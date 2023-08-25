@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "222019468081",
+    "project_id": "tn-boutique-stage",
+    "storage_bucket": "tn-boutique-stage.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222019468081:android:7caec73e8a7293916e8e10",
+        "android_client_info": {
+          "package_name": "com.tn.boutique.mobile_tn_boutique"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222019468081-f10u8evqsuj9eieea9sfgd68m7dc1hth.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx54l4amJlGPmmQcVOGDmwi5yxhqKaSfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222019468081-f10u8evqsuj9eieea9sfgd68m7dc1hth.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

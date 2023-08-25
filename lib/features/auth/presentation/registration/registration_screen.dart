@@ -1,0 +1,274 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../../core/common/button/buttons.dart';
+import '../../../../../core/common/textfield/textfield.dart';
+import '../../../../../core/themes/color_scheme.dart';
+import '../../../../../core/utils/app_texts.dart';
+import '../../../../../core/utils/input_validation.dart';
+import '../../../../../core/utils/loading_overlay.dart';
+import '../../../../../core/utils/size.dart';
+import '../../../../../router/router.dart';
+import 'states/registration_bloc.dart';
+
+class RegistrationScreen extends ConsumerStatefulWidget {
+  const RegistrationScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _RegistrationScreenState();
+}
+
+class _RegistrationScreenState extends ConsumerState<RegistrationScreen>
+    with InputValidationMixin, LoadingOverlayMixin {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final isValidate = ValueNotifier<bool>(false);
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  final FocusNode _phoneNumberNode = FocusNode();
+  final FocusNode _passwordNode = FocusNode();
+  final FocusNode _confirmPasswordNode = FocusNode();
+  final FocusNode _firstNameNode = FocusNode();
+  OverlayEntry? _overlayEntry;
+  var _passwordVisible = false;
+  var _confirmPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+    _confirmPasswordVisible = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const VerticalMargin(50),
+                  Text(AppTexts.createAccount,
+                      style: Config.h2(context).copyWith(
+                        fontSize: 24,
+                      )),
+                  // 📝 Note: The code below is the same as the one in the previous snippet.
+                  Text(AppTexts.createAccountDescription,
+                      style: Config.b3(context).copyWith(
+                        color: AppColors.grey100,
+                      )),
+                  const VerticalMargin(20),
+                  AppTextField(
+                    controller: _firstNameController,
+                    hintText: AppTexts.firstName,
+                    inputType: TextInputType.name,
+                    textCapitalization: TextCapitalization.none,
+                    focusNode: _firstNameNode,
+                    textInputAction: TextInputAction.next,
+                    validator: isValidate.value
+                        ? combine([
+                            withMessage(
+                                AppTexts.fieldEmpty("First Name"), isTextEmpty),
+                          ])
+                        : null,
+                  ),
+                  const VerticalMargin(20),
+                  AppTextField(
+                    controller: _phoneNumberController,
+                    hintText: AppTexts.phoneNumber,
+                    inputType: TextInputType.number,
+                    textCapitalization: TextCapitalization.none,
+                    focusNode: _phoneNumberNode,
+                    textInputAction: TextInputAction.done,
+                    validator: isValidate.value
+                        ? combine([
+                            withMessage(AppTexts.phoneNumberInvalid,
+                                isInvalidPhoneNumber),
+                            withMessage(AppTexts.fieldEmpty("Phone number"),
+                                isTextEmpty),
+                          ])
+                        : null,
+                  ),
+                  const VerticalMargin(20),
+                  AppTextField(
+                    controller: _passwordController,
+                    hintText: AppTexts.password,
+                    inputType: TextInputType.text,
+                    textCapitalization: TextCapitalization.none,
+                    focusNode: _passwordNode,
+                    obscureText: !_passwordVisible,
+                    textInputAction: TextInputAction.done,
+                    validator: isValidate.value
+                        ? combine([
+                            withMessage(
+                                AppTexts.passwordInvalid, isPasswordInvalid),
+                            withMessage(
+                                AppTexts.fieldEmpty("Password"), isTextEmpty),
+                          ])
+                        : null,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: () {
+                        // Update the state i.e. toogle the state of passwordVisible variable
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                  const VerticalMargin(20),
+                  AppTextField(
+                    controller: _confirmPasswordController,
+                    hintText: AppTexts.confirmPassword,
+                    inputType: TextInputType.text,
+                    textCapitalization: TextCapitalization.none,
+                    focusNode: _confirmPasswordNode,
+                    obscureText: !_confirmPasswordVisible,
+                    textInputAction: TextInputAction.done,
+                    validator: isValidate.value
+                        ? combine([
+                            withMessage(AppTexts.confirmPasswordInvalid,
+                                isPasswordInvalid),
+                            withMessage(AppTexts.fieldEmpty("Confirm Password"),
+                                isTextEmpty),
+                          ])
+                        : null,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        _confirmPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: () {
+                        // Update the state i.e. toogle the state of passwordVisible variable
+                        setState(() {
+                          _confirmPasswordVisible = !_confirmPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                  const VerticalMargin(20),
+                  BlocConsumer<RegistrationBloc, RegistrationState>(
+                    listener: _listener,
+                    builder: (context, state) {
+                      return AppButton(
+                        text: AppTexts.createAccountButton,
+                        onTap: () {
+                          _phoneNumberNode.unfocus();
+                          _firstNameNode.unfocus();
+                          if (_formKey.currentState!.validate()) {
+                            isValidate.value = true;
+                            context.read<RegistrationBloc>().add(RegisterUser(
+                                phoneNumber: _phoneNumberController.text,
+                                username: _firstNameController.text,
+                                password: _passwordController.text));
+                          } else {
+                            isValidate.value = false;
+                          }
+                        },
+                        textSize: 18,
+                        textColor: AppColors.white100,
+                        color: AppColors.primaryColor,
+                      );
+                    },
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateProperty.all(
+                            Colors.transparent,
+                          ),
+                        ),
+                        onPressed: () {
+                          GoRouter.of(context).pushNamed(RouteConstants.login);
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              AppTexts.alreadyHaveAccount,
+                              style: Config.b3(context).copyWith(
+                                fontSize: 16,
+                                color: AppColors.secondaryColor,
+                              ),
+                            ),
+                            const HorizontalMargin(5),
+                            Text(
+                              AppTexts.login,
+                              style: Config.b3(context).copyWith(
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                                color: AppColors.black200,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _phoneNumberController.dispose();
+    _firstNameController.dispose();
+    _phoneNumberNode.dispose();
+    super.dispose();
+  }
+
+  void _listener(BuildContext context, RegistrationState state) {
+    state.maybeWhen(orElse: () {
+      _overlayEntry?.remove();
+    }, loading: () {
+      _overlayEntry = showLoadingOverlay(context, _overlayEntry);
+    }, registrationError: (message) {
+      _overlayEntry?.remove();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.errorColor,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }, registrationSuccessful: (message) {
+      _overlayEntry?.remove();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.secondaryColor,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      GoRouter.of(context).pushNamed(RouteConstants.login);
+    });
+  }
+}
