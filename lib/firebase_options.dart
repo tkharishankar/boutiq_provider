@@ -44,40 +44,41 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCoSK5dZa3UTdw4s8fUFVnt25tOyaqySRs',
-    appId: '1:222019468081:web:c9f4d33677a88b816e8e10',
-    messagingSenderId: '222019468081',
-    projectId: 'tn-boutique-stage',
-    authDomain: 'tn-boutique-stage.firebaseapp.com',
-    storageBucket: 'tn-boutique-stage.appspot.com',
-    measurementId: 'G-BNGYH61NLN',
-  );
+      apiKey: 'AIzaSyB2uVN6SxP5ENHHLDWkOBgOCRptUxvvUtY',
+      appId: '1:49238018761:web:3b036b6e94686a31e71b18',
+      messagingSenderId: '49238018761',
+      projectId: "boutiq-stage",
+      authDomain: "boutiq-stage.firebaseapp.com",
+      storageBucket: "boutiq-stage.appspot.com",
+      measurementId: "G-2NH15J2BFS");
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAx54l4amJlGPmmQcVOGDmwi5yxhqKaSfg',
-    appId: '1:222019468081:android:7caec73e8a7293916e8e10',
-    messagingSenderId: '222019468081',
-    projectId: 'tn-boutique-stage',
-    storageBucket: 'tn-boutique-stage.appspot.com',
+    apiKey: 'AIzaSyCt98bKYFrSzETXHP_CQ09qIV2irWisB9o',
+    appId: '1:49238018761:android:25b53cf4da848eeee71b18',
+    messagingSenderId: '49238018761',
+    projectId: 'boutiq-stage',
+    storageBucket: "boutiq-stage.appspot.com",
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCi9ekVFoULhDmmkPjt990g19a8tMTM0z0',
-    appId: '1:222019468081:ios:4be5e6e889b90e0b6e8e10',
-    messagingSenderId: '222019468081',
-    projectId: 'tn-boutique-stage',
-    storageBucket: 'tn-boutique-stage.appspot.com',
-    iosClientId: '222019468081-6mehohjvadnvli21f3kksm30jegu5k14.apps.googleusercontent.com',
-    iosBundleId: 'com.tn.boutique.mobileTnBoutique',
+    apiKey: 'AIzaSyCYA3mqo2xFsY5264huhA_A9n6-VaD84a8',
+    appId: '1:49238018761:ios:18a5fae92089122ae71b18',
+    messagingSenderId: '49238018761',
+    projectId: 'boutiq-stage',
+    storageBucket: "boutiq-stage.appspot.com",
+    iosClientId:
+        '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
+    iosBundleId: 'com.boutiq.provider',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCi9ekVFoULhDmmkPjt990g19a8tMTM0z0',
-    appId: '1:222019468081:ios:4be5e6e889b90e0b6e8e10',
-    messagingSenderId: '222019468081',
-    projectId: 'tn-boutique-stage',
-    storageBucket: 'tn-boutique-stage.appspot.com',
-    iosClientId: '222019468081-6mehohjvadnvli21f3kksm30jegu5k14.apps.googleusercontent.com',
-    iosBundleId: 'com.tn.boutique.mobileTnBoutique',
+    apiKey: 'AIzaSyCYA3mqo2xFsY5264huhA_A9n6-VaD84a8',
+    appId: '1:49238018761:ios:18a5fae92089122ae71b18',
+    messagingSenderId: '49238018761',
+    projectId: 'boutiq-stage',
+    storageBucket: "boutiq-stage.appspot.com",
+    iosClientId:
+    '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
+    iosBundleId: 'com.boutiq.provider',
   );
 }

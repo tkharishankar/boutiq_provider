@@ -1,4 +1,4 @@
-package com.tn.boutique.mobile_tn_boutique
+package com.boutiq.provider
 
 import io.flutter.embedding.android.FlutterActivity
 

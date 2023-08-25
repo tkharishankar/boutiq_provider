@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tn.boutique.mobile_tn_boutique">
+    package="com.boutiq.provider">
    <application
-        android:label="mobile_tn_boutique"
+        android:label="BoutiQ Provider"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

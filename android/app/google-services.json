@@ -1,34 +1,77 @@
 {
   "project_info": {
-    "project_number": "222019468081",
-    "project_id": "tn-boutique-stage",
-    "storage_bucket": "tn-boutique-stage.appspot.com"
+    "project_number": "49238018761",
+    "project_id": "boutiq-stage",
+    "storage_bucket": "boutiq-stage.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:222019468081:android:7caec73e8a7293916e8e10",
+        "mobilesdk_app_id": "1:49238018761:android:65ce9d7022b0d49be71b18",
         "android_client_info": {
-          "package_name": "com.tn.boutique.mobile_tn_boutique"
+          "package_name": "com.boutiq.customer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "222019468081-f10u8evqsuj9eieea9sfgd68m7dc1hth.apps.googleusercontent.com",
+          "client_id": "49238018761-8tch1s831mufg13tat193dh2funv8vep.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAx54l4amJlGPmmQcVOGDmwi5yxhqKaSfg"
+          "current_key": "AIzaSyCt98bKYFrSzETXHP_CQ09qIV2irWisB9o"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "222019468081-f10u8evqsuj9eieea9sfgd68m7dc1hth.apps.googleusercontent.com",
+              "client_id": "49238018761-8tch1s831mufg13tat193dh2funv8vep.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "49238018761-9gk452trglrlhdduag6b3aau6t11auec.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boutiq.customer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49238018761:android:25b53cf4da848eeee71b18",
+        "android_client_info": {
+          "package_name": "com.boutiq.provider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "49238018761-8tch1s831mufg13tat193dh2funv8vep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt98bKYFrSzETXHP_CQ09qIV2irWisB9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "49238018761-8tch1s831mufg13tat193dh2funv8vep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "49238018761-9gk452trglrlhdduag6b3aau6t11auec.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boutiq.customer"
+              }
             }
           ]
         }
