@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mobile_tn_boutique/features/auth/domain/entities/login_response.dart';
 
 import '../../../../../core/common/error/exceptions.dart';
+import '../../domain/entities/login_response.dart';
 import '../../domain/entities/registration_response.dart';
 
 abstract class AuthenticationRemoteDataSource {
@@ -92,7 +92,8 @@ class IAuthenticationRemoteDataSource
         return LoginResponse.fromJson(data);
       }
     } catch (e) {
-      throw ServerException(message: 'Server error');
+      print(e);
+      throw ServerException(message: 'Server error $e');
     }
   }
 }

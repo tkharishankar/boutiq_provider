@@ -5,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mobile_tn_boutique/features/auth/presentation/login/states/login_bloc.dart';
-import 'package:mobile_tn_boutique/firebase_options.dart';
-import 'package:mobile_tn_boutique/router/router.dart';
 
 import 'di/injector.dart';
 import 'features/auth/auth_service_locator.dart';
+import 'features/auth/presentation/login/states/login_bloc.dart';
 import 'features/auth/presentation/registration/states/registration_bloc.dart';
+import 'firebase_options.dart';
+import 'router/router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +26,7 @@ Future<void> main() async {
 
 class App extends ConsumerStatefulWidget {
   const App({super.key});
+
   @override
   ConsumerState<App> createState() => _AppState();
 }

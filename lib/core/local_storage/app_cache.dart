@@ -1,6 +1,6 @@
 import 'package:get_storage/get_storage.dart';
-import 'package:mobile_tn_boutique/features/auth/domain/entities/login_response.dart';
 
+import '../../features/auth/domain/entities/login_response.dart';
 import '../common/error/exceptions.dart';
 
 class AppCacheKey {

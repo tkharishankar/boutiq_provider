@@ -1,9 +1,9 @@
 // 🐦 Flutter imports:
 
+import 'package:boutiq_provider/core/utils/size.dart';
 import 'package:flutter/material.dart';
 // 📦 Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile_tn_boutique/core/utils/size.dart';
 
 import '../../themes/color_scheme.dart';
 // 🌎 Project imports:

@@ -1,7 +1,8 @@
 // 📦 Package imports:
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mobile_tn_boutique/core/network/api_error.dart';
+
+import '../network/api_error.dart';
 
 // 🌎 Project imports:
 

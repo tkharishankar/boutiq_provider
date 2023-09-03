@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_tn_boutique/features/auth/presentation/login/login_screen.dart';
-import 'package:mobile_tn_boutique/features/dashboard/dashboard_screen.dart';
-import 'package:mobile_tn_boutique/features/onboarding_screen.dart';
 
+import '../features/auth/presentation/login/login_screen.dart';
 import '../features/auth/presentation/otp/otp_screen.dart';
 import '../features/auth/presentation/registration/registration_screen.dart';
+import '../features/dashboard/add_new_product.dart';
+import '../features/dashboard/dashboard_screen.dart';
+import '../features/onboarding_screen.dart';
 import '../features/splash_screen.dart';
 
 class AppRouter {
@@ -109,7 +110,26 @@ class AppRouter {
                 pageBuilder: (context, state) {
                   return CustomTransitionPage(
                     key: state.pageKey,
-                    child: const HomeScreen(),
+                    child: const DashboardScreen(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      // Change the opacity of the screen using a Curve based on the the animation's
+                      // value
+                      return FadeTransition(
+                        opacity: CurveTween(curve: Curves.easeInOutCirc)
+                            .animate(animation),
+                        child: child,
+                      );
+                    },
+                  );
+                },
+              ),GoRoute(
+                path: 'addnewproduct',
+                name: RouteConstants.addnewproduct,
+                pageBuilder: (context, state) {
+                  return CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const AddNewProduct(),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
                       // Change the opacity of the screen using a Curve based on the the animation's
@@ -134,4 +154,5 @@ class RouteConstants {
   static String register = 'register';
   static String verifyOtp = 'otp';
   static String home = 'home';
+  static String addnewproduct = 'addnewproduct';
 }

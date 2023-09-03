@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>222019468081-6mehohjvadnvli21f3kksm30jegu5k14.apps.googleusercontent.com</string>
+	<string>49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.222019468081-6mehohjvadnvli21f3kksm30jegu5k14</string>
+	<string>com.googleusercontent.apps.49238018761-b7k2geqfis14pme1alrngjb87del44oc</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCi9ekVFoULhDmmkPjt990g19a8tMTM0z0</string>
+	<string>AIzaSyCYA3mqo2xFsY5264huhA_A9n6-VaD84a8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>222019468081</string>
+	<string>49238018761</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.tn.boutique.mobileTnBoutique</string>
+	<string>com.boutiq.provider</string>
 	<key>PROJECT_ID</key>
-	<string>tn-boutique-stage</string>
+	<string>boutiq-stage</string>
 	<key>STORAGE_BUCKET</key>
-	<string>tn-boutique-stage.appspot.com</string>
+	<string>boutiq-stage.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:222019468081:ios:4be5e6e889b90e0b6e8e10</string>
+	<string>1:49238018761:ios:18a5fae92089122ae71b18</string>
 </dict>
 </plist>

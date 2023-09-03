@@ -1,6 +1,6 @@
 {
-    "name": "mobile_tn_boutique",
-    "short_name": "mobile_tn_boutique",
+    "name": "boutiq_provider",
+    "short_name": "boutiq_provider",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

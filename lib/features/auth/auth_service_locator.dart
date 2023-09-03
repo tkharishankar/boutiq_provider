@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
-import 'package:mobile_tn_boutique/features/auth/domain/usecases/login_usecase.dart';
-import 'package:mobile_tn_boutique/features/auth/presentation/login/states/login_bloc.dart';
 
 import 'data/data_source/authentication_remote_firebase.dart';
 import 'data/repositories/authentication_repo.dart';
+import 'domain/usecases/login_usecase.dart';
 import 'domain/usecases/registration_usecase.dart';
+import 'presentation/login/states/login_bloc.dart';
 import 'presentation/registration/states/registration_bloc.dart';
 
 final authLocator = GetIt.instance;

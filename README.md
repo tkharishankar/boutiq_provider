@@ -1,4 +1,4 @@
-# mobile_tn_boutique
+# boutiq_provider
 
 Get your boutique to hand
 

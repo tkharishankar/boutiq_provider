@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:mobile_tn_boutique/features/auth/domain/entities/login_response.dart';
 
 import '../../../../../core/network/api_error.dart';
 import '../../../../core/local_storage/app_cache.dart';
 import '../../../../di/injector.dart';
+import '../../domain/entities/login_response.dart';
 import '../../domain/entities/registration_response.dart';
 import '../data_source/authentication_remote_firebase.dart';
 

@@ -44,20 +44,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-      apiKey: 'AIzaSyB2uVN6SxP5ENHHLDWkOBgOCRptUxvvUtY',
-      appId: '1:49238018761:web:3b036b6e94686a31e71b18',
-      messagingSenderId: '49238018761',
-      projectId: "boutiq-stage",
-      authDomain: "boutiq-stage.firebaseapp.com",
-      storageBucket: "boutiq-stage.appspot.com",
-      measurementId: "G-2NH15J2BFS");
+    apiKey: 'AIzaSyB2uVN6SxP5ENHHLDWkOBgOCRptUxvvUtY',
+    appId: '1:49238018761:web:fe969e59da2aa0bee71b18',
+    messagingSenderId: '49238018761',
+    projectId: 'boutiq-stage',
+    authDomain: 'boutiq-stage.firebaseapp.com',
+    storageBucket: 'boutiq-stage.appspot.com',
+    measurementId: 'G-L548G9XBGK',
+  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCt98bKYFrSzETXHP_CQ09qIV2irWisB9o',
     appId: '1:49238018761:android:25b53cf4da848eeee71b18',
     messagingSenderId: '49238018761',
     projectId: 'boutiq-stage',
-    storageBucket: "boutiq-stage.appspot.com",
+    storageBucket: 'boutiq-stage.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -65,9 +66,8 @@ class DefaultFirebaseOptions {
     appId: '1:49238018761:ios:18a5fae92089122ae71b18',
     messagingSenderId: '49238018761',
     projectId: 'boutiq-stage',
-    storageBucket: "boutiq-stage.appspot.com",
-    iosClientId:
-        '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
+    storageBucket: 'boutiq-stage.appspot.com',
+    iosClientId: '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
     iosBundleId: 'com.boutiq.provider',
   );
 
@@ -76,9 +76,8 @@ class DefaultFirebaseOptions {
     appId: '1:49238018761:ios:18a5fae92089122ae71b18',
     messagingSenderId: '49238018761',
     projectId: 'boutiq-stage',
-    storageBucket: "boutiq-stage.appspot.com",
-    iosClientId:
-    '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
+    storageBucket: 'boutiq-stage.appspot.com',
+    iosClientId: '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
     iosBundleId: 'com.boutiq.provider',
   );
 }

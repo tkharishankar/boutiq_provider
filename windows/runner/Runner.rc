@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.tn.boutique" "\0"
-            VALUE "FileDescription", "mobile_tn_boutique" "\0"
+            VALUE "FileDescription", "boutiq_provider" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mobile_tn_boutique" "\0"
+            VALUE "InternalName", "boutiq_provider" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.tn.boutique. All rights reserved." "\0"
-            VALUE "OriginalFilename", "mobile_tn_boutique.exe" "\0"
-            VALUE "ProductName", "mobile_tn_boutique" "\0"
+            VALUE "OriginalFilename", "boutiq_provider.exe" "\0"
+            VALUE "ProductName", "boutiq_provider" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

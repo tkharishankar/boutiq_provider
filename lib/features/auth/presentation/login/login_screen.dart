@@ -1,8 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_tn_boutique/features/auth/presentation/login/states/login_bloc.dart';
 
 import '../../../../../core/common/button/buttons.dart';
 import '../../../../../core/common/textfield/textfield.dart';
@@ -12,6 +12,7 @@ import '../../../../../core/utils/input_validation.dart';
 import '../../../../../core/utils/loading_overlay.dart';
 import '../../../../../core/utils/size.dart';
 import '../../../../../router/router.dart';
+import 'states/login_bloc.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -31,6 +32,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   final FocusNode _passwordNode = FocusNode();
   OverlayEntry? _overlayEntry;
   var _passwordVisible = false;
+  double maxWidth = 0;
   @override
   void initState() {
     _passwordVisible = false;
@@ -38,15 +40,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    maxWidth = kIsWeb ? 400: double.infinity;
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+        child: Center(
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+                constraints: BoxConstraints(maxWidth: maxWidth),
+                child:Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const VerticalMargin(50),
                   Text(AppTexts.login,
@@ -146,7 +151,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                         ),
                         onPressed: () {
                           GoRouter.of(context)
-                              .pushNamed(RouteConstants.register);
+                              .pushReplacementNamed(RouteConstants.register);
                         },
                         child: Column(
                           children: [
@@ -173,6 +178,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     ],
                   ),
                 ],
+              ),
               ),
             ),
           ),
@@ -217,3 +223,5 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     });
   }
 }
+
+
