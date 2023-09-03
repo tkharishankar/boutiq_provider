@@ -75,7 +75,7 @@ dependencies:
   dio_smart_retry: any
 
   #? google_fonts is a Flutter package that provides a set of fonts from Google Fonts.
-  google_fonts: ^5.0.0
+  google_fonts: ^5.1.0
 
   #? flutter_svg is a Flutter package for drawing SVG pictures.
   flutter_svg: ^2.0.6

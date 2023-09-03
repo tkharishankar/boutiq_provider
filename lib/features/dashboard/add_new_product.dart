@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:boutiq_provider/core/utils/size.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +34,11 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     'Care',
   ];
 
+  List<String> categoryList = <String>['men', 'women', "baby"];
+  String categoryValue = "";
+  List<String> subCategoryList = <String>['One', 'Two', 'Three', 'Four'];
+  String subCategoryValue = "";
+
   void _validateInput(String value) {
     if (value.isEmpty) {
       setState(() {
@@ -43,6 +49,13 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
         _errorText = '';
       });
     }
+  }
+
+  @override
+  void initState() {
+    categoryValue = categoryList.first;
+    subCategoryValue = subCategoryList.first;
+    super.initState();
   }
 
   @override
@@ -93,15 +106,15 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              const Row(
+              Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
                       "Add Product",
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.lato(
+                          fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -175,16 +188,13 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
   _publishProduct(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          GoRouter.of(context).goNamed(RouteConstants.addnewproduct);
-        },
-        icon: const Icon(Icons.published_with_changes, size: 25),
-        label: Padding(
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Padding(
           padding: const EdgeInsets.all(10),
-          child: const Text(
+          child: Text(
             "Publish",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: GoogleFonts.acme(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -199,7 +209,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
         children: [
           Text(
             'Product Name',
-            style: TextStyle(
+            style: GoogleFonts.lato(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -210,7 +220,13 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
             controller: _textEditingController,
             decoration: InputDecoration(
               hintText: 'Enter product name.',
-              border: const OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade300,
+                  width: 1.0,
+                ),
+              ),
             ),
             onChanged: _validateInput,
           ),
@@ -227,20 +243,27 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
         children: [
           Text(
             'Category',
-            style: TextStyle(
+            style: GoogleFonts.lato(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
           VerticalMargin(10),
-          // Editable Text Field
-          TextField(
-            controller: _textEditingController,
-            decoration: InputDecoration(
-              hintText: 'Enter category.',
-              border: const OutlineInputBorder(),
+          Container(
+            width: double.infinity,
+            child: DropdownMenu<String>(
+              width: MediaQuery.of(context).size.width * 0.25,
+              initialSelection: categoryList.first,
+              onSelected: (String? value) {
+                setState(() {
+                  categoryValue = value!;
+                });
+              },
+              dropdownMenuEntries:
+                  categoryList.map<DropdownMenuEntry<String>>((String value) {
+                return DropdownMenuEntry<String>(value: value, label: value);
+              }).toList(),
             ),
-            onChanged: _validateInput,
           ),
         ],
       ),
@@ -251,25 +274,33 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Sub Category',
-            style: TextStyle(
+            style: GoogleFonts.lato(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
           VerticalMargin(10),
-          // Editable Text Field
-          TextField(
-            controller: _textEditingController,
-            decoration: InputDecoration(
-              hintText: 'Enter sub category.',
-              border: const OutlineInputBorder(),
+          Container(
+            width: double.infinity,
+            child: DropdownMenu<String>(
+              width: MediaQuery.of(context).size.width * 0.25,
+              initialSelection: subCategoryList.first,
+              onSelected: (String? value) {
+                setState(() {
+                  subCategoryValue = value!;
+                });
+              },
+              dropdownMenuEntries: subCategoryList
+                  .map<DropdownMenuEntry<String>>((String value) {
+                return DropdownMenuEntry<String>(value: value, label: value);
+              }).toList(),
             ),
-            onChanged: _validateInput,
-          ),
+          )
         ],
       ),
     );
@@ -283,7 +314,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
         children: [
           Text(
             'Price',
-            style: TextStyle(
+            style: GoogleFonts.lato(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -292,9 +323,16 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           // Editable Text Field
           TextField(
             controller: _textEditingController,
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               hintText: 'Enter price.',
-              border: const OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade300,
+                  width: 1.0,
+                ),
+              ),
             ),
             onChanged: _validateInput,
           ),
@@ -311,12 +349,12 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
         children: [
           Text(
             'Description',
-            style: TextStyle(
+            style: GoogleFonts.lato(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          VerticalMargin(10),
+          const VerticalMargin(10),
           // Editable Text Field
           TextField(
             controller: _textEditingController,
@@ -343,9 +381,9 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Description',
-            style: TextStyle(
+          Text(
+            'Tags',
+            style: GoogleFonts.lato(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -354,7 +392,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           // Editable Text Field
           Container(
             width: double.infinity,
-            height: 100,
             decoration: ShapeDecoration(
               color: Colors.grey.shade50,
               shape: RoundedRectangleBorder(
@@ -411,7 +448,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           onTap: () {
             openImages();
           },
-          child: const SizedBox(
+          child: SizedBox(
             width: double.infinity, // Adjust the width as needed
             height: 200, // Adjust the height as needed
             child: Center(
@@ -425,7 +462,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
                   ),
                   Text(
                     'Upload Image',
-                    style: TextStyle(
+                    style: GoogleFonts.lato(
                       color: Colors.blue,
                     ),
                   ),
@@ -477,39 +514,11 @@ class ImageItemWidget extends StatelessWidget {
       ),
       title: Text(imageName!),
       trailing: IconButton(
-        icon: Icon(Icons.delete),
+        icon: const Icon(Icons.delete),
         onPressed: () {
           onDelete();
         },
       ),
-    );
-  }
-}
-
-class DropdownMenuExample extends StatefulWidget {
-  const DropdownMenuExample({super.key});
-
-  @override
-  State<DropdownMenuExample> createState() => _DropdownMenuExampleState();
-}
-
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-
-class _DropdownMenuExampleState extends State<DropdownMenuExample> {
-  String dropdownValue = list.first;
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownMenu<String>(
-      initialSelection: list.first,
-      onSelected: (String? value) {
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      dropdownMenuEntries: list.map<DropdownMenuEntry<String>>((String value) {
-        return DropdownMenuEntry<String>(value: value, label: value);
-      }).toList(),
     );
   }
 }
