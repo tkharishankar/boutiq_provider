@@ -123,7 +123,8 @@ class AppRouter {
                     },
                   );
                 },
-              ),GoRoute(
+              ),
+              GoRoute(
                 path: 'addnewproduct',
                 name: RouteConstants.addnewproduct,
                 pageBuilder: (context, state) {
@@ -143,7 +144,7 @@ class AppRouter {
                   );
                 },
               ),
-            ])
+            ],)
       ]);
 }
 

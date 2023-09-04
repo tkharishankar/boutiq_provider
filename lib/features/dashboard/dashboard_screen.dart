@@ -147,7 +147,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
       child: ElevatedButton.icon(
         onPressed: () {
           GoRouter.of(context)
-              .goNamed(RouteConstants.addnewproduct);
+              .pushNamed(RouteConstants.addnewproduct);
           },
         icon: const Icon(Icons.add, size: 45),
         label: const Text("Add New"),

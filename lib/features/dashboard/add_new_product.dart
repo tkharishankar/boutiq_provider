@@ -60,7 +60,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
 
   @override
   void dispose() {
-    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -194,7 +193,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           padding: const EdgeInsets.all(10),
           child: Text(
             "Publish",
-            style: GoogleFonts.acme(fontSize: 18, fontWeight: FontWeight.bold),
+            style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
       ),
