@@ -35,22 +35,35 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
 
   List<String> selectedTags = [];
   List<String> availableTags = [
-    'Jewel',
-    'Shoes',
-    'Accessories',
     'Cloths',
+    'Accessories',
     'Care',
   ];
 
-  List<String> categoryList = <String>['men', 'women', "baby"];
+  List<String> categoryList = <String>['Men', 'Women', "Baby"];
   String categoryValue = "";
   List<String> subCategoryList = <String>[
-    'I want this to be lengthy',
-    'Two',
-    'Three',
-    'Four'
+    'Top Wear',
+    'Bottom Wear',
+    'Foot Wear',
+    'Inner Wear',
+    'Bath Care',
+    'Face Care',
+    'Hair Care',
+    'Body & Skin Care',
   ];
   String subCategoryValue = "";
+  List<String> subCategoryTypeList = <String>[
+    'Top Wear',
+    'Bottom Wear',
+    'Foot Wear',
+    'Inner Wear',
+    'Bath Care',
+    'Face Care',
+    'Hair Care',
+    'Body & Skin Care',
+  ];
+  String subCategoryTypeValue = "";
 
   @override
   void initState() {
@@ -83,16 +96,13 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'New Product',
-          style: GoogleFonts.lato(),
-        ),
+        title: Text('New Product', style: GoogleFonts.lato()),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          primary: false,
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
@@ -100,41 +110,56 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: isMobile ? 3 : 6, // Adjust flex based on device
                     child: Column(
                       children: [
                         productName(),
-                        category(),
-                        subcategory(),
-                        Row(
-                          children: [
-                            Expanded(child: price()),
-                            Expanded(child: deliveryPrice()),
-                          ],
-                        ),
+                        if (!isMobile)
+                          Row(
+                            children: [
+                              Expanded(child: category()),
+                              Expanded(child: subcategory()),
+                              Expanded(child: subcategorytype()),
+                            ],
+                          ),
+                        if (isMobile) category(),
+                        if (isMobile) subcategory(),
+                        if (isMobile) subcategorytype(),
+                        if (!isMobile)
+                          Row(
+                            children: [
+                              Expanded(child: price()),
+                              Expanded(child: deliveryPrice()),
+                            ],
+                          ),
+                        if (isMobile) price(),
+                        if (isMobile) deliveryPrice(),
                         description(),
                         tags(),
-                        if (Responsive.isMobile(context))
-                          Column(children: [fileUpload(), selectedImageList()]),
+                        if (isMobile) fileUpload(),
+                        if (isMobile) selectedImageList(),
                       ],
                     ),
                   ),
-                  if (!Responsive.isMobile(context))
+                  if (!isMobile)
                     Expanded(
                       flex: 3,
-                      child:
-                          Column(children: [fileUpload(), selectedImageList()]),
+                      child: Column(
+                        children: [
+                          fileUpload(),
+                          selectedImageList(),
+                        ],
+                      ),
                     ),
                 ],
-              )
+              ),
+              // Render only on mobile
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          onPublish();
-        },
+        onPressed: onPublish,
         label: Text(
           'Publish',
           style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
@@ -147,7 +172,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     );
   }
 
-  productName() {
+  Widget productName() {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -160,14 +185,14 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          VerticalMargin(10),
+          SizedBox(height: 10),
           // Editable Text Field
           TextField(
             controller: _productNameController,
             decoration: InputDecoration(
               hintText: 'Enter product name.',
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(4),
                 borderSide: BorderSide(
                   color: Colors.grey.shade300,
                   width: 1.0,
@@ -180,7 +205,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     );
   }
 
-  category() {
+  Widget category() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
@@ -193,7 +218,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          VerticalMargin(10),
+          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
           Container(
             width: double.infinity,
             child: DropdownMenu<String>(
@@ -214,11 +239,10 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     );
   }
 
-  subcategory() {
+  Widget subcategory() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
-        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -228,7 +252,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          VerticalMargin(10),
+          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
           Container(
             width: double.infinity,
             child: DropdownMenu<String>(
@@ -243,13 +267,47 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
                 return DropdownMenuEntry<String>(value: value, label: value);
               }).toList(),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  price() {
+  Widget subcategorytype() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Type, Brand or Product',
+            style: GoogleFonts.lato(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
+          Container(
+            width: double.infinity,
+            child: DropdownMenu<String>(
+              initialSelection: subCategoryTypeList.first,
+              onSelected: (String? value) {
+                setState(() {
+                  subCategoryValue = value!;
+                });
+              },
+              dropdownMenuEntries: subCategoryTypeList
+                  .map<DropdownMenuEntry<String>>((String value) {
+                return DropdownMenuEntry<String>(value: value, label: value);
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget price() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
@@ -262,15 +320,14 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          VerticalMargin(10),
-          // Editable Text Field
+          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
           TextField(
             controller: _priceController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               hintText: 'Enter price.',
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(4),
                 borderSide: BorderSide(
                   color: Colors.grey.shade300,
                   width: 1.0,
@@ -283,7 +340,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     );
   }
 
-  description() {
+  Widget description() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
@@ -296,14 +353,13 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const VerticalMargin(10),
-          // Editable Text Field
+          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
           TextField(
             controller: _descriptionController,
             decoration: InputDecoration(
               hintText: 'Enter description about the product.',
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(4),
                 borderSide: BorderSide(
                   color: Colors.grey.shade300,
                   width: 1.0,
@@ -316,7 +372,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     );
   }
 
-  tags() {
+  Widget tags() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
@@ -329,40 +385,38 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const VerticalMargin(10),
-          // Editable Text Field
+          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
           Container(
             width: double.infinity,
-            decoration: ShapeDecoration(
+            decoration: BoxDecoration(
               color: Colors.grey.shade50,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: BorderSide(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: Colors.grey.shade500,
+                width: 1.0,
               ),
             ),
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Wrap(
+                spacing: 8,
                 children: availableTags.map((filter) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: FilterChip(
-                      label: Text(filter),
-                      selected: selectedTags.contains(filter),
-                      onSelected: (isSelected) {
-                        setState(() {
-                          if (isSelected) {
-                            selectedTags.add(filter);
-                          } else {
-                            selectedTags.remove(filter);
-                          }
-                        });
-                      },
-                      selectedColor: Colors.blue,
-                      backgroundColor: Colors.grey.shade300,
+                  return FilterChip(
+                    label: Text(filter),
+                    selected: selectedTags.contains(filter),
+                    onSelected: (isSelected) {
+                      setState(() {
+                        if (isSelected) {
+                          selectedTags.add(filter);
+                        } else {
+                          selectedTags.remove(filter);
+                        }
+                      });
+                    },
+                    selectedColor: Colors.blue,
+                    backgroundColor: Colors.grey.shade300,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
                       side: BorderSide(
                         color: Colors.grey.shade300,
                         width: 1.0,
@@ -378,37 +432,37 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     );
   }
 
-  fileUpload() {
+  Widget fileUpload() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      child: DottedBorder(
-        color: Colors.blue, // Customize the border color
-        strokeWidth: 2, // Adjust the border thickness
-        radius: const Radius.circular(15), // Adjust the border radius
-        child: InkWell(
-          onTap: () {
-            openImages();
-          },
-          child: SizedBox(
-            width: double.infinity, // Adjust the width as needed
-            height: 150, // Adjust the height as needed
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.camera_alt, // You can use any icon you like
-                    size: 40,
+      child: InkWell(
+        onTap: openImages,
+        child: Container(
+          width: double.infinity, // Adjust the width as needed
+          height: 150, // Adjust the height as needed
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.blue, // Customize the border color
+              width: 2, // Adjust the border thickness
+            ),
+            borderRadius: BorderRadius.circular(15), // Adjust the border radius
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.camera_alt, // You can use any icon you like
+                  size: 40,
+                  color: Colors.blue,
+                ),
+                Text(
+                  'Upload Image',
+                  style: GoogleFonts.lato(
                     color: Colors.blue,
                   ),
-                  Text(
-                    'Upload Image',
-                    style: GoogleFonts.lato(
-                      color: Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -427,7 +481,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
             margin: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300, width: 1.0),
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(4),
             ),
             child: Row(
               children: [
@@ -482,7 +536,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
             decoration: InputDecoration(
               hintText: 'Enter delivery amount.',
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(4),
                 borderSide: BorderSide(
                   color: Colors.grey.shade300,
                   width: 1.0,
