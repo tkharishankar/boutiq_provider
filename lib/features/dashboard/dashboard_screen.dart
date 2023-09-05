@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/utils/input_validation.dart';
 import '../../core/utils/loading_overlay.dart';
@@ -22,136 +23,61 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount = (screenWidth / 150).floor();
+    crossAxisCount = crossAxisCount.clamp(1, 8);
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  _searchbar(),
-                  _addnewproduct(context),
-                ],
-              ),
-              _topsold(),
-            ],
-          ),
+      appBar: AppBar(
+        title: Text(
+          'Dashboard',
+          style: GoogleFonts.lato(),
         ),
       ),
-    );
-  }
-
-  Padding _searchbar() {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: SearchBar(
-        hintText: 'What you are looking for?',
-        leading: const Icon(Icons.search),
-        trailing: [
-          IconButton(
-            icon: const Icon(Icons.favorite),
-            onPressed: () {
-              print('Use image search');
-            },
-          )
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: SearchBar(
+              hintText: 'What you are looking for?',
+              leading: const Icon(Icons.search),
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: kIsWeb ? crossAxisCount : 2,
+                // Number of columns
+                crossAxisSpacing: 10.0,
+                // Spacing between columns
+                mainAxisSpacing: 10.0, // Spacing between rows
+              ),
+              itemCount: 50, // Replace with your data count
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(
+                    'Item $index',
+                    style: GoogleFonts.lato(),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
-    );
-  }
-
-  SizedBox _topsold() {
-    return SizedBox(
-      height: 250,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: 200,
-                color: Colors.purple[600],
-                child: const Center(
-                  child: Text(
-                    'Item 1',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: 200,
-                color: Colors.purple[600],
-                child: const Center(
-                  child: Text(
-                    'Item 2',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: 200,
-                color: Colors.purple[600],
-                child: const Center(
-                  child: Text(
-                    'Item 3',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: 200,
-                color: Colors.purple[600],
-                child: const Center(
-                  child: Text(
-                    'Item 4',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: 200,
-                color: Colors.purple[600],
-                child: const Center(
-                  child: Text(
-                    'Item 5',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ],
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          GoRouter.of(context).pushNamed(RouteConstants.addnewproduct);
+        },
+        icon: Icon(Icons.add),
+        label: Text(
+          'Add New',
+          style: GoogleFonts.lato(),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
       ),
-    );
-  }
-
-  _addnewproduct(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          GoRouter.of(context)
-              .pushNamed(RouteConstants.addnewproduct);
-          },
-        icon: const Icon(Icons.add, size: 45),
-        label: const Text("Add New"),
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

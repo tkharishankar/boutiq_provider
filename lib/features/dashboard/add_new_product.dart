@@ -1,13 +1,15 @@
 import 'dart:io';
+
 import 'package:boutiq_provider/core/utils/size.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../router/router.dart';
+import '../../core/utils/responsive.dart';
 
 class AddNewProduct extends ConsumerStatefulWidget {
   const AddNewProduct({super.key});
@@ -19,14 +21,20 @@ class AddNewProduct extends ConsumerStatefulWidget {
 }
 
 class _AddNewProductState extends ConsumerState<AddNewProduct> {
-  final ImagePicker img_picker = ImagePicker();
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final isValidate = ValueNotifier<bool>(false);
+
+  final ImagePicker imagePicker = ImagePicker();
   List<XFile>? selectedImages;
 
-  var _textEditingController;
-  String _errorText = '';
-  List<String> selectedFilters = [];
+  final TextEditingController _productNameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _deliveryAmountController =
+      TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
-  List<String> availableFilters = [
+  List<String> selectedTags = [];
+  List<String> availableTags = [
     'Jewel',
     'Shoes',
     'Accessories',
@@ -36,20 +44,13 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
 
   List<String> categoryList = <String>['men', 'women', "baby"];
   String categoryValue = "";
-  List<String> subCategoryList = <String>['One', 'Two', 'Three', 'Four'];
+  List<String> subCategoryList = <String>[
+    'I want this to be lengthy',
+    'Two',
+    'Three',
+    'Four'
+  ];
   String subCategoryValue = "";
-
-  void _validateInput(String value) {
-    if (value.isEmpty) {
-      setState(() {
-        _errorText = 'This field cannot be empty';
-      });
-    } else {
-      setState(() {
-        _errorText = '';
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -63,18 +64,14 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     super.dispose();
   }
 
-  void _deleteImage(int index) {
-    setState(() {
-      selectedImages?.removeAt(index);
-    });
-  }
-
   openImages() async {
     try {
-      var selected_files = await img_picker.pickMultiImage();
+      var selectedFiles =
+          await imagePicker.pickMultiImage(requestFullMetadata: true);
       //you can use ImageCourse.camera for Camera capture
-      if (selected_files != null) {
-        selectedImages = selected_files;
+      if (selectedFiles != null) {
+        Set<XFile> uniqueImages = {...?selectedImages, ...selectedFiles};
+        selectedImages = uniqueImages.toList();
         setState(() {});
       } else {
         print("No image is selected.");
@@ -87,116 +84,66 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: ShapeDecoration(
-            color: Colors.grey.shade50,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-            ),
-          ),
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.all(10),
+      appBar: AppBar(
+        title: Text(
+          'New Product',
+          style: GoogleFonts.lato(),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          primary: false,
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: [
               Row(
-                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Add Product",
-                      style: GoogleFonts.lato(
-                          fontSize: 25, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Flex(
-                  direction: Axis.horizontal,
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                          decoration: ShapeDecoration(
-                            color: Colors.grey.shade50,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(
-                                color: Colors.grey.shade300,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              productName(),
-                              category(),
-                              subcategory(),
-                              price(),
-                              description(),
-                              tags()
-                            ],
-                          )),
-                    ),
-                    const HorizontalMargin(10),
-                    Expanded(
-                      child: Container(
-                        decoration: ShapeDecoration(
-                          color: Colors.grey.shade50,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                          ),
-                        ),
-                        child: Column(
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        productName(),
+                        category(),
+                        subcategory(),
+                        Row(
                           children: [
-                            fileUpload(),
-                            selectedImageList(),
+                            Expanded(child: price()),
+                            Expanded(child: deliveryPrice()),
                           ],
                         ),
-                      ),
+                        description(),
+                        tags(),
+                        if (Responsive.isMobile(context))
+                          Column(children: [fileUpload(), selectedImageList()]),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _publishProduct(context),
+                  ),
+                  if (!Responsive.isMobile(context))
+                    Expanded(
+                      flex: 3,
+                      child:
+                          Column(children: [fileUpload(), selectedImageList()]),
+                    ),
                 ],
-              ),
+              )
             ],
           ),
         ),
       ),
-    );
-  }
-
-  _publishProduct(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            "Publish",
-            style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          onPublish();
+        },
+        label: Text(
+          'Publish',
+          style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -216,7 +163,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           VerticalMargin(10),
           // Editable Text Field
           TextField(
-            controller: _textEditingController,
+            controller: _productNameController,
             decoration: InputDecoration(
               hintText: 'Enter product name.',
               border: OutlineInputBorder(
@@ -227,7 +174,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
                 ),
               ),
             ),
-            onChanged: _validateInput,
           ),
         ],
       ),
@@ -251,7 +197,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           Container(
             width: double.infinity,
             child: DropdownMenu<String>(
-              width: MediaQuery.of(context).size.width * 0.25,
               initialSelection: categoryList.first,
               onSelected: (String? value) {
                 setState(() {
@@ -287,7 +232,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           Container(
             width: double.infinity,
             child: DropdownMenu<String>(
-              width: MediaQuery.of(context).size.width * 0.25,
               initialSelection: subCategoryList.first,
               onSelected: (String? value) {
                 setState(() {
@@ -321,7 +265,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           VerticalMargin(10),
           // Editable Text Field
           TextField(
-            controller: _textEditingController,
+            controller: _priceController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               hintText: 'Enter price.',
@@ -333,7 +277,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
                 ),
               ),
             ),
-            onChanged: _validateInput,
           ),
         ],
       ),
@@ -356,7 +299,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           const VerticalMargin(10),
           // Editable Text Field
           TextField(
-            controller: _textEditingController,
+            controller: _descriptionController,
             decoration: InputDecoration(
               hintText: 'Enter description about the product.',
               border: OutlineInputBorder(
@@ -367,7 +310,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
                 ),
               ),
             ),
-            onChanged: _validateInput,
           ),
         ],
       ),
@@ -404,18 +346,18 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Wrap(
-                children: availableFilters.map((filter) {
+                children: availableTags.map((filter) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.all(8),
                     child: FilterChip(
                       label: Text(filter),
-                      selected: selectedFilters.contains(filter),
+                      selected: selectedTags.contains(filter),
                       onSelected: (isSelected) {
                         setState(() {
                           if (isSelected) {
-                            selectedFilters.add(filter);
+                            selectedTags.add(filter);
                           } else {
-                            selectedFilters.remove(filter);
+                            selectedTags.remove(filter);
                           }
                         });
                       },
@@ -449,7 +391,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           },
           child: SizedBox(
             width: double.infinity, // Adjust the width as needed
-            height: 200, // Adjust the height as needed
+            height: 150, // Adjust the height as needed
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -475,49 +417,156 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
   }
 
   selectedImageList() {
-    return selectedImages != null
-        ? Wrap(
-            children: selectedImages!.map((imageone) {
-              return Card(
-                child: SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Image.network(File(imageone.path).path),
+    if (selectedImages != null) {
+      return Wrap(
+        spacing: 10.0,
+        children: selectedImages!.asMap().entries.map((entry) {
+          final index = entry.key;
+          final imageFile = entry.value;
+          return Container(
+            margin: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300, width: 1.0),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Row(
+              children: [
+                kIsWeb
+                    ? Image.network(
+                        imageFile.path,
+                        width: 100,
+                        height: 100,
+                      )
+                    : Image.file(
+                        File(imageFile.path),
+                        width: 100,
+                        height: 100,
+                      ),
+                HorizontalMargin(10),
+                Text(imageFile.name),
+                Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    onDelete(index);
+                  },
                 ),
-              );
-            }).toList(),
-          )
-        : Container();
+              ],
+            ),
+          );
+        }).toList(),
+      );
+    } else {
+      return Container();
+    }
   }
-}
 
-class ImageItemWidget extends StatelessWidget {
-  final XFile? imageFile;
-  final String? imageName;
-  final Function onDelete;
-
-  ImageItemWidget({
-    required this.imageFile,
-    required this.imageName,
-    required this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Image.network(
-        imageFile!.path,
-        width: 50,
-        height: 50,
-        fit: BoxFit.cover,
-      ),
-      title: Text(imageName!),
-      trailing: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () {
-          onDelete();
-        },
+  deliveryPrice() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Delivery Amount',
+            style: GoogleFonts.lato(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          VerticalMargin(10),
+          // Editable Text Field
+          TextField(
+            controller: _deliveryAmountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: 'Enter delivery amount.',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade300,
+                  width: 1.0,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  void onDelete(int index) {
+    selectedImages?.removeAt(index);
+    setState(() {});
+  }
+
+  void onPublish() {
+    isValidate.value = true;
+    print("product name:" + _productNameController.text);
+    print("product price:" + _priceController.text);
+    print("product delivery amount:" + _deliveryAmountController.text);
+    print("product desc:" + _descriptionController.text);
+    print("product category:" + categoryValue);
+    print("product sub category:" + subCategoryValue);
+
+    for (var item in selectedTags) {
+      print("product tags:" + item);
+    }
+
+    for (var item in selectedImages!) {
+      _uploadImage(item);
+      print("product image:" + item.name);
+    }
+
+    // for(var item in  selectedImages!){
+    //   print("product tags:" + selectedImages?.first.name);
+    // }
+    // selectedTags.map((tag) => {);
+    // selectedImages?.map((image) => {print("product image:" + image.name)});
+    // context.read<LoginBloc>().add(LoginUser(
+    //     phoneNumber: _phoneNumberController.text,
+    //     password: _passwordController.text));
+  }
+
+  bool _isUploading = false;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  Future<void> _uploadImage(XFile item) async {
+    setState(() {
+      _isUploading = true;
+    });
+
+    if (item == null) {
+      setState(() {
+        _isUploading = false;
+      });
+      return;
+    }
+
+    try {
+      final storageRef =
+          _storage.ref('images/${DateTime.now().millisecond}.jpg');
+      final Uint8List imageBytes = await item.readAsBytes();
+
+      final uploadTask = storageRef.putData(imageBytes);
+
+      await uploadTask.whenComplete(() async {
+        setState(() {
+          _isUploading = false;
+        });
+
+        final downloadURL = await storageRef.getDownloadURL();
+        print("downloadable link " + downloadURL);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Image uploaded successfully.' + downloadURL),
+          ),
+        );
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error uploading image: $error'),
+      ));
+    }
   }
 }
