@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum ValidateFailResult {
   empty,
   invalidEmail,
@@ -108,4 +110,25 @@ mixin InputValidationMixin {
     }
     return null;
   }
+}
+
+void showAlertDialog(BuildContext context, String title, String content) {
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: Text(content),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Ok'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    ),
+  );
 }
