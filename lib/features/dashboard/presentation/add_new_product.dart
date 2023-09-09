@@ -1,17 +1,21 @@
 import 'dart:io';
 
 import 'package:boutiq_provider/core/utils/size.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../core/utils/input_validation.dart';
-import '../../core/utils/responsive.dart';
+import '../../../core/themes/color_scheme.dart';
+import '../../../core/utils/input_validation.dart';
+import '../../../core/utils/loading_overlay.dart';
+import '../../../core/utils/responsive.dart';
+import '../../../router/router.dart';
+import 'states/product_bloc.dart';
 
 class AddNewProduct extends ConsumerStatefulWidget {
   const AddNewProduct({super.key});
@@ -22,8 +26,10 @@ class AddNewProduct extends ConsumerStatefulWidget {
   }
 }
 
-class _AddNewProductState extends ConsumerState<AddNewProduct> {
+class _AddNewProductState extends ConsumerState<AddNewProduct>
+    with LoadingOverlayMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  OverlayEntry? _overlayEntry;
   final TextEditingController _productNameController = TextEditingController();
   String _productName = "";
   final TextEditingController _priceController = TextEditingController();
@@ -146,18 +152,26 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
           ),
         ),
       ),
-      floatingActionButton: Visibility(
-        visible: MediaQuery.of(context).viewInsets.bottom == 0,
-        child: FloatingActionButton.extended(
-          onPressed: onPublish,
-          label: Text(
-            'Publish',
-            style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(25.0)),
-          ),
-        ),
+      floatingActionButton: BlocConsumer<ProductBloc, ProductState>(
+        listener: _listener,
+        builder: (context, state) {
+          return Visibility(
+            visible: MediaQuery.of(context).viewInsets.bottom == 0,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                onPublish(context);
+              },
+              label: Text(
+                'Publish',
+                style:
+                    GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+              ),
+            ),
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -222,7 +236,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
+          const SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
           Container(
             width: double.infinity,
             child: DropdownMenu<String>(
@@ -591,7 +605,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     setState(() {});
   }
 
-  void onPublish() {
+  void onPublish(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       if (categoryValue.isEmpty ||
           subCategoryTypeValue.isEmpty ||
@@ -611,33 +625,20 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
             "Please select the product images.");
         return;
       }
-
-      print("product name:" + _productName);
-      print("product price:" + _price);
-      print("product delivery amount:" + _deliveryAmount);
-      print("product desc:" + _description);
-      print("product category:" + categoryValue);
-      print("product sub category:" + subCategoryValue);
-      print("product sub type category:" + subCategoryTypeValue);
+      context.read<ProductBloc>().add(
+            AddProductReq(
+                name: _productName,
+                price: _price,
+                deliveryPrice: _deliveryAmount,
+                category: categoryValue,
+                subCategory: subCategoryValue,
+                subCategoryType: subCategoryTypeValue,
+                description: _description,
+                tags: selectedTags,
+                images: selectedImages!),
+          );
     }
-
-    // for (var item in selectedTags) {
-    //   print("product tags:" + item);
-    // }
-    //
-    // for (var item in selectedImages!) {
-    //   _uploadImage(item);
-    //   print("product image:" + item.name);
-    // }
-
-    // for(var item in  selectedImages!){
-    //   print("product tags:" + selectedImages?.first.name);
-    // }
-    // selectedTags.map((tag) => {);
-    // selectedImages?.map((image) => {print("product image:" + image.name)});
-    // context.read<LoginBloc>().add(LoginUser(
-    //     phoneNumber: _phoneNumberController.text,
-    //     password: _passwordController.text));
+    return;
   }
 
   openImages() async {
@@ -656,45 +657,30 @@ class _AddNewProductState extends ConsumerState<AddNewProduct> {
     }
   }
 
-  bool _isUploading = false;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-
-  Future<void> _uploadImage(XFile item) async {
-    setState(() {
-      _isUploading = true;
+  void _listener(BuildContext context, ProductState state) {
+    state.maybeWhen(orElse: () {
+      _overlayEntry?.remove();
+    }, loading: () {
+      _overlayEntry = showLoadingOverlay(context, _overlayEntry);
+    }, addProductError: (message) {
+      _overlayEntry?.remove();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.errorColor,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }, addProductSuccessful: (message) {
+      _overlayEntry?.remove();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.secondaryColor,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      GoRouter.of(context).pushReplacementNamed(RouteConstants.home);
     });
-
-    if (item == null) {
-      setState(() {
-        _isUploading = false;
-      });
-      return;
-    }
-
-    try {
-      final storageRef =
-          _storage.ref('images/${DateTime.now().millisecond}.jpg');
-      final Uint8List imageBytes = await item.readAsBytes();
-
-      final uploadTask = storageRef.putData(imageBytes);
-
-      await uploadTask.whenComplete(() async {
-        setState(() {
-          _isUploading = false;
-        });
-
-        final downloadURL = await storageRef.getDownloadURL();
-        print("downloadable link " + downloadURL);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Image uploaded successfully.' + downloadURL),
-          ),
-        );
-      });
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error uploading image: $error'),
-      ));
-    }
   }
 }

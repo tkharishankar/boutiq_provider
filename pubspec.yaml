@@ -138,6 +138,41 @@ flutter:
 
   assets:
     - assets/images/
+    - lib/
+    - lib/di/
+    - lib/core/
+    - lib/core/utils/
+    - lib/core/common/
+    - lib/core/common/error/
+    - lib/core/common/button/
+    - lib/core/common/textfield/
+    - lib/core/themes/
+    - lib/core/network/
+    - lib/core/usecases/
+    - lib/core/local_storage/
+    - lib/router/
+    - lib/features/
+    - lib/features/auth/
+    - lib/features/auth/data/
+    - lib/features/auth/data/data_source/
+    - lib/features/auth/data/repositories/
+    - lib/features/auth/domain/
+    - lib/features/auth/domain/entities/
+    - lib/features/auth/domain/usecases/
+    - lib/features/auth/presentation/
+    - lib/features/auth/presentation/otp/
+    - lib/features/auth/presentation/login/
+    - lib/features/auth/presentation/login/states/
+    - lib/features/auth/presentation/registration/
+    - lib/features/auth/presentation/registration/states/
+    - lib/features/dashboard/
+    - lib/features/dashboard/data/
+    - lib/features/dashboard/data/data_source/
+    - lib/features/dashboard/data/repositories/
+    - lib/features/dashboard/domain/
+    - lib/features/dashboard/domain/entities/
+    - lib/features/dashboard/presentation/
+    - lib/features/dashboard/presentation/states/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

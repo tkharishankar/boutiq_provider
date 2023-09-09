@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../features/auth/presentation/login/login_screen.dart';
 import '../features/auth/presentation/otp/otp_screen.dart';
 import '../features/auth/presentation/registration/registration_screen.dart';
-import '../features/dashboard/add_new_product.dart';
-import '../features/dashboard/dashboard_screen.dart';
+import '../features/dashboard/presentation/add_new_product.dart';
+import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/onboarding_screen.dart';
 import '../features/splash_screen.dart';
 

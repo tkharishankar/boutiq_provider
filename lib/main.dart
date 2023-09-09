@@ -1,3 +1,4 @@
+import 'package:boutiq_provider/features/dashboard/presentation/states/product_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'di/injector.dart';
 import 'features/auth/auth_service_locator.dart';
 import 'features/auth/presentation/login/states/login_bloc.dart';
 import 'features/auth/presentation/registration/states/registration_bloc.dart';
+import 'features/dashboard/product_locator.dart';
 import 'firebase_options.dart';
 import 'router/router.dart';
 
@@ -53,6 +55,9 @@ class _AppState extends ConsumerState<App> {
           ),
           BlocProvider<LoginBloc>(
             create: (context) => authLocator<LoginBloc>(),
+          ),
+          BlocProvider<ProductBloc>(
+            create: (context) => productLocator<ProductBloc>(),
           ),
         ],
         child: MaterialApp.router(
