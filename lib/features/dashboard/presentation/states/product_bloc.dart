@@ -17,7 +17,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   ProductBloc({required this.productRepo}) : super(_Initial()) {
     on<AddProductReq>(_onAddProduct);
-    // on<GetProducts>(_getProducts);
+    on<GetProducts>(_getProducts);
   }
 
   Future<void> _onAddProduct(
@@ -33,14 +33,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     });
   }
 
-  // Future<void> _getProducts(
-  //     GetProducts getProducts, Emitter<ProductState> emit) async {
-  //   emit(const ProductState.loading());
-  //   final failureOrSuccess = await productRepo.getProducts();
-  //   failureOrSuccess.fold((failure) {
-  //     emit(ProductState.onProductListError(failure.errorMessage));
-  //   }, (success) {
-  //     emit(ProductState.onProductList(success.message));
-  //   });
-  // }
+  Future<void> _getProducts(
+      GetProducts getProducts, Emitter<ProductState> emit) async {
+    emit(const ProductState.loading());
+    final failureOrSuccess = await productRepo.getProducts();
+    failureOrSuccess.fold((failure) {
+      emit(ProductState.onProductListError(failure.errorMessage));
+    }, (success) {
+      emit(ProductState.onProductList(success));
+    });
+  }
 }

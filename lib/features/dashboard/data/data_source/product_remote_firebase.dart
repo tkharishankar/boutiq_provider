@@ -14,7 +14,7 @@ abstract class ProductRemoteDataSource {
   Future<Either<ApiError, AddProductResp>> addProduct(
       AddProductReq addProductReq);
 
-  // Future<Either<ApiError, List<Product>>> getProduct();
+  Future<Either<ApiError, List<Product>>> getProduct();
 }
 
 class IProductRemoteDataSource implements ProductRemoteDataSource {
@@ -28,7 +28,7 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
         return Left(ApiError(
             errorCode: "400",
             errorMessage:
-            "Error in adding product please contact support team"));
+                "Error in adding product please contact support team"));
       } else {
         return const Right(AddProductResp(message: "Product Added successful"));
       }
@@ -37,8 +37,8 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
     }
   }
 
-  Future<int> addProductToFirebase(AddProductReq addProductReq,
-      List<String> fileUrl) async {
+  Future<int> addProductToFirebase(
+      AddProductReq addProductReq, List<String> fileUrl) async {
     try {
       var db = FirebaseFirestore.instance;
       final productCollection = db.collection("product");
@@ -67,9 +67,7 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
     try {
       for (var item in images) {
         final storageRef = firebaseStorage
-            .ref('images/${DateTime
-            .now()
-            .millisecondsSinceEpoch}.jpg');
+            .ref('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
         final Uint8List imageBytes = await item.readAsBytes();
         final uploadTask = storageRef.putData(imageBytes);
 
@@ -87,19 +85,28 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
     }
   }
 
-  // Future<Either<ApiError, List<Product>>> getProduct() async {
-  //   try {
-  //     final QuerySnapshot querySnapshot =
-  //     await FirebaseFirestore.instance.collection('products').get();
-  //
-  //     final List<Product> products = querySnapshot.docs
-  //         .map((DocumentSnapshot document) => Product.fromFirestore(document))
-  //         .toList();
-  //
-  //     return const Right(products)
-  //   } catch (e) {
-  //     print("Error fetching products: $e");
-  //     throw ServerException(message: 'Server Error $e');
-  //   }
-  // }
+  Future<Either<ApiError, List<Product>>> getProduct() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('product').get();
+
+      final List<Product> products = querySnapshot.docs
+          .map((DocumentSnapshot document) => Product.fromFirestore(document))
+          .toList();
+
+      if (products.isNotEmpty) {
+        return Right<ApiError, List<Product>>(products);
+      } else {
+        return Left<ApiError, List<Product>>(
+          ApiError(
+            errorCode: "400",
+            errorMessage: "Products not found",
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error fetching products: $e");
+      throw ServerException(message: 'Server Error $e');
+    }
+  }
 }

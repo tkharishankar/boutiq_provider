@@ -9,7 +9,7 @@ abstract class ProductRepo {
   Future<Either<ApiError, AddProductResp>> addProduct(
       AddProductReq addProductReq);
 
-  // Future<Either<ApiError, List<Product>>> getProducts();
+  Future<Either<ApiError, List<Product>>> getProducts();
 }
 
 class ProductRepository implements ProductRepo {
@@ -23,8 +23,8 @@ class ProductRepository implements ProductRepo {
     return await productRemoteDataSource.addProduct(addProductReq);
   }
 
-  // @override
-  // Future<Either<ApiError, List<Product>>> getProducts() {
-  //   return await productRemoteDataSource.getProduct();
-  // }
+  @override
+  Future<Either<ApiError, List<Product>>> getProducts() async {
+    return await productRemoteDataSource.getProduct();
+  }
 }

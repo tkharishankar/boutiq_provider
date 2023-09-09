@@ -132,3 +132,43 @@ void showAlertDialog(BuildContext context, String title, String content) {
     ),
   );
 }
+
+void showActionAlertDialog(
+  BuildContext context,
+  String title,
+  String content,
+  List<AlertAction> actions,
+) {
+  final hasContent = content.isNotEmpty;
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: hasContent ? Text(content) : null,
+      actions: actions.map((action) {
+        return TextButton(
+          child: Text(action.label),
+          onPressed: () {
+            Navigator.of(context).pop();
+            if (action.onTap != null) {
+              action.onTap!();
+            }
+          },
+        );
+      }).toList(),
+    ),
+  );
+}
+
+class AlertAction {
+  final String label;
+  final void Function()? onTap;
+
+  AlertAction({
+    required this.label,
+    this.onTap,
+  });
+}

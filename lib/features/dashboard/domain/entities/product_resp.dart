@@ -29,4 +29,20 @@ class Product with _$Product {
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
+
+  factory Product.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    return Product(
+      name: data['name'] ?? '',
+      category: data['category'] ?? '',
+      price: data['price'] ?? '',
+      deliveryPrice: data['deliveryPrice'] ?? '',
+      subCategory: data['subCategory'] ?? '',
+      subCategoryType: data['subCategoryType'] ?? '',
+      description: data['description'] ?? '',
+      tags: List<String>.from(data['tags'] ?? []),
+      images: List<String>.from(data['images'] ?? []),
+    );
+  }
 }

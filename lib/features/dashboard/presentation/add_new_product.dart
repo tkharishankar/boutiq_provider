@@ -673,14 +673,20 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
       );
     }, addProductSuccessful: (message) {
       _overlayEntry?.remove();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: AppColors.secondaryColor,
-          duration: const Duration(seconds: 3),
-        ),
+      showActionAlertDialog(
+        context,
+        "Product Added successfully.",
+        "",
+        [
+          AlertAction(
+            label: 'Ok',
+            onTap: () {
+              _overlayEntry?.remove();
+              GoRouter.of(context).pushReplacementNamed(RouteConstants.home);
+            },
+          ),
+        ],
       );
-      GoRouter.of(context).pushReplacementNamed(RouteConstants.home);
     });
   }
 }

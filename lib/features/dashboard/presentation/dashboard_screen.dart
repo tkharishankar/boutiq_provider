@@ -20,9 +20,8 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen>
-    with InputValidationMixin, LoadingOverlayMixin {
+    with InputValidationMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  OverlayEntry? _overlayEntry;
 
   @override
   void initState() {
@@ -50,39 +49,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
               leading: const Icon(Icons.search),
             ),
           ),
-          // Expanded(
-          //   child: BlocBuilder<ProductBloc, ProductState>(
-          //     bloc: context.read<ProductBloc>()..add(GetProducts()),
-          //     builder: (context, state) {
-          //       return state.maybeWhen(orElse: () {
-          //         return const Center(
-          //           child: CircularProgressIndicator(),
-          //         );
-          //       }, onProductList: (products) {
-          //         return GridView.builder(
-          //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //             crossAxisCount: kIsWeb ? crossAxisCount : 2,
-          //             crossAxisSpacing: 10.0,
-          //             mainAxisSpacing: 10.0,
-          //           ),
-          //           itemCount: state.items.length,
-          //           itemBuilder: (BuildContext context, int index) {
-          //             return ListTile(
-          //               title: Text(
-          //                 'Item ${state.items[index]}',
-          //                 style: GoogleFonts.lato(),
-          //               ),
-          //             );
-          //           },
-          //         );
-          //       }, onProductListError: (message) {
-          //         return Center(
-          //           child: Text(message),
-          //         );
-          //       });
-          //     },
-          //   ),
-          // ),
+          Expanded(
+            child: BlocBuilder<ProductBloc, ProductState>(
+              bloc: context.read<ProductBloc>()..add(GetProducts()),
+              builder: (context, state) {
+                return state.maybeWhen(orElse: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }, onProductList: (products) {
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: kIsWeb ? crossAxisCount : 2,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Text(
+                          'Item ${products[index].name}',
+                          style: GoogleFonts.lato(),
+                        ),
+                      );
+                    },
+                  );
+                }, onProductListError: (message) {
+                  return Center(
+                    child: Text(message),
+                  );
+                });
+              },
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
