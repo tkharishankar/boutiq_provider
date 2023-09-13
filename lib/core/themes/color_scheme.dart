@@ -17,4 +17,7 @@ class AppColors {
   static const Color black100 = Color(0xFF000000);
   static const Color black200 = Color(0xFF222222);
   static const Color warningColor = Color.fromARGB(0, 214, 203, 45);
+
+  static const transparentWhite = Color.fromARGB(121, 84, 122, 184);
+
 }

@@ -12,6 +12,7 @@ class ProductEvent extends Equatable {
 
 class AddProductReq extends ProductEvent {
   final String name;
+  final String identifier;
   final String category;
   final String price;
   final String deliveryPrice;
@@ -23,6 +24,7 @@ class AddProductReq extends ProductEvent {
 
   const AddProductReq({
     required this.name,
+    required this.identifier,
     required this.category,
     required this.price,
     required this.deliveryPrice,

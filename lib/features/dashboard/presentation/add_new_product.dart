@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:boutiq_provider/core/utils/size.dart';
@@ -32,6 +33,9 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
   OverlayEntry? _overlayEntry;
   final TextEditingController _productNameController = TextEditingController();
   String _productName = "";
+  final TextEditingController _productIdentifierController =
+      TextEditingController();
+  String _productIdentifier = "";
   final TextEditingController _priceController = TextEditingController();
   String _price = "";
   final TextEditingController _deliveryAmountController =
@@ -50,30 +54,150 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
     'Care',
   ];
 
-  List<String> categoryList = <String>['Men', 'Women', "Baby"];
   String categoryValue = "";
-  List<String> subCategoryList = <String>[
-    'Top Wear',
-    'Bottom Wear',
-    'Foot Wear',
-    'Inner Wear',
-    'Bath Care',
-    'Face Care',
-    'Hair Care',
-    'Body & Skin Care',
-  ];
   String subCategoryValue = "";
-  List<String> subCategoryTypeList = <String>[
-    'Top Wear',
-    'Bottom Wear',
-    'Foot Wear',
-    'Inner Wear',
-    'Bath Care',
-    'Face Care',
-    'Hair Care',
-    'Body & Skin Care',
-  ];
-  String subCategoryTypeValue = "";
+  String subCategoryItemValue = "";
+
+  static const jsonString = '''{
+  "Men": {
+    "Top Wear": [
+      "T-Shirts",
+      "Shirts",
+      "Sweaters",
+      "Hoodies",
+      "Jackets",
+      "Polos",
+      "Vests",
+      "Long Sleeve Tops"
+    ],
+    "Bottom Wear": [
+      "Jeans",
+      "Trousers",
+      "Shorts",
+      "Cargo Pants",
+      "Sweatpants",
+      "Chinos"
+    ],
+    "Foot Wear": [
+      "Sneakers",
+      "Boots",
+      "Loafers",
+      "Oxfords",
+      "Athletic Shoes"
+    ],
+    "Inner Wear": [
+      "Boxers",
+      "Briefs",
+      "Thermal Underwear",
+      "Socks"
+    ]
+  },
+  "Women": {
+    "Top Wear": [
+      "T-Shirts",
+      "Blouses",
+      "Tank Tops",
+      "Sweaters",
+      "Hoodies",
+      "Jackets",
+      "Cardigans",
+      "Polos",
+      "Tunics",
+      "Sweatshirts",
+      "Kimonos",
+      "Crop Tops",
+      "Peplum Tops",
+      "Off-Shoulder Tops",
+      "Halter Tops",
+      "Button-Down Tops",
+      "Camisoles",
+      "Turtlenecks",
+      "Long Sleeve Tops",
+      "Sleeveless Tops"
+    ],
+    "Bottom Wear": [
+      "Jeans",
+      "Trousers",
+      "Shorts",
+      "Skirts",
+      "Leggings",
+      "Capri Pants",
+      "Culottes",
+      "Jeggings",
+      "Cargo Pants",
+      "Sweatpants",
+      "Palazzo Pants",
+      "Track Pants",
+      "Chinos",
+      "Overalls",
+      "Bermuda Shorts",
+      "Flare Pants",
+      "High-Waisted Pants",
+      "Wide-Leg Pants",
+      "Pencil Skirts",
+      "Maxi Skirts",
+      "Mini Skirts",
+      "A-Line Skirts"
+    ],
+    "Foot Wear": [
+      "Sneakers",
+      "Boots",
+      "Sandals",
+      "Flip-Flops",
+      "Heels",
+      "Flats",
+      "Loafers",
+      "Espadrilles",
+      "Oxfords",
+      "Wedges",
+      "Mules",
+      "Slippers",
+      "Platform Shoes",
+      "Ballet Flats",
+      "Driving Shoes"
+    ],
+    "Inner Wear": [
+      "Bras",
+      "Panties",
+      "Lingerie Sets",
+      "Shapewear",
+      "Camisoles",
+      "Sleepwear",
+      "Socks",
+      "Tights"
+    ]
+  },
+  "Baby": {
+    "Foot Wear": [
+      "Baby Shoes",
+      "Baby Socks"
+    ],
+    "Bath Care": [
+      "Baby Shampoo",
+      "Baby Soap",
+      "Baby Lotion"
+    ],
+    "Face Care": [
+      "Baby Face Cream"
+    ],
+    "Hair Care": [
+      "Baby Shampoo"
+    ],
+    "Body & Skin Care": [
+      "Baby Body Lotion",
+      "Baby Oil",
+      "Baby Powder",
+      "Baby Cream"
+    ],
+    "Accessories": [
+      "Baby Hats",
+      "Baby Mittens",
+      "Baby Bibs"
+    ]
+  }
+}''';
+
+  final Map<String, dynamic> categories = json.decode(jsonString);
 
   @override
   void initState() {
@@ -107,6 +231,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
                       child: Column(
                         children: [
                           productName(),
+                          productIdentifier(),
                           if (!isMobile)
                             Row(
                               children: [
@@ -213,6 +338,52 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
     );
   }
 
+  productIdentifier() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Product Identifier',
+            style: GoogleFonts.lato(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 10),
+          // Editable Text Field
+          TextFormField(
+            controller: _productIdentifierController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+              hintText: 'Enter product color/shade/code',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade300,
+                  width: 1.0,
+                ),
+              ),
+            ),
+            validator: productIdentifierValidator,
+            onChanged: (text) => setState(() => _productIdentifier = text),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String? productIdentifierValidator(text) {
+    if (text == null || text.isEmpty) {
+      return 'Can\'t be empty';
+    }
+    if (text.length < 3) {
+      return 'Too short';
+    }
+    return null;
+  }
+
   String? productNameValidator(text) {
     if (text == null || text.isEmpty) {
       return 'Can\'t be empty';
@@ -244,10 +415,12 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
               onSelected: (String? value) {
                 setState(() {
                   categoryValue = value!;
+                  subCategoryValue = "";
+                  subCategoryItemValue = "";
                 });
               },
-              dropdownMenuEntries:
-                  categoryList.map<DropdownMenuEntry<String>>((String value) {
+              dropdownMenuEntries: categories.keys
+                  .map<DropdownMenuEntry<String>>((String value) {
                 return DropdownMenuEntry<String>(value: value, label: value);
               }).toList(),
             ),
@@ -278,12 +451,17 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
               onSelected: (String? value) {
                 setState(() {
                   subCategoryValue = value!;
+                  subCategoryItemValue = "";
                 });
               },
-              dropdownMenuEntries: subCategoryList
-                  .map<DropdownMenuEntry<String>>((String value) {
-                return DropdownMenuEntry<String>(value: value, label: value);
-              }).toList(),
+              dropdownMenuEntries: categoryValue.isNotEmpty
+                  ? categories[categoryValue]
+                      .keys
+                      .map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry<String>(
+                          value: value, label: value);
+                    }).toList()
+                  : [],
             ),
           ),
         ],
@@ -312,13 +490,17 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
               errorText: subCategoryTypeError,
               onSelected: (String? value) {
                 setState(() {
-                  subCategoryTypeValue = value!;
+                  subCategoryItemValue = value!;
                 });
               },
-              dropdownMenuEntries: subCategoryTypeList
-                  .map<DropdownMenuEntry<String>>((String value) {
-                return DropdownMenuEntry<String>(value: value, label: value);
-              }).toList(),
+              dropdownMenuEntries:
+                  categoryValue.isNotEmpty && subCategoryValue.isNotEmpty
+                      ? categories[categoryValue][subCategoryValue]
+                          .map<DropdownMenuEntry<String>>((String value) {
+                          return DropdownMenuEntry<String>(
+                              value: value, label: value);
+                        }).toList()
+                      : [],
             ),
           ),
         ],
@@ -608,7 +790,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
   void onPublish(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       if (categoryValue.isEmpty ||
-          subCategoryTypeValue.isEmpty ||
+          subCategoryItemValue.isEmpty ||
           subCategoryValue.isEmpty) {
         showAlertDialog(context, "Category Missing",
             "You missed to specify something on the category section.");
@@ -628,11 +810,12 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
       context.read<ProductBloc>().add(
             AddProductReq(
                 name: _productName,
+                identifier: _productIdentifier,
                 price: _price,
                 deliveryPrice: _deliveryAmount,
                 category: categoryValue,
                 subCategory: subCategoryValue,
-                subCategoryType: subCategoryTypeValue,
+                subCategoryType: subCategoryItemValue,
                 description: _description,
                 tags: selectedTags,
                 images: selectedImages!),
@@ -672,7 +855,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
         ),
       );
     }, addProductSuccessful: (message) {
-      _overlayEntry?.remove();
+      _overlayEntry = hideLoadingOverlay(context, _overlayEntry);
       showActionAlertDialog(
         context,
         "Product Added successfully.",
@@ -681,8 +864,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
           AlertAction(
             label: 'Ok',
             onTap: () {
-              _overlayEntry?.remove();
-              GoRouter.of(context).pushReplacementNamed(RouteConstants.home);
+              GoRouter.of(context).replaceNamed(RouteConstants.home);
             },
           ),
         ],

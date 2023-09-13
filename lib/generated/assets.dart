@@ -24,6 +24,7 @@ class Assets {
   static const String imagesInstagram = 'assets/images/instagram.png';
   static const String imagesLoading = 'assets/images/loading.png';
   static const String imagesTwitter = 'assets/images/twitter.png';
+  static const String jsonCategory = 'assets/json/category.json';
   static const String libFirebaseOptions = 'lib/firebase_options.dart';
   static const String libMain = 'lib/main.dart';
   static const String localStorageAppCache = 'lib/core/local_storage/app_cache.dart';
@@ -33,6 +34,7 @@ class Assets {
   static const String otpOtpScreen = 'lib/features/auth/presentation/otp/otp_screen.dart';
   static const String presentationAddNewProduct = 'lib/features/dashboard/presentation/add_new_product.dart';
   static const String presentationDashboardScreen = 'lib/features/dashboard/presentation/dashboard_screen.dart';
+  static const String presentationProductCard = 'lib/features/dashboard/presentation/product_card.dart';
   static const String registrationRegistrationScreen = 'lib/features/auth/presentation/registration/registration_screen.dart';
   static const String repositoriesAuthenticationRepo = 'lib/features/auth/data/repositories/authentication_repo.dart';
   static const String repositoriesProductRepo = 'lib/features/dashboard/data/repositories/product_repo.dart';

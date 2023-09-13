@@ -8,7 +8,9 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../../core/common/error/exceptions.dart';
+import '../../../../core/local_storage/app_cache.dart';
 import '../../../../core/network/api_error.dart';
+import '../../../../di/injector.dart';
 
 abstract class ProductRemoteDataSource {
   Future<Either<ApiError, AddProductResp>> addProduct(
@@ -18,6 +20,8 @@ abstract class ProductRemoteDataSource {
 }
 
 class IProductRemoteDataSource implements ProductRemoteDataSource {
+  final user = sl<AppCache>().getUserInfo();
+
   @override
   Future<Either<ApiError, AddProductResp>> addProduct(
       AddProductReq addProductReq) async {
@@ -43,7 +47,9 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
       var db = FirebaseFirestore.instance;
       final productCollection = db.collection("product");
       await productCollection.add({
+        "provider_id": user!.phoneNumber,
         "name": addProductReq.name,
+        "identifier": addProductReq.identifier,
         "category": addProductReq.category,
         "subCategory": addProductReq.subCategory,
         "subCategoryType": addProductReq.subCategoryType,
@@ -87,8 +93,11 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
 
   Future<Either<ApiError, List<Product>>> getProduct() async {
     try {
-      final QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('product').get();
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('product')
+          .where('provider_id',
+              isEqualTo: user!.phoneNumber)
+          .get();
 
       final List<Product> products = querySnapshot.docs
           .map((DocumentSnapshot document) => Product.fromFirestore(document))
