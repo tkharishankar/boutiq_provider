@@ -40,61 +40,70 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with InputVal
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Row(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(left: 70.w),
-              height: 30.h,
-              width: 60.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.r),
-                border: Border.all(color: Colors.grey),
+        title: isMobile
+            ? null
+            : Row(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(left: 70.w),
+                    height: 30.h,
+                    width: 60.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.r),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: TextFormField(
+                      cursorWidth: 1.5,
+                      cursorHeight: 12.0.h,
+                      controller: _searchController,
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        isCollapsed: true,
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 3.w),
+                        border: InputBorder.none,
+                        suffixIcon: (_searchController.text.isEmpty)
+                            ? IconButton(
+                                icon: const Icon(
+                                  Icons.search,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                },
+                              )
+                            : IconButton(
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                },
+                              ),
+                      ),
+                      onChanged: (value) {
+                        if (_debounce?.isActive ?? false) _debounce?.cancel();
+                        _debounce = Timer(Duration(milliseconds: _debouncetime), () {
+                          debugPrint(_searchController.text);
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
-              child: TextFormField(
-                cursorWidth: 1.5,
-                cursorHeight: 12.0.h,
-                controller: _searchController,
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  isCollapsed: true,
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 3.w),
-                  border: InputBorder.none,
-                  suffixIcon: (_searchController.text.isEmpty)
-                      ? IconButton(
-                          icon: const Icon(
-                            Icons.search,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            _searchController.clear();
-                            FocusScope.of(context).requestFocus(FocusNode());
-                          },
-                        )
-                      : IconButton(
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            _searchController.clear();
-                            FocusScope.of(context).requestFocus(FocusNode());
-                          },
-                        ),
-                ),
-                onChanged: (value) {
-                  if (_debounce?.isActive ?? false) _debounce?.cancel();
-                  _debounce = Timer(Duration(milliseconds: _debouncetime), () {
-                    debugPrint(_searchController.text);
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
         actions: [
+          if(isMobile)
+            IconButton(
+                icon: const Icon(Icons.search),
+                tooltip: 'Notifications',
+                onPressed: () {
+                  // handle the press
+                }),
           IconButton(
               icon: const Icon(Icons.notifications),
               tooltip: 'Notifications',
