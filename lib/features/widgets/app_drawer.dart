@@ -7,41 +7,33 @@ class AppDrawerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(0),
-            bottomRight: Radius.circular(0)),
+        borderRadius:
+            BorderRadius.only(topRight: Radius.circular(0), bottomRight: Radius.circular(0)),
       ),
       child: Container(
-        color: Color(0xFFEEF1F8),
+        color: const Color(0xFFEEF1F8),
         child: Column(
           children: [
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Dashboard'),
+              leading: const Icon(Icons.home),
+              title: const Text('Dashboard'),
               onTap: () {
-                Navigator.of(context).pushReplacementNamed('/');
               },
             ),
             ListTile(
-              leading: Icon(Icons.payment),
-              title: Text('Products'),
-              onTap: () {
-                // Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
-              },
+              leading: const Icon(Icons.payment),
+              title: const Text('Products'),
+              onTap: () {},
             ),
             ListTile(
-              leading: Icon(Icons.shopping_cart),
-              title: Text('Categories'),
-              onTap: () {
-                //Navigator.of(context).pushReplacementNamed(UserProductsScreen.routeName);
-              },
+              leading: const Icon(Icons.shopping_cart),
+              title: const Text('Categories'),
+              onTap: () {},
             ),
             ListTile(
-              leading: Icon(Icons.menu_rounded),
-              title: Text('Orders'),
-              onTap: () {
-                //Navigator.of(context).pushReplacementNamed(UserProductsScreen.routeName);
-              },
+              leading: const Icon(Icons.menu_rounded),
+              title: const Text('Orders'),
+              onTap: () {},
             ),
           ],
         ),

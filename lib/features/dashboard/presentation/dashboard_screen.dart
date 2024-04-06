@@ -1,25 +1,20 @@
 import 'dart:async';
-import 'package:boutiq_provider/features/dashboard/presentation/states/product_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/utils/input_validation.dart';
 import '../../../core/utils/responsive.dart';
-import '../../../router/router.dart';
 import '../../widgets/app_drawer.dart';
 import '../../widgets/product_grid.dart';
 import '../domain/entities/product_resp.dart';
 import 'product_card.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -115,10 +110,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with InputVal
         ],
         // title:,
       ),
-      body: MainPage(isMobile),
+      body: _MainPage(isMobile),
       // floatingActionButton: _buildAddNewProductButton(context),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      drawer: isMobile ? AppDrawerWidget() : null,
+      drawer: isMobile ? const AppDrawerWidget() : null,
     );
   }
 
@@ -152,57 +147,41 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with InputVal
     );
   }
 
-  //
-  // Widget _buildListView(List<Product> products) {
-  //   return ListView.builder(
-  //     itemCount: products.length,
-  //     itemBuilder: (BuildContext context, int index) {
-  //       final product = products[index];
-  //       final double price = double.parse(product.price);
-  //       final String imageUrl = product.imageUrls[0];
-  //       return ProductCard(
-  //         productName: product.name,
-  //         brandName: 'Brand XYZ',
-  //         price: price,
-  //         rating: 4.5,
-  //         isFavorited: false,
-  //         imageUrl: imageUrl,
-  //       );
-  //     },
-  //   );
-  // }
-
-  Widget _buildAddNewProductButton(BuildContext context) {
-    return FloatingActionButton.extended(
-      onPressed: () {
-        GoRouter.of(context).pushNamed(RouteConstants.addnewproduct);
-      },
-      icon: Icon(Icons.add),
-      label: Text(
-        'Add New',
-        style: GoogleFonts.lato(),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(25.0)),
-      ),
-    );
-  }
+//
+// Widget _buildListView(List<Product> products) {
+//   return ListView.builder(
+//     itemCount: products.length,
+//     itemBuilder: (BuildContext context, int index) {
+//       final product = products[index];
+//       final double price = double.parse(product.price);
+//       final String imageUrl = product.imageUrls[0];
+//       return ProductCard(
+//         productName: product.name,
+//         brandName: 'Brand XYZ',
+//         price: price,
+//         rating: 4.5,
+//         isFavorited: false,
+//         imageUrl: imageUrl,
+//       );
+//     },
+//   );
+// }
 }
 
-class MainPage extends StatelessWidget {
-  bool? isMobile;
+class _MainPage extends StatelessWidget {
+  final bool? isMobile;
 
-  MainPage(this.isMobile);
+  const _MainPage(this.isMobile, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFFDFEDF7),
+      color: const Color(0xFFDFEDF7),
       child: isMobile!
-          ? ProductGrid()
-          : Row(
+          ? const ProductGrid()
+          : const Row(
               children: [
-                DesktopMenuItems(),
+                _DesktopMenuItems(),
                 Expanded(child: ProductGrid()),
               ],
             ),
@@ -210,11 +189,11 @@ class MainPage extends StatelessWidget {
   }
 }
 
-class DesktopMenuItems extends StatelessWidget {
-  const DesktopMenuItems({super.key});
+class _DesktopMenuItems extends StatelessWidget {
+  const _DesktopMenuItems({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: 75.w, child: AppDrawerWidget());
+    return SizedBox(width: 75.w, child: const AppDrawerWidget());
   }
 }
