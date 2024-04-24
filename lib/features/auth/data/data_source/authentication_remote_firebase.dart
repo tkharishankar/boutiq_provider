@@ -1,51 +1,79 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:retrofit/retrofit.dart';
 
 import '../../../../../core/common/error/exceptions.dart';
+import '../../../../core/network/api_service.dart';
 import '../../domain/entities/login_response.dart';
 import '../../domain/entities/registration_response.dart';
 
 abstract class AuthenticationRemoteDataSource {
-  Future<RegisterResponse> createAccount(
-      String phoneNumber, String username, String password);
+  Future<RegisterResponse> createAccount(Map<String, dynamic> body);
 
   Future<LoginResponse> login(String phoneNumber, String password);
 }
 
-class IAuthenticationRemoteDataSource
-    implements AuthenticationRemoteDataSource {
+class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource {
+  final ApiService? apiService;
+
+  IAuthenticationRemoteDataSource({required this.apiService});
+
   @override
-  Future<RegisterResponse> createAccount(
-      String phoneNumber, String username, String password) async {
+  Future<RegisterResponse> createAccount(Map<String, dynamic> body) async {
     try {
-      var db = FirebaseFirestore.instance;
-      final userCollection = db.collection("users");
+      final response = await apiService!.providerRegistration(body);
 
-      QuerySnapshot querySnapshot = await userCollection
-          .where("phone_number", isEqualTo: phoneNumber)
-          .limit(1)
-          .get();
+      // var db = FirebaseFirestore.instance;
+      // final userCollection = db.collection("users");
+      //
+      // QuerySnapshot querySnapshot = await userCollection
+      //     .where("phone_number", isEqualTo: phoneNumber)
+      //     .limit(1)
+      //     .get();
+      //
+      // if (querySnapshot.docs.isNotEmpty) {
+      //   final data = {
+      //     "status": 400,
+      //     "message": "User already register to the system",
+      //   };
+      //   return RegisterResponse.fromJson(data);
+      // } else {
+      //   await addUser(username, phoneNumber, password); // Use 'await' here
+      //   final data = {
+      //     "status": 200,
+      //     "message": "Registration success...",
+      //   };
+      //   return RegisterResponse.fromJson(data);
+      // }
 
-      if (querySnapshot.docs.isNotEmpty) {
+      debugPrint("Provider Reg response ${response.toString()}");
+
+      if (response.response.statusCode == 200) {
+        final data = {
+          "status": 200,
+          "message": "Registration success...",
+        };
+        return RegisterResponse.fromJson(data);
+      } else if (response.response.statusCode == 400) {
         final data = {
           "status": 400,
           "message": "User already register to the system",
         };
         return RegisterResponse.fromJson(data);
       } else {
-        await addUser(username, phoneNumber, password); // Use 'await' here
+        //await addUser(username, phoneNumber, password); // Use 'await' here
         final data = {
-          "status": 200,
-          "message": "Registration success...",
+          "status": response.response.statusCode,
+          "message": "Something went wrong ",
         };
         return RegisterResponse.fromJson(data);
       }
     } catch (e) {
-      throw ServerException(message: 'Firestore server error');
+      throw ServerException(message: "Something went wrong, pls try again later");
     }
   }
 
-  Future<void> addUser(
-      String username, String phoneNumber, String password) async {
+  Future<void> addUser(String username, String phoneNumber, String password) async {
     try {
       var db = FirebaseFirestore.instance;
       final userCollection = db.collection("users");
@@ -85,10 +113,7 @@ class IAuthenticationRemoteDataSource
         };
         return LoginResponse.fromJson(data);
       } else {
-        final data = {
-          "message": "Incorrect Phone Number or Password",
-          "status": 400
-        };
+        final data = {"message": "Incorrect Phone Number or Password", "status": 400};
         return LoginResponse.fromJson(data);
       }
     } catch (e) {

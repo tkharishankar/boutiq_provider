@@ -19,12 +19,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     if (user == null) {
-      final introState = sl<AppCache>().getIntroState();
-      if (introState) {
-        GoRouter.of(context).pushReplacementNamed(RouteConstants.login);
-      } else {
-        GoRouter.of(context).pushReplacementNamed(RouteConstants.onboarding);
-      }
+      // final introState = sl<AppCache>().getIntroState();
+      // if (introState) {
+      //   GoRouter.of(context).pushReplacementNamed(RouteConstants.login);
+      // } else {
+      //   GoRouter.of(context).pushReplacementNamed(RouteConstants.onboarding);
+      // }
+      GoRouter.of(context).pushReplacementNamed(RouteConstants.login);
     } else {
       GoRouter.of(context).pushReplacementNamed(RouteConstants.home);
     }

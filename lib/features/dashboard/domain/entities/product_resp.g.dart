@@ -6,17 +6,19 @@ part of 'product_resp.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_AddProductResp _$$_AddProductRespFromJson(Map<String, dynamic> json) =>
-    _$_AddProductResp(
+_$AddProductRespImpl _$$AddProductRespImplFromJson(Map<String, dynamic> json) =>
+    _$AddProductRespImpl(
       message: json['message'] ?? '',
     );
 
-Map<String, dynamic> _$$_AddProductRespToJson(_$_AddProductResp instance) =>
+Map<String, dynamic> _$$AddProductRespImplToJson(
+        _$AddProductRespImpl instance) =>
     <String, dynamic>{
       'message': instance.message,
     };
 
-_$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
+_$ProductImpl _$$ProductImplFromJson(Map<String, dynamic> json) =>
+    _$ProductImpl(
       name: json['name'] as String? ?? '',
       category: json['category'] as String? ?? '',
       price: json['price'] as String? ?? '',
@@ -33,7 +35,7 @@ _$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
           const [],
     );
 
-Map<String, dynamic> _$$_ProductToJson(_$_Product instance) =>
+Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'category': instance.category,

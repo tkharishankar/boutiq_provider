@@ -3,9 +3,11 @@ class AppTexts {
   static String createAccount = "Create an account";
   static String createAccountDescription =
       "Enter your credentials to get started";
-  static String firstName = "User Name";
+  static String companyName = "Company Name";
   static String phoneNumber = "Phone Number";
+  static String email = "Email";
   static String phoneNumberInvalid = "Phone Number is invalid";
+  static String emailInvalid = "Email is invalid";
   static String createAccountButton = "Create my account";
   static String alreadyHaveAccount = "Already have an account?";
   static String fieldEmpty(String field) => "$field can't be empty";

@@ -11,7 +11,7 @@ class AppDrawerWidget extends StatelessWidget {
             BorderRadius.only(topRight: Radius.circular(0), bottomRight: Radius.circular(0)),
       ),
       child: Container(
-        color: const Color(0xFFEEF1F8),
+        color: Colors.white,
         child: Column(
           children: [
             ListTile(

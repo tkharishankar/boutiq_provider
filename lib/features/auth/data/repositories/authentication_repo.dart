@@ -9,9 +9,7 @@ import '../data_source/authentication_remote_firebase.dart';
 
 abstract class AuthenticationRepo {
   Future<Either<ApiError, RegisterResponse>> createAccount(
-      {required String username,
-      required String phoneNumber,
-      required String password});
+      {required final Map<String, dynamic> body});
 
   Future<Either<ApiError, LoginResponse>> login(
       {required String phoneNumber, required String password});
@@ -24,17 +22,16 @@ class AuthenticationRepository implements AuthenticationRepo {
 
   @override
   Future<Either<ApiError, RegisterResponse>> createAccount(
-      {required String username,
-      required String phoneNumber,
-      required String password}) async {
+      {required final Map<String, dynamic> body}) async {
     try {
       final registerResponse = await authenticationRemoteDataSource
-          .createAccount(phoneNumber, username, password);
+          .createAccount(body);
       if (registerResponse.status == 400) {
-        return Left(
-            ApiError(errorCode: "400", errorMessage: registerResponse.message));
-      } else {
         return Right(registerResponse);
+
+      } else {
+        return Left(
+            ApiError(errorCode: "400", errorMessage: registerResponse.message!));
       }
     } on ApiError catch (error) {
       return Left(error);

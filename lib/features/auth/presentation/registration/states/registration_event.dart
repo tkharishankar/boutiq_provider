@@ -11,16 +11,18 @@ class RegistrationEvent extends Equatable {
 }
 
 class RegisterUser extends RegistrationEvent {
+  final String companyName;
   final String phoneNumber;
-  final String username;
+  final String email;
   final String password;
 
   const RegisterUser({
     required this.phoneNumber,
-    required this.username,
+    required this.companyName,
+    required this.email,
     required this.password,
   });
 
   @override
-  List<Object?> get props => [phoneNumber, username, password];
+  List<Object?> get props => [phoneNumber, companyName, email,password];
 }

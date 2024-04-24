@@ -71,8 +71,12 @@ dependencies:
   #? A powerful HTTP client for Dart/Flutter, which supports global configuration, interceptors,
   #? FormData, request cancellation, file uploading/downloading, timeout, and custom adapters etc
   dio: ^5.4.1
-  #? Retry failed HTTP requests
-  dio_smart_retry: any
+#  #? Retry failed HTTP requests
+#  dio_smart_retry: any
+
+  retrofit: '>=4.0.0 <5.0.0'
+  logger: any  #for logging purpose
+  json_annotation: ^4.8.1
 
   #? google_fonts is a Flutter package that provides a set of fonts from Google Fonts.
   google_fonts: ^6.2.1
@@ -82,8 +86,6 @@ dependencies:
 
   #?  loading_animation_widget is a Flutter package that provides a loading animation widget.
   loading_animation_widget: ^1.1.0+5
-
-  json_annotation: ^4.8.1
 
   #? internet_connection_checker is a Flutter plugin to check the internet connection.
   internet_connection_checker: ^1.0.0+1
@@ -113,11 +115,13 @@ dev_dependencies:
   #? import_sorter is a Dart package that helps you to sort your imports.
   import_sorter: ^4.6.0
   #? json_serializable is a Dart package that helps you to convert your Dart objects to JSON and vice versa.
-  json_serializable: ^6.6.1
+  json_serializable: ^6.6.2
   #?  very_good_analysis is a Dart package that provides a set of lint rules for Dart and Flutter.
   very_good_analysis: ^5.1.0
 
   cached_network_image: ^3.2.3
+
+  retrofit_generator: '>=7.0.0 <8.0.0'
 
   flutter_test:
     sdk: flutter

@@ -6,8 +6,8 @@ part of 'login_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_LoginResponse _$$_LoginResponseFromJson(Map<String, dynamic> json) =>
-    _$_LoginResponse(
+_$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>
+    _$LoginResponseImpl(
       message: json['message'] ?? '',
       status: json['status'] as int,
       username: json['username'] ?? '',
@@ -15,7 +15,7 @@ _$_LoginResponse _$$_LoginResponseFromJson(Map<String, dynamic> json) =>
       loggedAt: json['loggedAt'] ?? '',
     );
 
-Map<String, dynamic> _$$_LoginResponseToJson(_$_LoginResponse instance) =>
+Map<String, dynamic> _$$LoginResponseImplToJson(_$LoginResponseImpl instance) =>
     <String, dynamic>{
       'message': instance.message,
       'status': instance.status,
@@ -24,13 +24,14 @@ Map<String, dynamic> _$$_LoginResponseToJson(_$_LoginResponse instance) =>
       'loggedAt': instance.loggedAt,
     };
 
-_$_UserData _$$_UserDataFromJson(Map<String, dynamic> json) => _$_UserData(
+_$UserDataImpl _$$UserDataImplFromJson(Map<String, dynamic> json) =>
+    _$UserDataImpl(
       username: json['username'] as String,
       phoneNumber: json['phoneNumber'] as String,
       loggedAt: json['loggedAt'] as String,
     );
 
-Map<String, dynamic> _$$_UserDataToJson(_$_UserData instance) =>
+Map<String, dynamic> _$$UserDataImplToJson(_$UserDataImpl instance) =>
     <String, dynamic>{
       'username': instance.username,
       'phoneNumber': instance.phoneNumber,

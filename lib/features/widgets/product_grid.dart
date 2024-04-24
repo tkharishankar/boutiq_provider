@@ -22,7 +22,7 @@ class ProductGrid extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding:  EdgeInsets.all(16.r),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -31,12 +31,12 @@ class ProductGrid extends StatelessWidget {
                 children: [
                   Text(
                     'Dashboard',
-                    style: TextStyle(fontSize: 14.sp),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.black),
                   ),
                   SizedBox(height: 2.h,),
                   Text(
                     'Welcome to your dashboard',
-                    style: TextStyle(fontSize: 8.sp),
+                    style: TextStyle(fontSize: 10.sp,  color: Colors.black),
                   ),
                 ],
               ),

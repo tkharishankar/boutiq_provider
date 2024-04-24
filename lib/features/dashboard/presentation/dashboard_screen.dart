@@ -100,7 +100,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with InputVal
           if(isMobile)
             IconButton(
                 icon: const Icon(Icons.search),
-                tooltip: 'Notifications',
+                tooltip: 'search',
                 onPressed: () {
                   // handle the press
                 }),

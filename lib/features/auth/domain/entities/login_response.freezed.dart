@@ -12,7 +12,7 @@ part of 'login_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
   return _LoginResponse.fromJson(json);
@@ -91,11 +91,11 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
 }
 
 /// @nodoc
-abstract class _$$_LoginResponseCopyWith<$Res>
+abstract class _$$LoginResponseImplCopyWith<$Res>
     implements $LoginResponseCopyWith<$Res> {
-  factory _$$_LoginResponseCopyWith(
-          _$_LoginResponse value, $Res Function(_$_LoginResponse) then) =
-      __$$_LoginResponseCopyWithImpl<$Res>;
+  factory _$$LoginResponseImplCopyWith(
+          _$LoginResponseImpl value, $Res Function(_$LoginResponseImpl) then) =
+      __$$LoginResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -107,11 +107,11 @@ abstract class _$$_LoginResponseCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_LoginResponseCopyWithImpl<$Res>
-    extends _$LoginResponseCopyWithImpl<$Res, _$_LoginResponse>
-    implements _$$_LoginResponseCopyWith<$Res> {
-  __$$_LoginResponseCopyWithImpl(
-      _$_LoginResponse _value, $Res Function(_$_LoginResponse) _then)
+class __$$LoginResponseImplCopyWithImpl<$Res>
+    extends _$LoginResponseCopyWithImpl<$Res, _$LoginResponseImpl>
+    implements _$$LoginResponseImplCopyWith<$Res> {
+  __$$LoginResponseImplCopyWithImpl(
+      _$LoginResponseImpl _value, $Res Function(_$LoginResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -123,7 +123,7 @@ class __$$_LoginResponseCopyWithImpl<$Res>
     Object? phoneNumber = freezed,
     Object? loggedAt = freezed,
   }) {
-    return _then(_$_LoginResponse(
+    return _then(_$LoginResponseImpl(
       message: freezed == message ? _value.message! : message,
       status: null == status
           ? _value.status
@@ -138,16 +138,16 @@ class __$$_LoginResponseCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_LoginResponse implements _LoginResponse {
-  const _$_LoginResponse(
+class _$LoginResponseImpl implements _LoginResponse {
+  const _$LoginResponseImpl(
       {this.message = '',
       required this.status,
       this.username = '',
       this.phoneNumber = '',
       this.loggedAt = ''});
 
-  factory _$_LoginResponse.fromJson(Map<String, dynamic> json) =>
-      _$$_LoginResponseFromJson(json);
+  factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LoginResponseImplFromJson(json);
 
   @override
   @JsonKey()
@@ -170,10 +170,10 @@ class _$_LoginResponse implements _LoginResponse {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_LoginResponse &&
+            other is _$LoginResponseImpl &&
             const DeepCollectionEquality().equals(other.message, message) &&
             (identical(other.status, status) || other.status == status) &&
             const DeepCollectionEquality().equals(other.username, username) &&
@@ -195,12 +195,12 @@ class _$_LoginResponse implements _LoginResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LoginResponseCopyWith<_$_LoginResponse> get copyWith =>
-      __$$_LoginResponseCopyWithImpl<_$_LoginResponse>(this, _$identity);
+  _$$LoginResponseImplCopyWith<_$LoginResponseImpl> get copyWith =>
+      __$$LoginResponseImplCopyWithImpl<_$LoginResponseImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_LoginResponseToJson(
+    return _$$LoginResponseImplToJson(
       this,
     );
   }
@@ -212,10 +212,10 @@ abstract class _LoginResponse implements LoginResponse {
       required final int status,
       final dynamic username,
       final dynamic phoneNumber,
-      final dynamic loggedAt}) = _$_LoginResponse;
+      final dynamic loggedAt}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
-      _$_LoginResponse.fromJson;
+      _$LoginResponseImpl.fromJson;
 
   @override
   dynamic get message;
@@ -229,7 +229,7 @@ abstract class _LoginResponse implements LoginResponse {
   dynamic get loggedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_LoginResponseCopyWith<_$_LoginResponse> get copyWith =>
+  _$$LoginResponseImplCopyWith<_$LoginResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -292,21 +292,22 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
 }
 
 /// @nodoc
-abstract class _$$_UserDataCopyWith<$Res> implements $UserDataCopyWith<$Res> {
-  factory _$$_UserDataCopyWith(
-          _$_UserData value, $Res Function(_$_UserData) then) =
-      __$$_UserDataCopyWithImpl<$Res>;
+abstract class _$$UserDataImplCopyWith<$Res>
+    implements $UserDataCopyWith<$Res> {
+  factory _$$UserDataImplCopyWith(
+          _$UserDataImpl value, $Res Function(_$UserDataImpl) then) =
+      __$$UserDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String username, String phoneNumber, String loggedAt});
 }
 
 /// @nodoc
-class __$$_UserDataCopyWithImpl<$Res>
-    extends _$UserDataCopyWithImpl<$Res, _$_UserData>
-    implements _$$_UserDataCopyWith<$Res> {
-  __$$_UserDataCopyWithImpl(
-      _$_UserData _value, $Res Function(_$_UserData) _then)
+class __$$UserDataImplCopyWithImpl<$Res>
+    extends _$UserDataCopyWithImpl<$Res, _$UserDataImpl>
+    implements _$$UserDataImplCopyWith<$Res> {
+  __$$UserDataImplCopyWithImpl(
+      _$UserDataImpl _value, $Res Function(_$UserDataImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -316,7 +317,7 @@ class __$$_UserDataCopyWithImpl<$Res>
     Object? phoneNumber = null,
     Object? loggedAt = null,
   }) {
-    return _then(_$_UserData(
+    return _then(_$UserDataImpl(
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -335,14 +336,14 @@ class __$$_UserDataCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_UserData implements _UserData {
-  const _$_UserData(
+class _$UserDataImpl implements _UserData {
+  const _$UserDataImpl(
       {required this.username,
       required this.phoneNumber,
       required this.loggedAt});
 
-  factory _$_UserData.fromJson(Map<String, dynamic> json) =>
-      _$$_UserDataFromJson(json);
+  factory _$UserDataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserDataImplFromJson(json);
 
   @override
   final String username;
@@ -357,10 +358,10 @@ class _$_UserData implements _UserData {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UserData &&
+            other is _$UserDataImpl &&
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.phoneNumber, phoneNumber) ||
@@ -376,12 +377,12 @@ class _$_UserData implements _UserData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UserDataCopyWith<_$_UserData> get copyWith =>
-      __$$_UserDataCopyWithImpl<_$_UserData>(this, _$identity);
+  _$$UserDataImplCopyWith<_$UserDataImpl> get copyWith =>
+      __$$UserDataImplCopyWithImpl<_$UserDataImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UserDataToJson(
+    return _$$UserDataImplToJson(
       this,
     );
   }
@@ -391,9 +392,10 @@ abstract class _UserData implements UserData {
   const factory _UserData(
       {required final String username,
       required final String phoneNumber,
-      required final String loggedAt}) = _$_UserData;
+      required final String loggedAt}) = _$UserDataImpl;
 
-  factory _UserData.fromJson(Map<String, dynamic> json) = _$_UserData.fromJson;
+  factory _UserData.fromJson(Map<String, dynamic> json) =
+      _$UserDataImpl.fromJson;
 
   @override
   String get username;
@@ -403,6 +405,6 @@ abstract class _UserData implements UserData {
   String get loggedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_UserDataCopyWith<_$_UserData> get copyWith =>
+  _$$UserDataImplCopyWith<_$UserDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

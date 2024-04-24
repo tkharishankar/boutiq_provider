@@ -25,5 +25,5 @@ Future<void> registerAuthDependencies() async {
       AuthenticationRepository(authenticationRemoteDataSource: authLocator()));
 
   authLocator.registerLazySingleton<AuthenticationRemoteDataSource>(
-      () => IAuthenticationRemoteDataSource());
+      () => IAuthenticationRemoteDataSource(apiService: authLocator()));
 }

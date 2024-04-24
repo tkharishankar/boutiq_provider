@@ -14,23 +14,18 @@ class RegisterUsecase implements UseCase<RegisterResponse, Params> {
   @override
   Future<Either<ApiError, RegisterResponse>> call(Params params) async {
     return await authenticationRepo.createAccount(
-      username: params.username,
-      phoneNumber: params.phoneNumber,
-      password: params.password,
+      body: params.body
     );
   }
 }
 
 class Params extends Equatable {
-  final String username;
-  final String phoneNumber;
-  final String password;
+  final Map<String, dynamic> body;
+
   const Params({
-    required this.phoneNumber,
-    required this.username,
-    required this.password,
+    required this.body,
   });
 
   @override
-  List<Object> get props => [phoneNumber, username,password];
+  List<Object> get props => [body];
 }

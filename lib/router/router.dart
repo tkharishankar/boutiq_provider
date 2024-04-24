@@ -24,26 +24,26 @@ class AppRouter {
             name: RouteConstants.initial,
             builder: (context, state) => const SplashScreen(),
             routes: [
-              GoRoute(
-                path: 'boarding',
-                name: RouteConstants.onboarding,
-                pageBuilder: (context, state) {
-                  return CustomTransitionPage(
-                    key: state.pageKey,
-                    child: const OnBoardingScreen(),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      // Change the opacity of the screen using a Curve based on the the animation's
-                      // value
-                      return FadeTransition(
-                        opacity: CurveTween(curve: Curves.easeInOutCirc)
-                            .animate(animation),
-                        child: child,
-                      );
-                    },
-                  );
-                },
-              ),
+              // GoRoute(
+              //   path: 'boarding',
+              //   name: RouteConstants.onboarding,
+              //   pageBuilder: (context, state) {
+              //     return CustomTransitionPage(
+              //       key: state.pageKey,
+              //       child: const OnBoardingScreen(),
+              //       transitionsBuilder:
+              //           (context, animation, secondaryAnimation, child) {
+              //         // Change the opacity of the screen using a Curve based on the the animation's
+              //         // value
+              //         return FadeTransition(
+              //           opacity: CurveTween(curve: Curves.easeInOutCirc)
+              //               .animate(animation),
+              //           child: child,
+              //         );
+              //       },
+              //     );
+              //   },
+              // ),
               GoRoute(
                 path: 'register',
                 name: RouteConstants.register,
@@ -150,7 +150,7 @@ class AppRouter {
 
 class RouteConstants {
   static String initial = '/';
-  static String onboarding = 'onboarding';
+  // static String onboarding = 'onboarding';
   static String login = 'login';
   static String register = 'register';
   static String verifyOtp = 'otp';
