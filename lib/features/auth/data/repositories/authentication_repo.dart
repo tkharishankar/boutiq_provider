@@ -1,3 +1,4 @@
+import 'package:boutiq_provider/core/common/error/exceptions.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../../core/network/api_error.dart';
@@ -24,15 +25,7 @@ class AuthenticationRepository implements AuthenticationRepo {
   Future<Either<ApiError, RegisterResponse>> createAccount(
       {required final Map<String, dynamic> body}) async {
     try {
-      final registerResponse = await authenticationRemoteDataSource
-          .createAccount(body);
-      if (registerResponse.status == 400) {
-        return Right(registerResponse);
-
-      } else {
-        return Left(
-            ApiError(errorCode: "400", errorMessage: registerResponse.message!));
-      }
+      return await authenticationRemoteDataSource.createAccount(body);
     } on ApiError catch (error) {
       return Left(error);
     }
@@ -42,19 +35,7 @@ class AuthenticationRepository implements AuthenticationRepo {
   Future<Either<ApiError, LoginResponse>> login(
       {required String phoneNumber, required String password}) async {
     try {
-      final loginResponse =
-          await authenticationRemoteDataSource.login(phoneNumber, password);
-      if (loginResponse.status == 400) {
-        return Left(
-            ApiError(errorCode: "400", errorMessage: loginResponse.message));
-      } else {
-        final cache = sl<AppCache>();
-        cache.setUserInfo(UserData(
-            username: loginResponse.username,
-            phoneNumber: phoneNumber,
-            loggedAt: ""));
-        return Right(loginResponse);
-      }
+      return await authenticationRemoteDataSource.login(phoneNumber, password);
     } on ApiError catch (error) {
       return Left(error);
     }

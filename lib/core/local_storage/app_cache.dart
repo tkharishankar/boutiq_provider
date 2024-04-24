@@ -11,19 +11,19 @@ class AppCacheKey {
 abstract class AppCache {
   setIntroState(bool state);
   bool getIntroState();
-  setUserInfo(UserData userData);
-  UserData? getUserInfo();
+  setUserInfo(LoginResponse userData);
+  LoginResponse? getUserInfo();
 }
 
 class AppCacheImpl implements AppCache {
   final box = GetStorage();
 
   @override
-  UserData? getUserInfo() {
+  LoginResponse? getUserInfo() {
     try {
       final userData = box.read(AppCacheKey.userData);
       if (userData != null) {
-        return UserData.fromJson(userData);
+        return LoginResponse.fromJson(userData);
       } else {
         return null;
       }
@@ -33,7 +33,7 @@ class AppCacheImpl implements AppCache {
   }
 
   @override
-  setUserInfo(UserData userData) async {
+  setUserInfo(LoginResponse userData) async {
     try {
       await box.write(AppCacheKey.userData, userData.toJson());
     } on CacheException {

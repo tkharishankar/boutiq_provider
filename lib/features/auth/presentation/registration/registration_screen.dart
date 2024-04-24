@@ -24,9 +24,8 @@ class RegistrationScreen extends ConsumerStatefulWidget {
 class _RegistrationScreenState extends ConsumerState<RegistrationScreen>
     with InputValidationMixin, LoadingOverlayMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  final isValidate = ValueNotifier<bool>(false);
+  // final isValidate = ValueNotifier<bool>(false);
 
-  // final phoneNumberValidate = ValueNotifier<bool>(false);
 
   final TextEditingController _companyNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -189,7 +188,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen>
                                   email: _emailController.text,
                                   password: _passwordController.text));
                             } else {
-                              isValidate.value = false;
+                              // isValidate.value = false;
                             }
                           },
                           textSize: 18,
@@ -277,6 +276,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen>
       );
     }, registrationSuccessful: (message) {
       _overlayEntry?.remove();
+      GoRouter.of(context).pushReplacementNamed(RouteConstants.login);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
@@ -284,7 +284,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen>
           duration: const Duration(seconds: 3),
         ),
       );
-      GoRouter.of(context).pushReplacementNamed(RouteConstants.login);
+      // GoRouter.of(context).pop();
+      // GoRouter.of(context).pushReplacementNamed(RouteConstants.login);
     });
   }
 }

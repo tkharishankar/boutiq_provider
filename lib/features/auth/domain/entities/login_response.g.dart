@@ -6,34 +6,30 @@ part of 'login_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>
-    _$LoginResponseImpl(
-      message: json['message'] ?? '',
-      status: json['status'] as int,
-      username: json['username'] ?? '',
-      phoneNumber: json['phoneNumber'] ?? '',
-      loggedAt: json['loggedAt'] ?? '',
+LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
+    LoginResponse(
+      accessToken: json['accessToken'] as String?,
+      provider: json['provider'] == null
+          ? null
+          : Provider.fromJson(json['provider'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$LoginResponseImplToJson(_$LoginResponseImpl instance) =>
+Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
     <String, dynamic>{
-      'message': instance.message,
-      'status': instance.status,
-      'username': instance.username,
-      'phoneNumber': instance.phoneNumber,
-      'loggedAt': instance.loggedAt,
+      'accessToken': instance.accessToken,
+      'provider': instance.provider,
     };
 
-_$UserDataImpl _$$UserDataImplFromJson(Map<String, dynamic> json) =>
-    _$UserDataImpl(
-      username: json['username'] as String,
-      phoneNumber: json['phoneNumber'] as String,
-      loggedAt: json['loggedAt'] as String,
+Provider _$ProviderFromJson(Map<String, dynamic> json) => Provider(
+      providerId: json['providerId'] as String?,
+      companyName: json['companyName'] as String?,
+      email: json['email'] as String?,
+      phone: json['phone'] as String?,
     );
 
-Map<String, dynamic> _$$UserDataImplToJson(_$UserDataImpl instance) =>
-    <String, dynamic>{
-      'username': instance.username,
-      'phoneNumber': instance.phoneNumber,
-      'loggedAt': instance.loggedAt,
+Map<String, dynamic> _$ProviderToJson(Provider instance) => <String, dynamic>{
+      'providerId': instance.providerId,
+      'companyName': instance.companyName,
+      'email': instance.email,
+      'phone': instance.phone,
     };

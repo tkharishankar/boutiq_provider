@@ -20,7 +20,7 @@ abstract class ProductRemoteDataSource {
 }
 
 class IProductRemoteDataSource implements ProductRemoteDataSource {
-  final user = sl<AppCache>().getUserInfo();
+  // final user = sl<AppCache>().getUserInfo();
 
   @override
   Future<Either<ApiError, AddProductResp>> addProduct(
@@ -47,7 +47,7 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
       var db = FirebaseFirestore.instance;
       final productCollection = db.collection("product");
       await productCollection.add({
-        "provider_id": user!.phoneNumber,
+        // "provider_id": user!.phoneNumber,
         "name": addProductReq.name,
         "identifier": addProductReq.identifier,
         "category": addProductReq.category,
@@ -96,7 +96,7 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('product')
           .where('provider_id',
-              isEqualTo: user!.phoneNumber)
+              isEqualTo: 'user!.phoneNumber')
           .get();
 
       final List<Product> products = querySnapshot.docs

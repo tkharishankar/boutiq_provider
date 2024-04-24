@@ -1,30 +1,34 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'login_response.freezed.dart';
 part 'login_response.g.dart';
 
-@freezed
-class LoginResponse with _$LoginResponse {
-  const factory LoginResponse({
-    @Default('') message,
-    required int status,
-    @Default('') username,
-    @Default('') phoneNumber,
-    @Default('') loggedAt,
-  }) = _LoginResponse;
+@JsonSerializable()
+class LoginResponse {
+  final String? accessToken;
+  final Provider? provider;
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) =>
-      _$LoginResponseFromJson(json);
+  const LoginResponse({this.accessToken, this.provider});
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
 }
 
-@freezed
-class UserData with _$UserData {
-  const factory UserData({
-    required String username,
-    required String phoneNumber,
-    required String loggedAt,
-  }) = _UserData;
+@JsonSerializable()
+class Provider {
+  final String? providerId;
+  final String? companyName;
+  final String? email;
+  final String? phone;
 
-  factory UserData.fromJson(Map<String, dynamic> json) =>
-      _$UserDataFromJson(json);
+  const Provider({
+    this.providerId,
+    this.companyName,
+    this.email,
+    this.phone,
+  });
+
+  factory Provider.fromJson(Map<String, dynamic> json) => _$ProviderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProviderToJson(this);
 }
