@@ -65,7 +65,7 @@ class _AppState extends ConsumerState<App> {
         child: MaterialApp.router(
           title: 'BoutiQ',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(primaryColor: const Color.fromARGB(255, 3, 3, 3)),
+          theme: ThemeData(primaryColor: const Color(0xFFE21F4E)),
           scrollBehavior: const _AppScrollBehavior(),
           routeInformationProvider: AppRouter.router.routeInformationProvider,
           routeInformationParser: AppRouter.router.routeInformationParser,

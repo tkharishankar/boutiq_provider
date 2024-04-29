@@ -3,14 +3,12 @@ import 'dart:typed_data';
 import 'package:boutiq_provider/features/dashboard/domain/entities/product_resp.dart';
 import 'package:boutiq_provider/features/dashboard/presentation/states/product_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/common/error/exceptions.dart';
-import '../../../../core/local_storage/app_cache.dart';
 import '../../../../core/network/api_error.dart';
-import '../../../../di/injector.dart';
 
 abstract class ProductRemoteDataSource {
   Future<Either<ApiError, AddProductResp>> addProduct(
@@ -50,13 +48,9 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
         // "provider_id": user!.phoneNumber,
         "name": addProductReq.name,
         "identifier": addProductReq.identifier,
-        "category": addProductReq.category,
-        "subCategory": addProductReq.subCategory,
-        "subCategoryType": addProductReq.subCategoryType,
         "price": addProductReq.price,
         "deliveryPrice": addProductReq.deliveryPrice,
         "description": addProductReq.description,
-        "tags": addProductReq.tags,
         "imageUrls": fileUrl,
       });
       return 200;

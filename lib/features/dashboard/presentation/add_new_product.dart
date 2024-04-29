@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:boutiq_provider/core/common/button/buttons.dart';
 import 'package:boutiq_provider/core/utils/size.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/themes/color_scheme.dart';
+import '../../../core/utils/app_texts.dart';
 import '../../../core/utils/input_validation.dart';
 import '../../../core/utils/loading_overlay.dart';
 import '../../../core/utils/responsive.dart';
@@ -30,6 +32,7 @@ class AddNewProduct extends ConsumerStatefulWidget {
 class _AddNewProductState extends ConsumerState<AddNewProduct>
     with LoadingOverlayMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _formSizeKey = GlobalKey();
   OverlayEntry? _overlayEntry;
   final TextEditingController _productNameController = TextEditingController();
   String _productName = "";
@@ -43,161 +46,17 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
   String _deliveryAmount = "";
   final TextEditingController _descriptionController = TextEditingController();
   String _description = "";
-  var subCategoryTypeError;
 
   final ImagePicker imagePicker = ImagePicker();
   List<XFile>? selectedImages;
-  List<String> selectedTags = [];
-  List<String> availableTags = [
-    'Cloths',
-    'Accessories',
-    'Care',
-  ];
 
-  String categoryValue = "";
-  String subCategoryValue = "";
-  String subCategoryItemValue = "";
-
-  static const jsonString = '''{
-  "Men": {
-    "Top Wear": [
-      "T-Shirts",
-      "Shirts",
-      "Sweaters",
-      "Hoodies",
-      "Jackets",
-      "Polos",
-      "Vests",
-      "Long Sleeve Tops"
-    ],
-    "Bottom Wear": [
-      "Jeans",
-      "Trousers",
-      "Shorts",
-      "Cargo Pants",
-      "Sweatpants",
-      "Chinos"
-    ],
-    "Foot Wear": [
-      "Sneakers",
-      "Boots",
-      "Loafers",
-      "Oxfords",
-      "Athletic Shoes"
-    ],
-    "Inner Wear": [
-      "Boxers",
-      "Briefs",
-      "Thermal Underwear",
-      "Socks"
-    ]
-  },
-  "Women": {
-    "Top Wear": [
-      "T-Shirts",
-      "Blouses",
-      "Tank Tops",
-      "Sweaters",
-      "Hoodies",
-      "Jackets",
-      "Cardigans",
-      "Polos",
-      "Tunics",
-      "Sweatshirts",
-      "Kimonos",
-      "Crop Tops",
-      "Peplum Tops",
-      "Off-Shoulder Tops",
-      "Halter Tops",
-      "Button-Down Tops",
-      "Camisoles",
-      "Turtlenecks",
-      "Long Sleeve Tops",
-      "Sleeveless Tops"
-    ],
-    "Bottom Wear": [
-      "Jeans",
-      "Trousers",
-      "Shorts",
-      "Skirts",
-      "Leggings",
-      "Capri Pants",
-      "Culottes",
-      "Jeggings",
-      "Cargo Pants",
-      "Sweatpants",
-      "Palazzo Pants",
-      "Track Pants",
-      "Chinos",
-      "Overalls",
-      "Bermuda Shorts",
-      "Flare Pants",
-      "High-Waisted Pants",
-      "Wide-Leg Pants",
-      "Pencil Skirts",
-      "Maxi Skirts",
-      "Mini Skirts",
-      "A-Line Skirts"
-    ],
-    "Foot Wear": [
-      "Sneakers",
-      "Boots",
-      "Sandals",
-      "Flip-Flops",
-      "Heels",
-      "Flats",
-      "Loafers",
-      "Espadrilles",
-      "Oxfords",
-      "Wedges",
-      "Mules",
-      "Slippers",
-      "Platform Shoes",
-      "Ballet Flats",
-      "Driving Shoes"
-    ],
-    "Inner Wear": [
-      "Bras",
-      "Panties",
-      "Lingerie Sets",
-      "Shapewear",
-      "Camisoles",
-      "Sleepwear",
-      "Socks",
-      "Tights"
-    ]
-  },
-  "Baby": {
-    "Foot Wear": [
-      "Baby Shoes",
-      "Baby Socks"
-    ],
-    "Bath Care": [
-      "Baby Shampoo",
-      "Baby Soap",
-      "Baby Lotion"
-    ],
-    "Face Care": [
-      "Baby Face Cream"
-    ],
-    "Hair Care": [
-      "Baby Shampoo"
-    ],
-    "Body & Skin Care": [
-      "Baby Body Lotion",
-      "Baby Oil",
-      "Baby Powder",
-      "Baby Cream"
-    ],
-    "Accessories": [
-      "Baby Hats",
-      "Baby Mittens",
-      "Baby Bibs"
-    ]
-  }
-}''';
-
-  final Map<String, dynamic> categories = json.decode(jsonString);
+  List<ProductSize>? productSizeList = [];
+  final TextEditingController _sizeNameController = TextEditingController();
+  String _sizeName = "";
+  final TextEditingController _sizeQuantityController = TextEditingController();
+  String _sizeQuantity = "";
+  final TextEditingController _sizePriceController = TextEditingController();
+  String _sizePrice = "";
 
   @override
   void initState() {
@@ -227,38 +86,27 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      flex: isMobile ? 3 : 6, // Adjust flex based on device
+                      flex: isMobile ? 3 : 3, // Adjust flex based on device
                       child: Column(
                         children: [
                           productName(),
                           productIdentifier(),
-                          if (!isMobile)
-                            Row(
-                              children: [
-                                Expanded(child: category()),
-                                Expanded(child: subcategory()),
-                                Expanded(child: subcategorytype()),
-                              ],
-                            ),
-                          if (isMobile) category(),
-                          if (isMobile) subcategory(),
-                          if (isMobile) subcategorytype(),
-                          if (!isMobile)
-                            Row(
-                              children: [
-                                Expanded(child: price()),
-                                Expanded(child: deliveryPrice()),
-                              ],
-                            ),
-                          if (isMobile) price(),
-                          if (isMobile) deliveryPrice(),
+                          deliveryPrice(),
                           description(),
-                          tags(),
+                          if (isMobile) productSizeView(),
+                          if (isMobile) productSizeListView(),
                           if (isMobile) fileUpload(),
                           if (isMobile) selectedImageList(),
                         ],
                       ),
                     ),
+                    if (!isMobile)
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          children: [productSizeView(), productSizeListView()],
+                        ),
+                      ),
                     if (!isMobile)
                       Expanded(
                         flex: 3,
@@ -394,120 +242,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
     return null;
   }
 
-  Widget category() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Category',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
-          Container(
-            width: double.infinity,
-            child: DropdownMenu<String>(
-              hintText: "Please select",
-              onSelected: (String? value) {
-                setState(() {
-                  categoryValue = value!;
-                  subCategoryValue = "";
-                  subCategoryItemValue = "";
-                });
-              },
-              dropdownMenuEntries: categories.keys
-                  .map<DropdownMenuEntry<String>>((String value) {
-                return DropdownMenuEntry<String>(value: value, label: value);
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget subcategory() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Sub Category',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
-          Container(
-            width: double.infinity,
-            child: DropdownMenu<String>(
-              hintText: "Please select",
-              onSelected: (String? value) {
-                setState(() {
-                  subCategoryValue = value!;
-                  subCategoryItemValue = "";
-                });
-              },
-              dropdownMenuEntries: categoryValue.isNotEmpty
-                  ? categories[categoryValue]
-                      .keys
-                      .map<DropdownMenuEntry<String>>((String value) {
-                      return DropdownMenuEntry<String>(
-                          value: value, label: value);
-                    }).toList()
-                  : [],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget subcategorytype() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Type, Brand or Product',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
-          Container(
-            width: double.infinity,
-            child: DropdownMenu<String>(
-              hintText: "Please select",
-              errorText: subCategoryTypeError,
-              onSelected: (String? value) {
-                setState(() {
-                  subCategoryItemValue = value!;
-                });
-              },
-              dropdownMenuEntries:
-                  categoryValue.isNotEmpty && subCategoryValue.isNotEmpty
-                      ? categories[categoryValue][subCategoryValue]
-                          .map<DropdownMenuEntry<String>>((String value) {
-                          return DropdownMenuEntry<String>(
-                              value: value, label: value);
-                        }).toList()
-                      : [],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget price() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -639,66 +373,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
     return null;
   }
 
-  Widget tags() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Tags',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                color: Colors.grey.shade500,
-                width: 1.0,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Wrap(
-                spacing: 8,
-                children: availableTags.map((filter) {
-                  return FilterChip(
-                    label: Text(filter),
-                    selected: selectedTags.contains(filter),
-                    onSelected: (isSelected) {
-                      setState(() {
-                        if (isSelected) {
-                          selectedTags.add(filter);
-                        } else {
-                          selectedTags.remove(filter);
-                        }
-                      });
-                    },
-                    selectedColor: Colors.blue,
-                    backgroundColor: Colors.grey.shade300,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                      side: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1.0,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget fileUpload() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -789,19 +463,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
 
   void onPublish(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      if (categoryValue.isEmpty ||
-          subCategoryItemValue.isEmpty ||
-          subCategoryValue.isEmpty) {
-        showAlertDialog(context, "Category Missing",
-            "You missed to specify something on the category section.");
-        return;
-      }
-
-      if (selectedTags.isEmpty) {
-        showAlertDialog(context, "Tags Missing", "Please select the tags.");
-        return;
-      }
-
       if (selectedImages == null || selectedImages!.isEmpty) {
         showAlertDialog(context, "Product Image Missing",
             "Please select the product images.");
@@ -813,11 +474,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
                 identifier: _productIdentifier,
                 price: _price,
                 deliveryPrice: _deliveryAmount,
-                category: categoryValue,
-                subCategory: subCategoryValue,
-                subCategoryType: subCategoryItemValue,
                 description: _description,
-                tags: selectedTags,
                 images: selectedImages!),
           );
     }
@@ -828,13 +485,9 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
     try {
       var selectedFiles =
           await imagePicker.pickMultiImage(requestFullMetadata: true);
-      if (selectedFiles != null) {
-        Set<XFile> uniqueImages = {...?selectedImages, ...selectedFiles};
-        selectedImages = uniqueImages.toList();
-        setState(() {});
-      } else {
-        print("No image is selected.");
-      }
+      Set<XFile> uniqueImages = {...?selectedImages, ...selectedFiles};
+      selectedImages = uniqueImages.toList();
+      setState(() {});
     } catch (e) {
       print("error while picking file.");
     }
@@ -870,5 +523,272 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
         ],
       );
     });
+  }
+
+  Widget productSizeListView() {
+    if (productSizeList != null && productSizeList!.isNotEmpty) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300, width: 1.0),
+            borderRadius: BorderRadius.circular(4)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 10.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Size Name',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Quantity',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Price',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Wrap(
+              spacing: 10.0,
+              children: productSizeList!.asMap().entries.map((entry) {
+                final productSize = entry.value;
+                return Column(
+                  children: [
+                    const Divider(
+                      // Add a Divider between rows
+                      color: Colors.grey, // Set the color of the Divider
+                      thickness: 1.0, // Set the thickness of the Divider
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              productSize.sizeName,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              productSize.quantity,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              productSize.price,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Edit',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Delete',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  String? sizeNameValidator(text) {
+    if (text == null || text.isEmpty) {
+      return 'Can\'t be empty';
+    }
+    return null;
+  }
+
+  productSizeView() {
+    return SafeArea(
+      child: Form(
+        key: _formSizeKey,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Size Name',
+                    style: GoogleFonts.lato(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _sizeNameController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: InputDecoration(
+                      hintText: 'Enter size name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade300,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    validator: sizeNameValidator,
+                    onChanged: (text) => setState(() => _sizeName = text),
+                  )
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Quantity',
+                          style: GoogleFonts.lato(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _sizeQuantityController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: 'Enter total quantity',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                          validator: priceValidator,
+                          onChanged: (text) =>
+                              setState(() => _sizeQuantity = text),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Price',
+                          style: GoogleFonts.lato(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _sizePriceController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: 'Enter per quantity price.',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                          validator: priceValidator,
+                          onChanged: (text) =>
+                              setState(() => _sizePrice = text),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: AppButton(
+                text: AppTexts.addNewSize,
+                onTap: () {
+                  if (_formSizeKey.currentState!.validate()) {
+                    productSizeList?.add(ProductSize(
+                        sizeName: _sizeName,
+                        price: _sizePrice,
+                        quantity: _sizeQuantity));
+                    setState(() {});
+                  }
+                },
+                textSize: 18,
+                textColor: AppColors.white100,
+                color: AppColors.primaryColor.withAlpha(150),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

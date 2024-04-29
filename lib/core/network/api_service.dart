@@ -17,7 +17,7 @@ abstract class ApiService {
   @POST("api/v1/provider/login")
   Future<HttpResponse<LoginResponse>> providerLogin(@Body() Map<String, dynamic> body);
 
-  @GET("api/v1/providers")
-  Future<HttpResponse<LoginResponse>> getProviderList();
+  // @GET("api/v1/providers")
+  // Future<HttpResponse<LoginResponse>> getProviderList();
 
 }

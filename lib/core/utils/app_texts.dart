@@ -21,5 +21,6 @@ class AppTexts {
   static String passwordInvalid ="Password is invalid";
   static String confirmPasswordInvalid ="Confirm Password is invalid";
 
+  static String addNewSize = "add new size";
 
 }
