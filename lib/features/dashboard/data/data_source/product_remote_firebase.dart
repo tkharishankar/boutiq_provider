@@ -91,6 +91,7 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
     }
   }
 
+  @override
   Future<Either<ApiError, List<Product>>> getProduct() async {
     try {
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
