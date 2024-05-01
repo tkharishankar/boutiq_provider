@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -12,9 +15,9 @@ import '../../domain/entities/login_response.dart';
 import '../../domain/entities/registration_response.dart';
 
 abstract class AuthenticationRemoteDataSource {
-  Future<Either<ApiError,RegisterResponse>> createAccount(Map<String, dynamic> body);
+  Future<Either<ApiError, RegisterResponse>> createAccount(Map<String, dynamic> body);
 
-  Future<Either<ApiError,LoginResponse>> login(String phoneNumber, String password);
+  Future<Either<ApiError, LoginResponse>> login(String phoneNumber, String password);
 }
 
 class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource {
@@ -23,7 +26,7 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
   IAuthenticationRemoteDataSource({required this.apiService});
 
   @override
-  Future<Either<ApiError,RegisterResponse>> createAccount(Map<String, dynamic> body) async {
+  Future<Either<ApiError, RegisterResponse>> createAccount(Map<String, dynamic> body) async {
     try {
       final response = await apiService!.providerRegistration(body);
 
@@ -58,19 +61,22 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
           "message": "Registration success...",
         };
         return Right(RegisterResponse.fromJson(data));
-      } else if (response.response.statusCode == 400) {
-        return Left(ApiError(
-            errorCode: "400",
-            errorMessage:
-            "Error in registration"));
       } else {
         return Left(ApiError(
-            errorCode: "400",
-            errorMessage:
-            "Error in registration"));
+            errorCode: response.response.statusCode.toString(),
+            errorMessage: "Error in registration"));
       }
-    } on ApiError catch (error) {
-      return Left(error);
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 400) {
+        log('Bad request: ${error.response?.data}');
+        final errorMessage = error.response!.data['statusMessage'] ?? 'Unknown error';
+        return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
+      } else {
+        log('Dio error: $error');
+        return Left(ApiError(
+            errorCode: error.response!.statusCode.toString(),
+            errorMessage: "Error in registration"));
+      }
     }
   }
 
@@ -89,7 +95,7 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
   }
 
   @override
-  Future<Either<ApiError,LoginResponse>> login(String phoneNumber, String password) async {
+  Future<Either<ApiError, LoginResponse>> login(String phoneNumber, String password) async {
     // try {
     //   var db = FirebaseFirestore.instance;
     //   final userCollection = db.collection("users");
@@ -122,12 +128,8 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
     //   throw ServerException(message: 'Server error $e');
     // }
 
-    try{
-
-      final body = {
-        "phoneNumber" : "+91$phoneNumber",
-        "password" : password
-      };
+    try {
+      final body = {"phoneNumber": "+91$phoneNumber", "password": password};
 
       final response = await apiService!.providerLogin(body);
       if (response.response.statusCode == 200) {
@@ -137,20 +139,12 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
 
         return Right(LoginResponse.fromJson(response.response.data));
       } else if (response.response.statusCode == 400) {
-        return Left(ApiError(
-            errorCode: "400",
-            errorMessage:
-            "Error in login"));
+        return Left(ApiError(errorCode: "400", errorMessage: "Error in login"));
       } else {
-        return Left(ApiError(
-            errorCode: "400",
-            errorMessage:
-            "Error in login"));
+        return Left(ApiError(errorCode: "400", errorMessage: "Error in login"));
       }
     } on ApiError catch (error) {
       return Left(error);
     }
-
-
   }
 }
