@@ -28,7 +28,11 @@ class AddProductReq extends ProductEvent {
   });
 }
 
-class GetProducts extends ProductEvent {}
+class GetProducts extends ProductEvent {
+  final String providerID;
+
+  const GetProducts({required this.providerID});
+}
 
 class ProductSize extends ProductEvent {
   final String sizeName;

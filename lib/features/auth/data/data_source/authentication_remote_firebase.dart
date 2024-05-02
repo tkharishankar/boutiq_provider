@@ -29,30 +29,6 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
   Future<Either<ApiError, RegisterResponse>> createAccount(Map<String, dynamic> body) async {
     try {
       final response = await apiService!.providerRegistration(body);
-
-      // var db = FirebaseFirestore.instance;
-      // final userCollection = db.collection("users");
-      //
-      // QuerySnapshot querySnapshot = await userCollection
-      //     .where("phone_number", isEqualTo: phoneNumber)
-      //     .limit(1)
-      //     .get();
-      //
-      // if (querySnapshot.docs.isNotEmpty) {
-      //   final data = {
-      //     "status": 400,
-      //     "message": "User already register to the system",
-      //   };
-      //   return RegisterResponse.fromJson(data);
-      // } else {
-      //   await addUser(username, phoneNumber, password); // Use 'await' here
-      //   final data = {
-      //     "status": 200,
-      //     "message": "Registration success...",
-      //   };
-      //   return RegisterResponse.fromJson(data);
-      // }
-
       debugPrint("Provider Reg response ${response.response.statusCode}");
 
       if (response.response.statusCode == 200) {

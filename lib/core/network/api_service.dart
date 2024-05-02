@@ -1,6 +1,7 @@
 
 import 'package:boutiq_provider/features/auth/domain/entities/login_response.dart';
 import 'package:boutiq_provider/features/auth/domain/entities/registration_response.dart';
+import 'package:boutiq_provider/features/dashboard/domain/entities/product_resp.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -17,7 +18,10 @@ abstract class ApiService {
   @POST("api/v1/provider/login")
   Future<HttpResponse<LoginResponse>> providerLogin(@Body() Map<String, dynamic> body);
 
-  // @GET("api/v1/providers")
-  // Future<HttpResponse<LoginResponse>> getProviderList();
+  @GET("api/v1/providers")
+  Future<HttpResponse<LoginResponse>> getProviderList();
+
+  @GET('api/v1/product/{providerID}')
+  Future<HttpResponse<List<Product>>> getProviderProductsList(@Path('providerID') String providerID);
 
 }

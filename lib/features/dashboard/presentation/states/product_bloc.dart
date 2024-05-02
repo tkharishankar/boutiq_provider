@@ -36,7 +36,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future<void> _getProducts(
       GetProducts getProducts, Emitter<ProductState> emit) async {
     emit(const ProductState.loading());
-    final failureOrSuccess = await productRepo.getProducts();
+    final failureOrSuccess = await productRepo.getProducts(getProducts.providerID);
     failureOrSuccess.fold((failure) {
       emit(ProductState.onProductListError(failure.errorMessage));
     }, (success) {

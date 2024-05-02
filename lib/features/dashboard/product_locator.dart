@@ -13,5 +13,5 @@ Future<void> registerProductDependencies() async {
       () => ProductRepository(productRemoteDataSource: productLocator()));
 
   productLocator.registerLazySingleton<ProductRemoteDataSource>(
-      () => IProductRemoteDataSource());
+      () => IProductRemoteDataSource(apiService: productLocator()));
 }

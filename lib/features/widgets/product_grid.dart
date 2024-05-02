@@ -70,7 +70,7 @@ class ProductGrid extends StatelessWidget {
         ),
         Expanded(
           child: BlocBuilder<ProductBloc, ProductState>(
-            bloc: context.read<ProductBloc>()..add(GetProducts()),
+            bloc: context.read<ProductBloc>()..add(GetProducts(providerID: '2342024PROV0662')),
             builder: (context, state) {
               return state.maybeWhen(
                 orElse: () {
