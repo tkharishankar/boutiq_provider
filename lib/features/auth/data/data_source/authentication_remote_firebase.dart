@@ -119,8 +119,17 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
       } else {
         return Left(ApiError(errorCode: "400", errorMessage: "Error in login"));
       }
-    } on ApiError catch (error) {
-      return Left(error);
+    }on DioException catch (error) {
+      if (error.response?.statusCode == 400) {
+        log('Bad request: ${error.response?.data}');
+        final errorMessage = error.response!.data['statusMessage'] ?? 'Unknown error';
+        return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
+      } else {
+        log('Dio error: $error');
+        return Left(ApiError(
+            errorCode: error.response!.statusCode.toString(),
+            errorMessage: "Error in registration"));
+      }
     }
   }
 }
