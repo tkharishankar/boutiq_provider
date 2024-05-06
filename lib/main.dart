@@ -1,4 +1,3 @@
-import 'package:boutiq_provider/features/dashboard/presentation/states/product_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,10 +8,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'di/injector.dart';
-import 'features/auth/auth_service_locator.dart';
-import 'features/auth/presentation/login/states/login_bloc.dart';
-import 'features/auth/presentation/registration/states/registration_bloc.dart';
-import 'features/dashboard/product_locator.dart';
+import 'di/auth_service_locator.dart';
+import 'features/presentation/bloc/login/login_bloc.dart';
+import 'features/presentation/bloc/registration/registration_bloc.dart';
+import 'di/product_locator.dart';
+import 'features/presentation/bloc/product/product_bloc.dart';
 import 'firebase_options.dart';
 import 'router/router.dart';
 

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/auth/presentation/login/login_screen.dart';
-import '../features/auth/presentation/otp/otp_screen.dart';
-import '../features/auth/presentation/registration/registration_screen.dart';
-import '../features/dashboard/presentation/add_new_product.dart';
-import '../features/dashboard/presentation/dashboard_screen.dart';
-import '../features/onboarding_screen.dart';
+import '../features/presentation/pages/login/login_screen.dart';
+import '../features/presentation/pages/registration/registration_screen.dart';
+import '../features/presentation/pages/product/add_new_product.dart';
+import '../features/presentation/pages/dashboard/dashboard_screen.dart';
 import '../features/splash_screen.dart';
 
 class AppRouter {
@@ -85,12 +83,12 @@ class AppRouter {
                 },
               ),
               GoRoute(
-                path: 'otp',
-                name: RouteConstants.verifyOtp,
+                path: 'home',
+                name: RouteConstants.home,
                 pageBuilder: (context, state) {
                   return CustomTransitionPage(
                     key: state.pageKey,
-                    child: const OtpScreen(),
+                    child: const DashboardScreen(),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
                       // Change the opacity of the screen using a Curve based on the the animation's
@@ -105,16 +103,14 @@ class AppRouter {
                 },
               ),
               GoRoute(
-                path: 'home',
-                name: RouteConstants.home,
+                path: 'product-detail',
+                name: RouteConstants.productDetail,
                 pageBuilder: (context, state) {
                   return CustomTransitionPage(
                     key: state.pageKey,
-                    child: const DashboardScreen(),
+                    child: const LoginScreen(),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
-                      // Change the opacity of the screen using a Curve based on the the animation's
-                      // value
                       return FadeTransition(
                         opacity: CurveTween(curve: Curves.easeInOutCirc)
                             .animate(animation),
@@ -155,5 +151,6 @@ class RouteConstants {
   static String register = 'register';
   static String verifyOtp = 'otp';
   static String home = 'home';
+  static String productDetail = 'product-detail';
   static String addnewproduct = 'addnewproduct';
 }

@@ -1,7 +1,7 @@
 
-import 'package:boutiq_provider/features/auth/domain/entities/login_response.dart';
-import 'package:boutiq_provider/features/auth/domain/entities/registration_response.dart';
-import 'package:boutiq_provider/features/dashboard/domain/entities/product_resp.dart';
+import 'package:boutiq_provider/features/data/models/login/login_response.dart';
+import 'package:boutiq_provider/features/data/models/registration/registration_response.dart';
+import 'package:boutiq_provider/features/data/models/product/product_resp.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
