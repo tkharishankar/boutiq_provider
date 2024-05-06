@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://boutiq-stage-db4d05bbf88e.herokuapp.com/';
+    baseUrl ??= 'https://boutiq-stage-db4d05bbf88e.herokuapp.com/';
   }
 
   final Dio _dio;

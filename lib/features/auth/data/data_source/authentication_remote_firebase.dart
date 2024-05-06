@@ -105,14 +105,13 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
     // }
 
     try {
-      final body = {"phoneNumber": "+91$phoneNumber", "password": password};
+      final body = {"phoneNumber": phoneNumber, "password": password};
 
       final response = await apiService!.providerLogin(body);
       if (response.response.statusCode == 200) {
         final cache = sl<AppCache>();
         final loginResponse = LoginResponse.fromJson(response.response.data);
         cache.setUserInfo(loginResponse);
-
         return Right(LoginResponse.fromJson(response.response.data));
       } else if (response.response.statusCode == 400) {
         return Left(ApiError(errorCode: "400", errorMessage: "Error in login"));
