@@ -1,17 +1,19 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/utils/app_texts.dart';
 import '../../../../core/utils/input_validation.dart';
 import '../../../../core/utils/responsive.dart';
-import '../../widgets/app_drawer.dart';
-import '../../widgets/product_grid.dart';
-import '../../../data/models/product/product_resp.dart';
-import '../product/product_card.dart';
+import '../../../../core/utils/size.dart';
+import '../../../../router/router.dart';
+import '../../widgets/app_dialog.dart';
+import '../../widgets/dashboard_detail.dart';
+import '../../widgets/provider_account.dart';
+import '../../widgets/provider_orders.dart';
+import '../../widgets/provider_products.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -22,16 +24,21 @@ class DashboardScreen extends ConsumerStatefulWidget {
   }
 }
 
-class _DashboardScreenState extends ConsumerState<DashboardScreen> with InputValidationMixin {
+class _DashboardScreenState extends ConsumerState<DashboardScreen>
+    with InputValidationMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   OverlayEntry? _overlayEntry;
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
   final int _debouncetime = 1000;
 
+  String? _selectedMenuItem;
+
   @override
   void initState() {
     super.initState();
+    // Set the initial selected menu item
+    _selectedMenuItem = 'Dashboard';
   }
 
   @override
@@ -40,169 +47,185 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> with InputVal
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: isMobile
-            ? null
-            : Row(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(left: 70.w),
-                    height: 30.h,
-                    width: 60.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4.r),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: TextFormField(
-                      cursorWidth: 1.5,
-                      cursorHeight: 12.0.h,
-                      controller: _searchController,
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        isCollapsed: true,
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 3.w),
-                        border: InputBorder.none,
-                        suffixIcon: (_searchController.text.isEmpty)
-                            ? IconButton(
-                                icon: const Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  FocusScope.of(context).requestFocus(FocusNode());
-                                },
-                              )
-                            : IconButton(
-                                icon: const Icon(
-                                  Icons.close,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  FocusScope.of(context).requestFocus(FocusNode());
-                                },
-                              ),
-                      ),
-                      onChanged: (value) {
-                        if (_debounce?.isActive ?? false) _debounce?.cancel();
-                        _debounce = Timer(Duration(milliseconds: _debouncetime), () {
-                          debugPrint(_searchController.text);
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-        actions: [
-          if(isMobile)
-            IconButton(
-                icon: const Icon(Icons.search),
-                tooltip: 'search',
-                onPressed: () {
-                  // handle the press
-                }),
-          IconButton(
-              icon: const Icon(Icons.notifications),
-              tooltip: 'Notifications',
-              onPressed: () {
-                // handle the press
-              }),
-          IconButton(
-              icon: const Icon(Icons.account_box_rounded),
-              tooltip: 'Profile',
-              onPressed: () {
-                // handle the press
-              }),
-        ],
-        // title:,
+        title: Text(AppTexts.boutiqTitle,
+            style: Config.h2(context).copyWith(
+              fontSize: 24,
+            )),
       ),
-      body: _MainPage(isMobile),
-      // floatingActionButton: _buildAddNewProductButton(context),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      drawer: isMobile ? const AppDrawerWidget() : null,
+      body: _MainPage(
+          isMobile: isMobile,
+          selectedMenuItem: _selectedMenuItem,
+          onMenuItemSelected: (menuItem) {
+            setState(() {
+              _selectedMenuItem = menuItem;
+            });
+          }),
+      drawer: isMobile
+          ? DrawerWidget(onMenuItemSelected: (menuItem) {
+              setState(() {
+                _selectedMenuItem = menuItem;
+              });
+              Navigator.pop(context);
+            })
+          : null,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                elevation: MaterialStateProperty.all<double>(8.0),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 12.0),
+                ),
+                shape: MaterialStateProperty.all<OutlinedBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        8.0),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                GoRouter.of(context).pushNamed(RouteConstants.addnewproduct);
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text('Add Product'),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  Widget _buildListView(List<Product> products) {
-    return ListView.separated(
-      itemCount: products.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(height: 10.0); // Adjust the height as needed
-      },
-      itemBuilder: (BuildContext context, int index) {
-        final product = products[index];
-        print("product ${product.toJson()}");
-        final double price = double.parse(product.price);
-        final String imageUrl = product.imageUrls[0];
-        return ProductCard(
-          productName: product.name,
-          brandName: 'Brand XYZ',
-          price: price,
-          rating: 4.5,
-          isFavorited: false,
-          imageUrl: imageUrl,
-        );
-      },
-    );
-  }
-
-//
-// Widget _buildListView(List<Product> products) {
-//   return ListView.builder(
-//     itemCount: products.length,
-//     itemBuilder: (BuildContext context, int index) {
-//       final product = products[index];
-//       final double price = double.parse(product.price);
-//       final String imageUrl = product.imageUrls[0];
-//       return ProductCard(
-//         productName: product.name,
-//         brandName: 'Brand XYZ',
-//         price: price,
-//         rating: 4.5,
-//         isFavorited: false,
-//         imageUrl: imageUrl,
-//       );
-//     },
-//   );
-// }
 }
 
 class _MainPage extends StatelessWidget {
   final bool? isMobile;
+  final String? selectedMenuItem;
+  final void Function(String)? onMenuItemSelected;
 
-  const _MainPage(this.isMobile, {super.key});
+  const _MainPage({
+    this.isMobile,
+    this.selectedMenuItem,
+    this.onMenuItemSelected,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Widget contentWidget;
+    switch (selectedMenuItem) {
+      case 'Account':
+        contentWidget = AccountDetail();
+        break;
+      case 'Dashboard':
+        contentWidget = const DashboardDetail();
+        break;
+      case 'Products':
+        contentWidget = const ProviderProduct();
+        break;
+      case 'Orders':
+        contentWidget = const ProviderOrder();
+        break;
+      default:
+        contentWidget = Container();
+    }
+
     return Container(
-      color: const Color(0xFFDFEDF7),
       child: isMobile!
-          ? const ProductGrid()
-          : const Row(
+          ? contentWidget
+          : Row(
               children: [
-                _DesktopMenuItems(),
-                Expanded(child: ProductGrid()),
+                DrawerWidget(onMenuItemSelected: onMenuItemSelected),
+                Expanded(child: contentWidget),
               ],
             ),
     );
   }
 }
 
-class _DesktopMenuItems extends StatelessWidget {
-  const _DesktopMenuItems({super.key});
+class DrawerWidget extends StatefulWidget {
+  final void Function(String)? onMenuItemSelected;
+
+  const DrawerWidget({Key? key, this.onMenuItemSelected}) : super(key: key);
+
+  @override
+  _DrawerWidgetState createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  String? _selectedMenuItem;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: 75.w, child: const AppDrawerWidget());
+    return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(0),
+          bottomRight: Radius.circular(0),
+        ),
+      ),
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            _buildMenuItem(
+              Icons.dashboard,
+              'Dashboard',
+            ),
+            _buildMenuItem(
+              Icons.manage_accounts,
+              'Account',
+            ),
+            _buildMenuItem(
+              Icons.production_quantity_limits,
+              'Products',
+            ),
+            _buildMenuItem(
+              Icons.local_shipping,
+              'Orders',
+            ),
+            _buildMenuItem(
+              Icons.logout,
+              'Logout',
+              onTap: () {
+                showLogoutDialog(context, () {
+                  // Handle logout action here
+                  GoRouter.of(context).pushNamed(RouteConstants.login);
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) {
+    final isSelected = title == _selectedMenuItem;
+    return ListTile(
+      leading: Icon(icon, color: isSelected ? Colors.blue : null),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: isSelected ? Colors.blue : null,
+          fontWeight: isSelected ? FontWeight.bold : null,
+        ),
+      ),
+      onTap: () {
+        setState(() {
+          _selectedMenuItem = title;
+        });
+        widget.onMenuItemSelected?.call(title);
+        onTap?.call();
+      },
+    );
   }
 }

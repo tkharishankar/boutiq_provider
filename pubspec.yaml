@@ -146,6 +146,16 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/fonts/
+
+  fonts:
+    - family: onest
+      fonts:
+        - asset: assets/fonts/onest-bold.ttf
+        - asset: assets/fonts/onest-extra-bold.ttf
+        - asset: assets/fonts/onest-light.ttf
+        - asset: assets/fonts/onest-medium.ttf
+        - asset: assets/fonts/onest-regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

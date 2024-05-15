@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/presentation/pages/login/login_screen.dart';
-import '../features/presentation/pages/registration/registration_screen.dart';
-import '../features/presentation/pages/product/add_new_product.dart';
 import '../features/presentation/pages/dashboard/dashboard_screen.dart';
+import '../features/presentation/pages/login/login_screen.dart';
+import '../features/presentation/pages/product/add_new_product.dart';
+import '../features/presentation/pages/registration/registration_screen.dart';
 import '../features/splash_screen.dart';
 
 class AppRouter {

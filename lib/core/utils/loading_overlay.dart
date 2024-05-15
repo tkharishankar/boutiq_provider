@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../themes/color_scheme.dart';
-import 'app_images.dart';
 
 mixin LoadingOverlayMixin {
   OverlayEntry showLoadingOverlay(

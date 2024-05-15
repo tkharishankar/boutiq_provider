@@ -5,9 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../domain/usecase/registration/registration_usecase.dart';
 
 part 'registration_bloc.freezed.dart';
-
 part 'registration_event.dart';
-
 part 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {

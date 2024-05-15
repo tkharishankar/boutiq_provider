@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../../core/network/api_error.dart';
 import '../../../../../core/usecases/usecases.dart';
-import '../../repositories/authentication_repo.dart';
 import '../../../data/models/registration/registration_response.dart';
+import '../../repositories/authentication_repo.dart';
 
 class RegisterUsecase implements UseCase<RegisterResponse, Params> {
   final AuthenticationRepo authenticationRepo;

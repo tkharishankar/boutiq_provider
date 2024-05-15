@@ -1,5 +1,6 @@
 class AppTexts {
   //! AUTHENTICATION
+  static String boutiqTitle = "BoutiQ";
   static String createAccount = "Create an account";
   static String createAccountDescription =
       "Enter your credentials to get started";

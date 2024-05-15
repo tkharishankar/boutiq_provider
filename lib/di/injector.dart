@@ -1,3 +1,4 @@
+import 'package:boutiq_provider/di/order_locator.dart';
 import 'package:boutiq_provider/di/product_locator.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -19,6 +20,7 @@ Future<void> injector() async {
 
   await registerAuthDependencies();
   await registerProductDependencies();
+  await registerOrderDependencies();
 
   sl
     ..registerLazySingleton<NetworkInfo>(

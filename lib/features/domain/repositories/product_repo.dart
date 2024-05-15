@@ -1,8 +1,8 @@
 import 'package:boutiq_provider/core/network/api_error.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../data/models/product/product_resp.dart';
 import '../../data/datasource/remote/product_remote_firebase.dart';
+import '../../data/models/product/product_resp.dart';
 import '../../presentation/bloc/product/product_bloc.dart';
 
 abstract class ProductRepo {

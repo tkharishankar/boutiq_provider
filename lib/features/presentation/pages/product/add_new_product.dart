@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:boutiq_provider/core/common/button/buttons.dart';
@@ -30,7 +29,7 @@ class AddNewProduct extends ConsumerStatefulWidget {
 }
 
 class _AddNewProductState extends ConsumerState<AddNewProduct>
-    with LoadingOverlayMixin {
+    with LoadingOverlayMixin, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formSizeKey = GlobalKey();
   OverlayEntry? _overlayEntry;
@@ -58,14 +57,18 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
   final TextEditingController _sizePriceController = TextEditingController();
   String _sizePrice = "";
 
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _tabController.dispose();
   }
 
   @override
@@ -76,77 +79,122 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
         title: Text('New Product', style: GoogleFonts.lato()),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(8),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: isMobile ? 3 : 3, // Adjust flex based on device
-                      child: Column(
-                        children: [
-                          productName(),
-                          productIdentifier(),
-                          deliveryPrice(),
-                          description(),
-                          if (isMobile) productSizeView(),
-                          if (isMobile) productSizeListView(),
-                          if (isMobile) fileUpload(),
-                          if (isMobile) selectedImageList(),
-                        ],
-                      ),
-                    ),
-                    if (!isMobile)
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          children: [productSizeView(), productSizeListView()],
-                        ),
-                      ),
-                    if (!isMobile)
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          children: [
-                            fileUpload(),
-                            selectedImageList(),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-                // Render only on mobile
+        child: Column(
+          children: [
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: 'Tab 1'),
+                Tab(text: 'Tab 2'),
               ],
             ),
-          ),
-        ),
-      ),
-      floatingActionButton: BlocConsumer<ProductBloc, ProductState>(
-        listener: _listener,
-        builder: (context, state) {
-          return Visibility(
-            visible: MediaQuery.of(context).viewInsets.bottom == 0,
-            child: FloatingActionButton.extended(
-              onPressed: () {
-                onPublish(context);
-              },
-              label: Text(
-                'Publish',
-                style:
-                    GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildTab1(isMobile),
+                  _buildTab2(isMobile),
+                ],
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  // SafeArea(
+  //   child: SingleChildScrollView(
+  //     padding: const EdgeInsets.all(8),
+  //     child: Form(
+  //       key: _formKey,
+  //       child: Column(
+  //         children: [
+  //           Row(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Expanded(
+  //                 flex: isMobile ? 3 : 3, // Adjust flex based on device
+  //                 child: Column(
+  //                   children: [
+  //                     productName(),
+  //                     productIdentifier(),
+  //                     deliveryPrice(),
+  //                     description(),
+  //                     if (isMobile) productSizeView(),
+  //                     if (isMobile) productSizeListView(),
+  //                     if (isMobile) fileUpload(),
+  //                     if (isMobile) selectedImageList(),
+  //                   ],
+  //                 ),
+  //               ),
+  //               if (!isMobile)
+  //                 Expanded(
+  //                   flex: 3,
+  //                   child: Column(
+  //                     children: [productSizeView(), productSizeListView()],
+  //                   ),
+  //                 ),
+  //               if (!isMobile)
+  //                 Expanded(
+  //                   flex: 3,
+  //                   child: Column(
+  //                     children: [
+  //                       fileUpload(),
+  //                       selectedImageList(),
+  //                     ],
+  //                   ),
+  //                 ),
+  //             ],
+  //           ),
+  //           // Render only on mobile
+  //         ],
+  //       ),
+  //     ),
+  //   ),
+  // ),
+
+  Widget _buildTab1(bool isMobile) {
+    return SingleChildScrollView(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            Expanded(
+              flex: isMobile ? 1 : 2, // Adjust flex based on device
+              child: Column(
+                children: [
+                  productName(),
+                  productIdentifier(),
+                  deliveryPrice(),
+                  description(),
+                  if (isMobile) fileUpload(),
+                  if (isMobile) selectedImageList(),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Column(
+                children: [
+                  fileUpload(),
+                  selectedImageList(),
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget _buildTab2(bool isMobile) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          productSizeView(),
+          productSizeListView(),
+          // _buildActionButton(),
+        ],
+      ),
     );
   }
 

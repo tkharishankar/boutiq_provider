@@ -1,15 +1,13 @@
-import 'package:image_picker/image_picker.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 
-import '../../../domain/repositories/product_repo.dart';
 import '../../../data/models/product/product_resp.dart';
+import '../../../domain/repositories/product_repo.dart';
 
 part 'product_bloc.freezed.dart';
-
 part 'product_event.dart';
-
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
