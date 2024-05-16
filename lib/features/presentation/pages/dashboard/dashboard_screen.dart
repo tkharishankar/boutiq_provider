@@ -68,40 +68,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
               Navigator.pop(context);
             })
           : null,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                elevation: MaterialStateProperty.all<double>(8.0),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                  const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0),
-                ),
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        8.0),
-                  ),
-                ),
-              ),
-              onPressed: () {
-                GoRouter.of(context).pushNamed(RouteConstants.addnewproduct);
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('Add Product'),
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }
@@ -135,7 +101,7 @@ class _MainPage extends StatelessWidget {
         contentWidget = const ProviderOrder();
         break;
       default:
-        contentWidget = Container();
+        contentWidget = const DashboardDetail();
     }
 
     return Container(
@@ -184,6 +150,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               Icons.manage_accounts,
               'Account',
             ),
+            _buildMenuItem(Icons.add_box_rounded, 'Add Product', onTap: () {
+              GoRouter.of(context).pushNamed(RouteConstants.addnewproduct);
+            }),
             _buildMenuItem(
               Icons.production_quantity_limits,
               'Products',

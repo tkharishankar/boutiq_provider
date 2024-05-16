@@ -52,7 +52,7 @@ class OrderSummary with _$OrderSummary {
     String? customerId,
     String? orderId,
     String? providerId,
-    String? status,
+    OrderStatus? status,
     PaymentData? paymentData,
     Address? address,
     List<ProductItem?>? productItems,
@@ -60,4 +60,19 @@ class OrderSummary with _$OrderSummary {
   }) = _OrderSummary;
 
   factory OrderSummary.fromJson(Map<String, dynamic> json) => _$OrderSummaryFromJson(json);
+}
+
+@freezed
+class OrderStatusTrace with _$OrderStatusTrace {
+  const factory OrderStatusTrace({
+    required String orderId,
+    required OrderStatus orderStatus,
+    required int timestamp,
+  }) = _OrderStatusTrace;
+
+  factory OrderStatusTrace.fromJson(Map<String, dynamic> json) => _$OrderStatusTraceFromJson(json);
+}
+
+enum OrderStatus {
+  CART, INITIATED, CREATED, SHIPPED, DISPATCHED, DELIVERED, CANCELED,
 }

@@ -1,5 +1,6 @@
 
 import 'package:boutiq_provider/features/data/models/login/login_response.dart';
+import 'package:boutiq_provider/features/data/models/order/order_summary.dart';
 import 'package:boutiq_provider/features/data/models/product/product_resp.dart';
 import 'package:boutiq_provider/features/data/models/registration/registration_response.dart';
 import 'package:dio/dio.dart';
@@ -26,5 +27,8 @@ abstract class ApiService {
 
   @GET('api/v1/orders/provider/{providerID}')
   Future<HttpResponse<List<Product>>> getProviderOrdersList(@Path('providerID') String providerID);
+
+  @GET('api/v1/orders/orderStatus/{orderId}')
+  Future<HttpResponse<List<OrderStatusTrace>>> getOrderStatusTraces(@Path('orderId') String orderId);
 
 }

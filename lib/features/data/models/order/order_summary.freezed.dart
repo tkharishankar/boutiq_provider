@@ -776,7 +776,7 @@ mixin _$OrderSummary {
   String? get customerId => throw _privateConstructorUsedError;
   String? get orderId => throw _privateConstructorUsedError;
   String? get providerId => throw _privateConstructorUsedError;
-  String? get status => throw _privateConstructorUsedError;
+  OrderStatus? get status => throw _privateConstructorUsedError;
   PaymentData? get paymentData => throw _privateConstructorUsedError;
   Address? get address => throw _privateConstructorUsedError;
   List<ProductItem?>? get productItems => throw _privateConstructorUsedError;
@@ -798,7 +798,7 @@ abstract class $OrderSummaryCopyWith<$Res> {
       {String? customerId,
       String? orderId,
       String? providerId,
-      String? status,
+      OrderStatus? status,
       PaymentData? paymentData,
       Address? address,
       List<ProductItem?>? productItems,
@@ -846,7 +846,7 @@ class _$OrderSummaryCopyWithImpl<$Res, $Val extends OrderSummary>
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as OrderStatus?,
       paymentData: freezed == paymentData
           ? _value.paymentData
           : paymentData // ignore: cast_nullable_to_non_nullable
@@ -903,7 +903,7 @@ abstract class _$$OrderSummaryImplCopyWith<$Res>
       {String? customerId,
       String? orderId,
       String? providerId,
-      String? status,
+      OrderStatus? status,
       PaymentData? paymentData,
       Address? address,
       List<ProductItem?>? productItems,
@@ -951,7 +951,7 @@ class __$$OrderSummaryImplCopyWithImpl<$Res>
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as OrderStatus?,
       paymentData: freezed == paymentData
           ? _value.paymentData
           : paymentData // ignore: cast_nullable_to_non_nullable
@@ -996,7 +996,7 @@ class _$OrderSummaryImpl implements _OrderSummary {
   @override
   final String? providerId;
   @override
-  final String? status;
+  final OrderStatus? status;
   @override
   final PaymentData? paymentData;
   @override
@@ -1071,7 +1071,7 @@ abstract class _OrderSummary implements OrderSummary {
       {final String? customerId,
       final String? orderId,
       final String? providerId,
-      final String? status,
+      final OrderStatus? status,
       final PaymentData? paymentData,
       final Address? address,
       final List<ProductItem?>? productItems,
@@ -1087,7 +1087,7 @@ abstract class _OrderSummary implements OrderSummary {
   @override
   String? get providerId;
   @override
-  String? get status;
+  OrderStatus? get status;
   @override
   PaymentData? get paymentData;
   @override
@@ -1099,5 +1099,182 @@ abstract class _OrderSummary implements OrderSummary {
   @override
   @JsonKey(ignore: true)
   _$$OrderSummaryImplCopyWith<_$OrderSummaryImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+OrderStatusTrace _$OrderStatusTraceFromJson(Map<String, dynamic> json) {
+  return _OrderStatusTrace.fromJson(json);
+}
+
+/// @nodoc
+mixin _$OrderStatusTrace {
+  String get orderId => throw _privateConstructorUsedError;
+  OrderStatus get orderStatus => throw _privateConstructorUsedError;
+  int get timestamp => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $OrderStatusTraceCopyWith<OrderStatusTrace> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $OrderStatusTraceCopyWith<$Res> {
+  factory $OrderStatusTraceCopyWith(
+          OrderStatusTrace value, $Res Function(OrderStatusTrace) then) =
+      _$OrderStatusTraceCopyWithImpl<$Res, OrderStatusTrace>;
+  @useResult
+  $Res call({String orderId, OrderStatus orderStatus, int timestamp});
+}
+
+/// @nodoc
+class _$OrderStatusTraceCopyWithImpl<$Res, $Val extends OrderStatusTrace>
+    implements $OrderStatusTraceCopyWith<$Res> {
+  _$OrderStatusTraceCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? orderId = null,
+    Object? orderStatus = null,
+    Object? timestamp = null,
+  }) {
+    return _then(_value.copyWith(
+      orderId: null == orderId
+          ? _value.orderId
+          : orderId // ignore: cast_nullable_to_non_nullable
+              as String,
+      orderStatus: null == orderStatus
+          ? _value.orderStatus
+          : orderStatus // ignore: cast_nullable_to_non_nullable
+              as OrderStatus,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$OrderStatusTraceImplCopyWith<$Res>
+    implements $OrderStatusTraceCopyWith<$Res> {
+  factory _$$OrderStatusTraceImplCopyWith(_$OrderStatusTraceImpl value,
+          $Res Function(_$OrderStatusTraceImpl) then) =
+      __$$OrderStatusTraceImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String orderId, OrderStatus orderStatus, int timestamp});
+}
+
+/// @nodoc
+class __$$OrderStatusTraceImplCopyWithImpl<$Res>
+    extends _$OrderStatusTraceCopyWithImpl<$Res, _$OrderStatusTraceImpl>
+    implements _$$OrderStatusTraceImplCopyWith<$Res> {
+  __$$OrderStatusTraceImplCopyWithImpl(_$OrderStatusTraceImpl _value,
+      $Res Function(_$OrderStatusTraceImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? orderId = null,
+    Object? orderStatus = null,
+    Object? timestamp = null,
+  }) {
+    return _then(_$OrderStatusTraceImpl(
+      orderId: null == orderId
+          ? _value.orderId
+          : orderId // ignore: cast_nullable_to_non_nullable
+              as String,
+      orderStatus: null == orderStatus
+          ? _value.orderStatus
+          : orderStatus // ignore: cast_nullable_to_non_nullable
+              as OrderStatus,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$OrderStatusTraceImpl implements _OrderStatusTrace {
+  const _$OrderStatusTraceImpl(
+      {required this.orderId,
+      required this.orderStatus,
+      required this.timestamp});
+
+  factory _$OrderStatusTraceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OrderStatusTraceImplFromJson(json);
+
+  @override
+  final String orderId;
+  @override
+  final OrderStatus orderStatus;
+  @override
+  final int timestamp;
+
+  @override
+  String toString() {
+    return 'OrderStatusTrace(orderId: $orderId, orderStatus: $orderStatus, timestamp: $timestamp)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$OrderStatusTraceImpl &&
+            (identical(other.orderId, orderId) || other.orderId == orderId) &&
+            (identical(other.orderStatus, orderStatus) ||
+                other.orderStatus == orderStatus) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, orderId, orderStatus, timestamp);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$OrderStatusTraceImplCopyWith<_$OrderStatusTraceImpl> get copyWith =>
+      __$$OrderStatusTraceImplCopyWithImpl<_$OrderStatusTraceImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$OrderStatusTraceImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _OrderStatusTrace implements OrderStatusTrace {
+  const factory _OrderStatusTrace(
+      {required final String orderId,
+      required final OrderStatus orderStatus,
+      required final int timestamp}) = _$OrderStatusTraceImpl;
+
+  factory _OrderStatusTrace.fromJson(Map<String, dynamic> json) =
+      _$OrderStatusTraceImpl.fromJson;
+
+  @override
+  String get orderId;
+  @override
+  OrderStatus get orderStatus;
+  @override
+  int get timestamp;
+  @override
+  @JsonKey(ignore: true)
+  _$$OrderStatusTraceImplCopyWith<_$OrderStatusTraceImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

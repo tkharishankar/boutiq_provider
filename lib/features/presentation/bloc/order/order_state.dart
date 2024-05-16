@@ -10,4 +10,12 @@ class OrderState with _$OrderState {
 
   const factory OrderState.onOrderListError(String message) = _OnOrderListError;
 
+  const factory OrderState.orderStatusTracesLoading() =
+      _orderStatusTracesLoading;
+
+  const factory OrderState.orderStatusTracesList(
+      List<OrderStatusTrace> products) = _OnOrderStatusTracesList;
+
+  const factory OrderState.orderStatusTracesListError(String message) =
+      _OnOrderStatusTracesListError;
 }

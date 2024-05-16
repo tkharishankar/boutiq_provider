@@ -73,7 +73,7 @@ _$OrderSummaryImpl _$$OrderSummaryImplFromJson(Map<String, dynamic> json) =>
       customerId: json['customerId'] as String?,
       orderId: json['orderId'] as String?,
       providerId: json['providerId'] as String?,
-      status: json['status'] as String?,
+      status: $enumDecodeNullable(_$OrderStatusEnumMap, json['status']),
       paymentData: json['paymentData'] == null
           ? null
           : PaymentData.fromJson(json['paymentData'] as Map<String, dynamic>),
@@ -93,9 +93,35 @@ Map<String, dynamic> _$$OrderSummaryImplToJson(_$OrderSummaryImpl instance) =>
       'customerId': instance.customerId,
       'orderId': instance.orderId,
       'providerId': instance.providerId,
-      'status': instance.status,
+      'status': _$OrderStatusEnumMap[instance.status],
       'paymentData': instance.paymentData,
       'address': instance.address,
       'productItems': instance.productItems,
       'updatedAt': instance.updatedAt,
+    };
+
+const _$OrderStatusEnumMap = {
+  OrderStatus.CART: 'CART',
+  OrderStatus.INITIATED: 'INITIATED',
+  OrderStatus.CREATED: 'CREATED',
+  OrderStatus.SHIPPED: 'SHIPPED',
+  OrderStatus.DISPATCHED: 'DISPATCHED',
+  OrderStatus.DELIVERED: 'DELIVERED',
+  OrderStatus.CANCELED: 'CANCELED',
+};
+
+_$OrderStatusTraceImpl _$$OrderStatusTraceImplFromJson(
+        Map<String, dynamic> json) =>
+    _$OrderStatusTraceImpl(
+      orderId: json['orderId'] as String,
+      orderStatus: $enumDecode(_$OrderStatusEnumMap, json['orderStatus']),
+      timestamp: (json['timestamp'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$OrderStatusTraceImplToJson(
+        _$OrderStatusTraceImpl instance) =>
+    <String, dynamic>{
+      'orderId': instance.orderId,
+      'orderStatus': _$OrderStatusEnumMap[instance.orderStatus]!,
+      'timestamp': instance.timestamp,
     };

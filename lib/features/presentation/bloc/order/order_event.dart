@@ -16,3 +16,8 @@ class GetOrders extends OrderEvent {
   const GetOrders({required this.providerID});
 }
 
+class GetOrderStatusTraces extends OrderEvent {
+  final String orderId;
+
+  const GetOrderStatusTraces({required this.orderId});
+}

@@ -16,6 +16,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   OrderBloc({required this.orderRepo}) : super(_Initial()) {
     on<GetOrders>(_getOrders);
+    on<GetOrderStatusTraces>(_getOrderStatusTraces);
   }
 
   Future<void> _getOrders(GetOrders getOrders, Emitter<OrderState> emit) async {
@@ -25,6 +26,16 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderState.onOrderListError(failure.errorMessage));
     }, (success) {
       emit(OrderState.onOrderList(success));
+    });
+  }
+
+  Future<void> _getOrderStatusTraces(GetOrderStatusTraces getOrders, Emitter<OrderState> emit) async {
+    emit(const OrderState.orderStatusTracesLoading());
+    final failureOrSuccess = await orderRepo.getOrderStatusTraces(getOrders.orderId);
+    failureOrSuccess.fold((failure) {
+      emit(OrderState.onOrderListError(failure.errorMessage));
+    }, (success) {
+      emit(OrderState.orderStatusTracesList(success));
     });
   }
 }
