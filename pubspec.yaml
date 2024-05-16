@@ -105,6 +105,8 @@ dependencies:
   firebase_auth: ^4.7.3
   image_picker: ^1.0.4
   dotted_border: ^2.0.0+3
+  data_grid: ^0.1.0
+  flutter_staggered_grid_view: ^0.7.0
 
 dev_dependencies:
 
