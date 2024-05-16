@@ -31,55 +31,61 @@ class _ProviderOrderState extends State<ProviderOrder> {
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
-    return Flex(
-      direction: Axis.horizontal,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(
-          flex: 6, // Takes 60% of the available width
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BlocListener<OrderBloc, OrderState>(
-                  bloc: _orderBloc,
-                  listener: (context, state) {
-                    state.maybeWhen(
-                      onOrderList: (orders) {
-                        setState(() {
-                          _orders = orders;
-                        });
+    return Scaffold(
+      body: SizedBox(
+        width: double.infinity,
+        child: Flex(
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              flex: 6,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    BlocListener<OrderBloc, OrderState>(
+                      bloc: _orderBloc,
+                      listener: (context, state) {
+                        state.maybeWhen(
+                          onOrderList: (orders) {
+                            setState(() {
+                              _orders = orders;
+                            });
+                          },
+                          // Handle other states if needed
+                          orElse: () {},
+                        );
                       },
-                      // Handle other states if needed
-                      orElse: () {},
-                    );
-                  },
-                  child: BlocBuilder<OrderBloc, OrderState>(
-                    bloc: _orderBloc,
-                    builder: (context, state) {
-                      return state.maybeWhen(
-                        orElse: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        onOrderList: (_) => _buildOrderDataTable(),
-                        onOrderListError: (message) =>
-                            Center(child: Text(message)),
-                      );
-                    },
-                  ),
+                      child: BlocBuilder<OrderBloc, OrderState>(
+                        bloc: _orderBloc,
+                        builder: (context, state) {
+                          return state.maybeWhen(
+                            orElse: () => const Center(
+                                child: CircularProgressIndicator()),
+                            onOrderList: (_) => _buildOrderDataTable(),
+                            onOrderListError: (message) =>
+                                Center(child: Text(message)),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
+            if (!isMobile && _selectedOrder != null)
+              Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: OrderDetail(orderSummary: _selectedOrder!),
+                ),
+              ),
+          ],
         ),
-        if (!isMobile &&
-            _selectedOrder != null) // Only show detail if an order is selected
-          Expanded(
-            flex: 4, // Takes the remaining 40% of the available width
-            child: Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: OrderDetail(orderSummary: _selectedOrder!),
-            ),
-          ),
-      ],
+      ),
     );
   }
 
@@ -135,6 +141,8 @@ class OrderDetail extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Detail (${orderSummary.orderId})'),
+            const SizedBox(height: 8.0),
             Text('Delivery address (${orderSummary.address?.label})',
                 style: const TextStyle(
                     fontSize: 18.0, fontWeight: FontWeight.bold)),

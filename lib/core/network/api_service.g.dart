@@ -36,7 +36,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/v1/provider/register',
+              'api/v1/providers/register',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -66,7 +66,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/v1/provider/login',
+              'api/v1/providers/login',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -123,7 +123,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/v1/product/${providerID}',
+              'api/v1/products/${providerID}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -154,7 +154,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/v1/order/provider/${providerID}',
+              'api/v1/orders/provider/${providerID}',
               queryParameters: queryParameters,
               data: _data,
             )

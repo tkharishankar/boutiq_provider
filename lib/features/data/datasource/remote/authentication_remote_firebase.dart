@@ -71,38 +71,6 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
 
   @override
   Future<Either<ApiError, LoginResponse>> login(String phoneNumber, String password) async {
-    // try {
-    //   var db = FirebaseFirestore.instance;
-    //   final userCollection = db.collection("users");
-    //   QuerySnapshot querySnapshot = await userCollection
-    //       .where("phone_number", isEqualTo: phoneNumber)
-    //       .where("password", isEqualTo: password)
-    //       .limit(1)
-    //       .get();
-    //
-    //   if (querySnapshot.docs.isNotEmpty) {
-    //     var username = "";
-    //     var phoneNumber = "";
-    //     for (var doc in querySnapshot.docs) {
-    //       phoneNumber = doc["phone_number"];
-    //       username = doc["username"];
-    //     }
-    //     final data = {
-    //       "message": "Login success...",
-    //       "status": 200,
-    //       "phone_number": phoneNumber,
-    //       "username": username
-    //     };
-    //     return LoginResponse.fromJson(data);
-    //   } else {
-    //     final data = {"message": "Incorrect Phone Number or Password", "status": 400};
-    //     return LoginResponse.fromJson(data);
-    //   }
-    // } catch (e) {
-    //   print(e);
-    //   throw ServerException(message: 'Server error $e');
-    // }
-
     try {
       final body = {"phoneNumber": phoneNumber, "password": password};
 
@@ -126,7 +94,7 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
         log('Dio error: $error');
         return Left(ApiError(
             errorCode: error.response!.statusCode.toString(),
-            errorMessage: "Error in registration"));
+            errorMessage: "Error in login"));
       }
     }
   }

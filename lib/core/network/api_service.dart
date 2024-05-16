@@ -12,19 +12,19 @@ part 'api_service.g.dart';
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
-  @POST("api/v1/provider/register")
+  @POST("api/v1/providers/register")
   Future<HttpResponse<RegisterResponse>> providerRegistration(@Body() Map<String, dynamic> body);
 
-  @POST("api/v1/provider/login")
+  @POST("api/v1/providers/login")
   Future<HttpResponse<LoginResponse>> providerLogin(@Body() Map<String, dynamic> body);
 
   @GET("api/v1/providers")
   Future<HttpResponse<LoginResponse>> getProviderList();
 
-  @GET('api/v1/product/{providerID}')
+  @GET('api/v1/products/{providerID}')
   Future<HttpResponse<List<Product>>> getProviderProductsList(@Path('providerID') String providerID);
 
-  @GET('api/v1/order/provider/{providerID}')
+  @GET('api/v1/orders/provider/{providerID}')
   Future<HttpResponse<List<Product>>> getProviderOrdersList(@Path('providerID') String providerID);
 
 }
