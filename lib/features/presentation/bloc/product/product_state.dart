@@ -13,6 +13,15 @@ class ProductState with _$ProductState {
 
   const factory ProductState.onProductList(List<Product> products) = _OnLoaded;
 
-  const factory ProductState.onProductListError(String message) = _OnProductListError;
+  const factory ProductState.onProductListError(String message) =
+      _OnProductListError;
 
+  const factory ProductState.onProductDetail(ProductDetailResp product) =
+      _onProductDetail;
+
+  const factory ProductState.onProductDetailError(String message) =
+      _onProductDetailError;
+
+  const factory ProductState.onProductDetailLoading() =
+      _onProductDetailLoading;
 }

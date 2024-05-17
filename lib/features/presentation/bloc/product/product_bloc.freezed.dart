@@ -24,6 +24,9 @@ mixin _$ProductState {
     required TResult Function(String message) addProductSuccessful,
     required TResult Function(List<Product> products) onProductList,
     required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -34,6 +37,9 @@ mixin _$ProductState {
     TResult? Function(String message)? addProductSuccessful,
     TResult? Function(List<Product> products)? onProductList,
     TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -44,6 +50,9 @@ mixin _$ProductState {
     TResult Function(String message)? addProductSuccessful,
     TResult Function(List<Product> products)? onProductList,
     TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -55,6 +64,10 @@ mixin _$ProductState {
     required TResult Function(_AddProductSuccessful value) addProductSuccessful,
     required TResult Function(_OnLoaded value) onProductList,
     required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -65,6 +78,9 @@ mixin _$ProductState {
     TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult? Function(_OnLoaded value)? onProductList,
     TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -75,6 +91,9 @@ mixin _$ProductState {
     TResult Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult Function(_OnLoaded value)? onProductList,
     TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -142,6 +161,9 @@ class _$InitialImpl implements _Initial {
     required TResult Function(String message) addProductSuccessful,
     required TResult Function(List<Product> products) onProductList,
     required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
   }) {
     return initial();
   }
@@ -155,6 +177,9 @@ class _$InitialImpl implements _Initial {
     TResult? Function(String message)? addProductSuccessful,
     TResult? Function(List<Product> products)? onProductList,
     TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
   }) {
     return initial?.call();
   }
@@ -168,6 +193,9 @@ class _$InitialImpl implements _Initial {
     TResult Function(String message)? addProductSuccessful,
     TResult Function(List<Product> products)? onProductList,
     TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -185,6 +213,10 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_AddProductSuccessful value) addProductSuccessful,
     required TResult Function(_OnLoaded value) onProductList,
     required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
   }) {
     return initial(this);
   }
@@ -198,6 +230,9 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult? Function(_OnLoaded value)? onProductList,
     TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
   }) {
     return initial?.call(this);
   }
@@ -211,6 +246,9 @@ class _$InitialImpl implements _Initial {
     TResult Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult Function(_OnLoaded value)? onProductList,
     TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -295,6 +333,9 @@ class _$AddProductErrorImpl implements _AddProductError {
     required TResult Function(String message) addProductSuccessful,
     required TResult Function(List<Product> products) onProductList,
     required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
   }) {
     return addProductError(message);
   }
@@ -308,6 +349,9 @@ class _$AddProductErrorImpl implements _AddProductError {
     TResult? Function(String message)? addProductSuccessful,
     TResult? Function(List<Product> products)? onProductList,
     TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
   }) {
     return addProductError?.call(message);
   }
@@ -321,6 +365,9 @@ class _$AddProductErrorImpl implements _AddProductError {
     TResult Function(String message)? addProductSuccessful,
     TResult Function(List<Product> products)? onProductList,
     TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (addProductError != null) {
@@ -338,6 +385,10 @@ class _$AddProductErrorImpl implements _AddProductError {
     required TResult Function(_AddProductSuccessful value) addProductSuccessful,
     required TResult Function(_OnLoaded value) onProductList,
     required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
   }) {
     return addProductError(this);
   }
@@ -351,6 +402,9 @@ class _$AddProductErrorImpl implements _AddProductError {
     TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult? Function(_OnLoaded value)? onProductList,
     TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
   }) {
     return addProductError?.call(this);
   }
@@ -364,6 +418,9 @@ class _$AddProductErrorImpl implements _AddProductError {
     TResult Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult Function(_OnLoaded value)? onProductList,
     TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (addProductError != null) {
@@ -426,6 +483,9 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(String message) addProductSuccessful,
     required TResult Function(List<Product> products) onProductList,
     required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
   }) {
     return loading();
   }
@@ -439,6 +499,9 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(String message)? addProductSuccessful,
     TResult? Function(List<Product> products)? onProductList,
     TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
   }) {
     return loading?.call();
   }
@@ -452,6 +515,9 @@ class _$LoadingImpl implements _Loading {
     TResult Function(String message)? addProductSuccessful,
     TResult Function(List<Product> products)? onProductList,
     TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -469,6 +535,10 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_AddProductSuccessful value) addProductSuccessful,
     required TResult Function(_OnLoaded value) onProductList,
     required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
   }) {
     return loading(this);
   }
@@ -482,6 +552,9 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult? Function(_OnLoaded value)? onProductList,
     TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
   }) {
     return loading?.call(this);
   }
@@ -495,6 +568,9 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult Function(_OnLoaded value)? onProductList,
     TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -580,6 +656,9 @@ class _$AddProductSuccessfulImpl implements _AddProductSuccessful {
     required TResult Function(String message) addProductSuccessful,
     required TResult Function(List<Product> products) onProductList,
     required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
   }) {
     return addProductSuccessful(message);
   }
@@ -593,6 +672,9 @@ class _$AddProductSuccessfulImpl implements _AddProductSuccessful {
     TResult? Function(String message)? addProductSuccessful,
     TResult? Function(List<Product> products)? onProductList,
     TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
   }) {
     return addProductSuccessful?.call(message);
   }
@@ -606,6 +688,9 @@ class _$AddProductSuccessfulImpl implements _AddProductSuccessful {
     TResult Function(String message)? addProductSuccessful,
     TResult Function(List<Product> products)? onProductList,
     TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (addProductSuccessful != null) {
@@ -623,6 +708,10 @@ class _$AddProductSuccessfulImpl implements _AddProductSuccessful {
     required TResult Function(_AddProductSuccessful value) addProductSuccessful,
     required TResult Function(_OnLoaded value) onProductList,
     required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
   }) {
     return addProductSuccessful(this);
   }
@@ -636,6 +725,9 @@ class _$AddProductSuccessfulImpl implements _AddProductSuccessful {
     TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult? Function(_OnLoaded value)? onProductList,
     TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
   }) {
     return addProductSuccessful?.call(this);
   }
@@ -649,6 +741,9 @@ class _$AddProductSuccessfulImpl implements _AddProductSuccessful {
     TResult Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult Function(_OnLoaded value)? onProductList,
     TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (addProductSuccessful != null) {
@@ -744,6 +839,9 @@ class _$OnLoadedImpl implements _OnLoaded {
     required TResult Function(String message) addProductSuccessful,
     required TResult Function(List<Product> products) onProductList,
     required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
   }) {
     return onProductList(products);
   }
@@ -757,6 +855,9 @@ class _$OnLoadedImpl implements _OnLoaded {
     TResult? Function(String message)? addProductSuccessful,
     TResult? Function(List<Product> products)? onProductList,
     TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
   }) {
     return onProductList?.call(products);
   }
@@ -770,6 +871,9 @@ class _$OnLoadedImpl implements _OnLoaded {
     TResult Function(String message)? addProductSuccessful,
     TResult Function(List<Product> products)? onProductList,
     TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (onProductList != null) {
@@ -787,6 +891,10 @@ class _$OnLoadedImpl implements _OnLoaded {
     required TResult Function(_AddProductSuccessful value) addProductSuccessful,
     required TResult Function(_OnLoaded value) onProductList,
     required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
   }) {
     return onProductList(this);
   }
@@ -800,6 +908,9 @@ class _$OnLoadedImpl implements _OnLoaded {
     TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult? Function(_OnLoaded value)? onProductList,
     TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
   }) {
     return onProductList?.call(this);
   }
@@ -813,6 +924,9 @@ class _$OnLoadedImpl implements _OnLoaded {
     TResult Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult Function(_OnLoaded value)? onProductList,
     TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (onProductList != null) {
@@ -902,6 +1016,9 @@ class _$OnProductListErrorImpl implements _OnProductListError {
     required TResult Function(String message) addProductSuccessful,
     required TResult Function(List<Product> products) onProductList,
     required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
   }) {
     return onProductListError(message);
   }
@@ -915,6 +1032,9 @@ class _$OnProductListErrorImpl implements _OnProductListError {
     TResult? Function(String message)? addProductSuccessful,
     TResult? Function(List<Product> products)? onProductList,
     TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
   }) {
     return onProductListError?.call(message);
   }
@@ -928,6 +1048,9 @@ class _$OnProductListErrorImpl implements _OnProductListError {
     TResult Function(String message)? addProductSuccessful,
     TResult Function(List<Product> products)? onProductList,
     TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (onProductListError != null) {
@@ -945,6 +1068,10 @@ class _$OnProductListErrorImpl implements _OnProductListError {
     required TResult Function(_AddProductSuccessful value) addProductSuccessful,
     required TResult Function(_OnLoaded value) onProductList,
     required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
   }) {
     return onProductListError(this);
   }
@@ -958,6 +1085,9 @@ class _$OnProductListErrorImpl implements _OnProductListError {
     TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult? Function(_OnLoaded value)? onProductList,
     TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
   }) {
     return onProductListError?.call(this);
   }
@@ -971,6 +1101,9 @@ class _$OnProductListErrorImpl implements _OnProductListError {
     TResult Function(_AddProductSuccessful value)? addProductSuccessful,
     TResult Function(_OnLoaded value)? onProductList,
     TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
     required TResult orElse(),
   }) {
     if (onProductListError != null) {
@@ -988,4 +1121,519 @@ abstract class _OnProductListError implements ProductState {
   @JsonKey(ignore: true)
   _$$OnProductListErrorImplCopyWith<_$OnProductListErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$onProductDetailImplCopyWith<$Res> {
+  factory _$$onProductDetailImplCopyWith(_$onProductDetailImpl value,
+          $Res Function(_$onProductDetailImpl) then) =
+      __$$onProductDetailImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ProductDetailResp product});
+
+  $ProductDetailRespCopyWith<$Res> get product;
+}
+
+/// @nodoc
+class __$$onProductDetailImplCopyWithImpl<$Res>
+    extends _$ProductStateCopyWithImpl<$Res, _$onProductDetailImpl>
+    implements _$$onProductDetailImplCopyWith<$Res> {
+  __$$onProductDetailImplCopyWithImpl(
+      _$onProductDetailImpl _value, $Res Function(_$onProductDetailImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? product = null,
+  }) {
+    return _then(_$onProductDetailImpl(
+      null == product
+          ? _value.product
+          : product // ignore: cast_nullable_to_non_nullable
+              as ProductDetailResp,
+    ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProductDetailRespCopyWith<$Res> get product {
+    return $ProductDetailRespCopyWith<$Res>(_value.product, (value) {
+      return _then(_value.copyWith(product: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$onProductDetailImpl implements _onProductDetail {
+  const _$onProductDetailImpl(this.product);
+
+  @override
+  final ProductDetailResp product;
+
+  @override
+  String toString() {
+    return 'ProductState.onProductDetail(product: $product)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$onProductDetailImpl &&
+            (identical(other.product, product) || other.product == product));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, product);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$onProductDetailImplCopyWith<_$onProductDetailImpl> get copyWith =>
+      __$$onProductDetailImplCopyWithImpl<_$onProductDetailImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(String message) addProductError,
+    required TResult Function() loading,
+    required TResult Function(String message) addProductSuccessful,
+    required TResult Function(List<Product> products) onProductList,
+    required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
+  }) {
+    return onProductDetail(product);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function(String message)? addProductError,
+    TResult? Function()? loading,
+    TResult? Function(String message)? addProductSuccessful,
+    TResult? Function(List<Product> products)? onProductList,
+    TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
+  }) {
+    return onProductDetail?.call(product);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(String message)? addProductError,
+    TResult Function()? loading,
+    TResult Function(String message)? addProductSuccessful,
+    TResult Function(List<Product> products)? onProductList,
+    TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
+    required TResult orElse(),
+  }) {
+    if (onProductDetail != null) {
+      return onProductDetail(product);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_AddProductError value) addProductError,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_AddProductSuccessful value) addProductSuccessful,
+    required TResult Function(_OnLoaded value) onProductList,
+    required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
+  }) {
+    return onProductDetail(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_AddProductError value)? addProductError,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
+    TResult? Function(_OnLoaded value)? onProductList,
+    TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
+  }) {
+    return onProductDetail?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_AddProductError value)? addProductError,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_AddProductSuccessful value)? addProductSuccessful,
+    TResult Function(_OnLoaded value)? onProductList,
+    TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
+    required TResult orElse(),
+  }) {
+    if (onProductDetail != null) {
+      return onProductDetail(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _onProductDetail implements ProductState {
+  const factory _onProductDetail(final ProductDetailResp product) =
+      _$onProductDetailImpl;
+
+  ProductDetailResp get product;
+  @JsonKey(ignore: true)
+  _$$onProductDetailImplCopyWith<_$onProductDetailImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$onProductDetailErrorImplCopyWith<$Res> {
+  factory _$$onProductDetailErrorImplCopyWith(_$onProductDetailErrorImpl value,
+          $Res Function(_$onProductDetailErrorImpl) then) =
+      __$$onProductDetailErrorImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$$onProductDetailErrorImplCopyWithImpl<$Res>
+    extends _$ProductStateCopyWithImpl<$Res, _$onProductDetailErrorImpl>
+    implements _$$onProductDetailErrorImplCopyWith<$Res> {
+  __$$onProductDetailErrorImplCopyWithImpl(_$onProductDetailErrorImpl _value,
+      $Res Function(_$onProductDetailErrorImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$onProductDetailErrorImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$onProductDetailErrorImpl implements _onProductDetailError {
+  const _$onProductDetailErrorImpl(this.message);
+
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'ProductState.onProductDetailError(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$onProductDetailErrorImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$onProductDetailErrorImplCopyWith<_$onProductDetailErrorImpl>
+      get copyWith =>
+          __$$onProductDetailErrorImplCopyWithImpl<_$onProductDetailErrorImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(String message) addProductError,
+    required TResult Function() loading,
+    required TResult Function(String message) addProductSuccessful,
+    required TResult Function(List<Product> products) onProductList,
+    required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
+  }) {
+    return onProductDetailError(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function(String message)? addProductError,
+    TResult? Function()? loading,
+    TResult? Function(String message)? addProductSuccessful,
+    TResult? Function(List<Product> products)? onProductList,
+    TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
+  }) {
+    return onProductDetailError?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(String message)? addProductError,
+    TResult Function()? loading,
+    TResult Function(String message)? addProductSuccessful,
+    TResult Function(List<Product> products)? onProductList,
+    TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
+    required TResult orElse(),
+  }) {
+    if (onProductDetailError != null) {
+      return onProductDetailError(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_AddProductError value) addProductError,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_AddProductSuccessful value) addProductSuccessful,
+    required TResult Function(_OnLoaded value) onProductList,
+    required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
+  }) {
+    return onProductDetailError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_AddProductError value)? addProductError,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
+    TResult? Function(_OnLoaded value)? onProductList,
+    TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
+  }) {
+    return onProductDetailError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_AddProductError value)? addProductError,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_AddProductSuccessful value)? addProductSuccessful,
+    TResult Function(_OnLoaded value)? onProductList,
+    TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
+    required TResult orElse(),
+  }) {
+    if (onProductDetailError != null) {
+      return onProductDetailError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _onProductDetailError implements ProductState {
+  const factory _onProductDetailError(final String message) =
+      _$onProductDetailErrorImpl;
+
+  String get message;
+  @JsonKey(ignore: true)
+  _$$onProductDetailErrorImplCopyWith<_$onProductDetailErrorImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$onProductDetailLoadingImplCopyWith<$Res> {
+  factory _$$onProductDetailLoadingImplCopyWith(
+          _$onProductDetailLoadingImpl value,
+          $Res Function(_$onProductDetailLoadingImpl) then) =
+      __$$onProductDetailLoadingImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$onProductDetailLoadingImplCopyWithImpl<$Res>
+    extends _$ProductStateCopyWithImpl<$Res, _$onProductDetailLoadingImpl>
+    implements _$$onProductDetailLoadingImplCopyWith<$Res> {
+  __$$onProductDetailLoadingImplCopyWithImpl(
+      _$onProductDetailLoadingImpl _value,
+      $Res Function(_$onProductDetailLoadingImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$onProductDetailLoadingImpl implements _onProductDetailLoading {
+  const _$onProductDetailLoadingImpl();
+
+  @override
+  String toString() {
+    return 'ProductState.onProductDetailLoading()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$onProductDetailLoadingImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(String message) addProductError,
+    required TResult Function() loading,
+    required TResult Function(String message) addProductSuccessful,
+    required TResult Function(List<Product> products) onProductList,
+    required TResult Function(String message) onProductListError,
+    required TResult Function(ProductDetailResp product) onProductDetail,
+    required TResult Function(String message) onProductDetailError,
+    required TResult Function() onProductDetailLoading,
+  }) {
+    return onProductDetailLoading();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function(String message)? addProductError,
+    TResult? Function()? loading,
+    TResult? Function(String message)? addProductSuccessful,
+    TResult? Function(List<Product> products)? onProductList,
+    TResult? Function(String message)? onProductListError,
+    TResult? Function(ProductDetailResp product)? onProductDetail,
+    TResult? Function(String message)? onProductDetailError,
+    TResult? Function()? onProductDetailLoading,
+  }) {
+    return onProductDetailLoading?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(String message)? addProductError,
+    TResult Function()? loading,
+    TResult Function(String message)? addProductSuccessful,
+    TResult Function(List<Product> products)? onProductList,
+    TResult Function(String message)? onProductListError,
+    TResult Function(ProductDetailResp product)? onProductDetail,
+    TResult Function(String message)? onProductDetailError,
+    TResult Function()? onProductDetailLoading,
+    required TResult orElse(),
+  }) {
+    if (onProductDetailLoading != null) {
+      return onProductDetailLoading();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_AddProductError value) addProductError,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_AddProductSuccessful value) addProductSuccessful,
+    required TResult Function(_OnLoaded value) onProductList,
+    required TResult Function(_OnProductListError value) onProductListError,
+    required TResult Function(_onProductDetail value) onProductDetail,
+    required TResult Function(_onProductDetailError value) onProductDetailError,
+    required TResult Function(_onProductDetailLoading value)
+        onProductDetailLoading,
+  }) {
+    return onProductDetailLoading(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_AddProductError value)? addProductError,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_AddProductSuccessful value)? addProductSuccessful,
+    TResult? Function(_OnLoaded value)? onProductList,
+    TResult? Function(_OnProductListError value)? onProductListError,
+    TResult? Function(_onProductDetail value)? onProductDetail,
+    TResult? Function(_onProductDetailError value)? onProductDetailError,
+    TResult? Function(_onProductDetailLoading value)? onProductDetailLoading,
+  }) {
+    return onProductDetailLoading?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_AddProductError value)? addProductError,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_AddProductSuccessful value)? addProductSuccessful,
+    TResult Function(_OnLoaded value)? onProductList,
+    TResult Function(_OnProductListError value)? onProductListError,
+    TResult Function(_onProductDetail value)? onProductDetail,
+    TResult Function(_onProductDetailError value)? onProductDetailError,
+    TResult Function(_onProductDetailLoading value)? onProductDetailLoading,
+    required TResult orElse(),
+  }) {
+    if (onProductDetailLoading != null) {
+      return onProductDetailLoading(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _onProductDetailLoading implements ProductState {
+  const factory _onProductDetailLoading() = _$onProductDetailLoadingImpl;
 }

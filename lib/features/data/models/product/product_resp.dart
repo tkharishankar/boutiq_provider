@@ -31,3 +31,28 @@ class Product with _$Product {
 
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 }
+
+@freezed
+class ProductSize with _$ProductSize {
+  const factory ProductSize({
+    @Default('') String sizeId,
+    @Default('') String productId,
+    @Default('') String productSize,
+    @Default(0) int quantity,
+    @Default(0) int selectedQuantity,
+    @Default(0.0) double price,
+  }) = _ProductSize;
+
+  factory ProductSize.fromJson(Map<String, dynamic> json) => _$ProductSizeFromJson(json);
+}
+
+@freezed
+class ProductDetailResp with _$ProductDetailResp {
+  const factory ProductDetailResp({
+    required Product product,
+    required List<ProductSize> productSize,
+  }) = _ProductDetailResp;
+
+  factory ProductDetailResp.fromJson(Map<String, dynamic> json) =>
+      _$ProductDetailRespFromJson(json);
+}

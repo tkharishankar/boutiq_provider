@@ -34,14 +34,9 @@ class GetProducts extends ProductEvent {
   const GetProducts({required this.providerID});
 }
 
-class ProductSize extends ProductEvent {
-  final String sizeName;
-  final String price;
-  final String quantity;
+class GetProductDetail extends ProductEvent {
+  final String productId;
 
-  const ProductSize({
-    required this.sizeName,
-    required this.price,
-    required this.quantity,
-  });
+  const GetProductDetail({required this.productId});
 }
+

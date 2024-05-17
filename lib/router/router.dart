@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../features/presentation/pages/dashboard/dashboard_screen.dart';
 import '../features/presentation/pages/login/login_screen.dart';
-import '../features/presentation/pages/product/add_new_product.dart';
+import '../features/presentation/pages/product/product_detail.dart';
 import '../features/presentation/pages/registration/registration_screen.dart';
 import '../features/splash_screen.dart';
 
@@ -109,7 +109,7 @@ class AppRouter {
                 var productId = state.pathParameters['productId'] ?? "";
                 return CustomTransitionPage(
                   key: state.pageKey,
-                  child: AddNewProduct(
+                  child: ProductDetail(
                     productId: productId,
                   ),
                   transitionsBuilder:

@@ -10,6 +10,8 @@ abstract class ProductRepo {
       AddProductReq addProductReq);
 
   Future<Either<ApiError, List<Product>>> getProducts(String providerID);
+
+  Future<Either<ApiError, ProductDetailResp>> getProductDetail(String productId);
 }
 
 class ProductRepository implements ProductRepo {
@@ -26,5 +28,10 @@ class ProductRepository implements ProductRepo {
   @override
   Future<Either<ApiError, List<Product>>> getProducts(String providerID) async {
     return await productRemoteDataSource.getProduct(providerID);
+  }
+
+  @override
+  Future<Either<ApiError, ProductDetailResp>> getProductDetail(String productId) async {
+    return await productRemoteDataSource.getProductDetail(productId);
   }
 }

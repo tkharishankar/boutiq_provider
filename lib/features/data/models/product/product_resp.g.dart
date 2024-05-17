@@ -53,3 +53,39 @@ Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
     };
+
+_$ProductSizeImpl _$$ProductSizeImplFromJson(Map<String, dynamic> json) =>
+    _$ProductSizeImpl(
+      sizeId: json['sizeId'] as String? ?? '',
+      productId: json['productId'] as String? ?? '',
+      productSize: json['productSize'] as String? ?? '',
+      quantity: (json['quantity'] as num?)?.toInt() ?? 0,
+      selectedQuantity: (json['selectedQuantity'] as num?)?.toInt() ?? 0,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+    );
+
+Map<String, dynamic> _$$ProductSizeImplToJson(_$ProductSizeImpl instance) =>
+    <String, dynamic>{
+      'sizeId': instance.sizeId,
+      'productId': instance.productId,
+      'productSize': instance.productSize,
+      'quantity': instance.quantity,
+      'selectedQuantity': instance.selectedQuantity,
+      'price': instance.price,
+    };
+
+_$ProductDetailRespImpl _$$ProductDetailRespImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ProductDetailRespImpl(
+      product: Product.fromJson(json['product'] as Map<String, dynamic>),
+      productSize: (json['productSize'] as List<dynamic>)
+          .map((e) => ProductSize.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$ProductDetailRespImplToJson(
+        _$ProductDetailRespImpl instance) =>
+    <String, dynamic>{
+      'product': instance.product,
+      'productSize': instance.productSize,
+    };

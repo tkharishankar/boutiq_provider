@@ -39,4 +39,8 @@ abstract class ApiService {
     @Path('orderId') String orderId,
     @Body() OrderStatusUpdateReq req,
   );
+
+  @GET('api/v1/products/detail/{productId}')
+  Future<HttpResponse<Product>> getProductDetail(
+      @Path('productId') String productId);
 }

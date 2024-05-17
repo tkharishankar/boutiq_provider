@@ -7,7 +7,9 @@ import '../../../data/models/product/product_resp.dart';
 import '../../../domain/repositories/product_repo.dart';
 
 part 'product_bloc.freezed.dart';
+
 part 'product_event.dart';
+
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
@@ -16,6 +18,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc({required this.productRepo}) : super(_Initial()) {
     on<AddProductReq>(_onAddProduct);
     on<GetProducts>(_getProducts);
+    on<GetProductDetail>(_getProductDetail);
   }
 
   Future<void> _onAddProduct(
@@ -34,11 +37,25 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future<void> _getProducts(
       GetProducts getProducts, Emitter<ProductState> emit) async {
     emit(const ProductState.loading());
-    final failureOrSuccess = await productRepo.getProducts(getProducts.providerID);
+    final failureOrSuccess =
+        await productRepo.getProducts(getProducts.providerID);
     failureOrSuccess.fold((failure) {
       emit(ProductState.onProductListError(failure.errorMessage));
     }, (success) {
       emit(ProductState.onProductList(success));
     });
   }
+
+  Future<void> _getProductDetail(
+      GetProductDetail getProductDetail, Emitter<ProductState> emit) async {
+    emit(const ProductState.onProductDetailLoading());
+    final failureOrSuccess =
+        await productRepo.getProductDetail(getProductDetail.productId);
+    failureOrSuccess.fold((failure) {
+      emit(ProductState.onProductDetailError(failure.errorMessage));
+    }, (success) {
+      emit(ProductState.onProductDetail(success));
+    });
+  }
+
 }
