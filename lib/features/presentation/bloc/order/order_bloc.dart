@@ -6,9 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../domain/repositories/order_repo.dart';
 
 part 'order_bloc.freezed.dart';
-
 part 'order_event.dart';
-
 part 'order_state.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {

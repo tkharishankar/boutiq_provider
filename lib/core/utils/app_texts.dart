@@ -22,6 +22,9 @@ class AppTexts {
   static String passwordInvalid ="Password is invalid";
   static String confirmPasswordInvalid ="Confirm Password is invalid";
 
+  static String addNewProduct = "Add new product";
+  static String updateProduct = "Update product";
   static String addNewSize = "add new size";
+  static String updateSize = "Update size";
 
 }

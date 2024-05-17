@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_resp.freezed.dart';
@@ -15,33 +14,20 @@ class AddProductResp with _$AddProductResp {
 @freezed
 class Product with _$Product {
   const factory Product({
-    @Default('') String name, // Add @required here
+    @Default('') String productId,
+    @Default('') String providerId,
     @Default('') String category,
-    @Default('') String price,
     @Default('') String deliveryPrice,
+    @Default('') String description,
+    @Default('') String name,
+    @Default('') String price,
     @Default('') String subCategory,
     @Default('') String subCategoryType,
-    @Default('') String description,
-    @Default([]) List<String> tags,
-    @Default([]) List<String> imageUrls,
+    @Default(<String>[]) List<String> imageUrls,
+    @Default('INR') String currency,
+    @Default(0) int createdAt,
+    @Default(0) int updatedAt,
   }) = _Product;
 
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      _$ProductFromJson(json);
-
-  factory Product.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-
-    return Product(
-      name: data['name'] ?? '',
-      category: data['category'] ?? '',
-      price: data['price'] ?? '',
-      deliveryPrice: data['deliveryPrice'] ?? '',
-      subCategory: data['subCategory'] ?? '',
-      subCategoryType: data['subCategoryType'] ?? '',
-      description: data['description'] ?? '',
-      tags: List<String>.from(data['tags'] ?? []),
-      imageUrls: List<String>.from(data['imageUrls'] ?? []),
-    );
-  }
+  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 }

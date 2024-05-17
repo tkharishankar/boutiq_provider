@@ -102,6 +102,7 @@ class _MainPage extends StatelessWidget {
         break;
       default:
         contentWidget = const DashboardDetail();
+        break;
     }
 
     return Container(
@@ -151,7 +152,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               'Account',
             ),
             _buildMenuItem(Icons.add_box_rounded, 'Add Product', onTap: () {
-              GoRouter.of(context).pushNamed(RouteConstants.addnewproduct);
+              GoRouter.of(context).pushNamed(
+                RouteConstants.addNewProduct,
+                pathParameters: {'productId': "XXX"},
+              );
             }),
             _buildMenuItem(
               Icons.production_quantity_limits,
@@ -165,10 +169,16 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               Icons.logout,
               'Logout',
               onTap: () {
-                showLogoutDialog(context, () {
-                  // Handle logout action here
-                  GoRouter.of(context).pushNamed(RouteConstants.login);
-                });
+                showCustomDialog(
+                  context,
+                  'Logout',
+                  'Are you sure you want to logout?',
+                  () {
+                    GoRouter.of(context).pushNamed(RouteConstants.login);
+                  },
+                  confirmText: 'Logout',
+                  cancelText: 'Cancel',
+                );
               },
             ),
           ],

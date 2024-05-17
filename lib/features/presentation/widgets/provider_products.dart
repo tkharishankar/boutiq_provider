@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/utils/responsive.dart';
+import '../../../router/router.dart';
 import '../../data/models/product/product_resp.dart';
 import '../bloc/product/product_bloc.dart';
 import '../pages/product/product_card.dart';
@@ -11,7 +13,6 @@ class ProviderProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // OverlayEntry? _overlayEntry;
     double screenWidth = MediaQuery.of(context).size.width;
     int crossAxisCount = (screenWidth / 150).floor();
     crossAxisCount = crossAxisCount.clamp(1, 4);
@@ -30,7 +31,6 @@ class ProviderProduct extends StatelessWidget {
                   );
                 },
                 onProductList: (products) {
-                  // _overlayEntry?.remove();
                   if (isMobile) {
                     return _buildGridView(products, 3);
                   } else {
@@ -53,7 +53,7 @@ class ProviderProduct extends StatelessWidget {
   Widget _buildGridView(List<Product> products, int count) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: count, // Adjust the number of columns as needed
+        crossAxisCount: count,
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 10.0,
       ),
@@ -61,14 +61,23 @@ class ProviderProduct extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final product = products[index];
         final double price = double.parse(product.price);
-        final String imageUrl = product.imageUrls[0];
-        return ProductCard(
-          productName: product.name,
-          brandName: product.description,
-          price: price,
-          rating: 4.5,
-          isFavorited: false,
-          imageUrl: imageUrl,
+        final String imageUrl =
+            product.imageUrls.isNotEmpty ? product.imageUrls[0] : '';
+        return GestureDetector(
+          onTap: () {
+            GoRouter.of(context).pushNamed(
+              RouteConstants.addNewProduct,
+              pathParameters: {'productId': product.productId},
+            );
+          },
+          child: ProductCard(
+            productName: product.name,
+            brandName: product.description,
+            price: price,
+            rating: 4.5,
+            isFavorited: false,
+            imageUrl: imageUrl,
+          ),
         );
       },
     );

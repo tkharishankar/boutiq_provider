@@ -2,31 +2,32 @@
 
 import 'package:flutter/material.dart';
 
-void showLogoutDialog(BuildContext context, VoidCallback onLogout) {
+void showCustomDialog(BuildContext context, String title, String content, VoidCallback onConfirm, {String confirmText = 'Confirm', String cancelText = 'Cancel'}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Logout'),
-        content: Text('Are you sure you want to logout?'),
+        title: Text(title),
+        content: Text(content),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               Navigator.of(context).pop(); // Close the dialog
             },
-            child: Text('Cancel'),
+            child: Text(cancelText),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop(); // Close the dialog
-              if (onLogout != null) {
-                onLogout(); // Execute the callback
+              if (onConfirm != null) {
+                onConfirm(); // Execute the callback
               }
             },
-            child: Text('Logout'),
+            child: Text(confirmText),
           ),
         ],
       );
     },
   );
 }
+

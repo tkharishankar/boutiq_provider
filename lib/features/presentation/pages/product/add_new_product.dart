@@ -18,13 +18,16 @@ import '../../../../core/utils/loading_overlay.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../router/router.dart';
 import '../../bloc/product/product_bloc.dart';
+import '../../widgets/app_dialog.dart';
 
 class AddNewProduct extends ConsumerStatefulWidget {
-  const AddNewProduct({super.key});
+  const AddNewProduct({super.key, required this.productId});
+
+  final String productId;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
-    return _AddNewProductState();
+    return _AddNewProductState(productId);
   }
 }
 
@@ -32,6 +35,11 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
     with LoadingOverlayMixin, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formSizeKey = GlobalKey();
+
+  final String productId;
+
+  _AddNewProductState(this.productId);
+
   OverlayEntry? _overlayEntry;
   final TextEditingController _productNameController = TextEditingController();
   String _productName = "";
@@ -58,6 +66,7 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
   String _sizePrice = "";
 
   late TabController _tabController;
+  int? _editingIndex;
 
   @override
   void initState() {
@@ -76,16 +85,18 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
     final isMobile = Responsive.isMobile(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Product', style: GoogleFonts.lato()),
+        title: Text(
+            productId == "XXX" ? AppTexts.addNewProduct : AppTexts.updateProduct,
+            style: GoogleFonts.lato()),
       ),
       body: SafeArea(
         child: Column(
           children: [
             TabBar(
               controller: _tabController,
-              tabs: [
-                Tab(text: 'Tab 1'),
-                Tab(text: 'Tab 2'),
+              tabs: const [
+                Tab(text: 'Product Detail'),
+                Tab(text: 'Variant & Quantity'),
               ],
             ),
             Expanded(
@@ -102,57 +113,6 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
       ),
     );
   }
-
-  // SafeArea(
-  //   child: SingleChildScrollView(
-  //     padding: const EdgeInsets.all(8),
-  //     child: Form(
-  //       key: _formKey,
-  //       child: Column(
-  //         children: [
-  //           Row(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Expanded(
-  //                 flex: isMobile ? 3 : 3, // Adjust flex based on device
-  //                 child: Column(
-  //                   children: [
-  //                     productName(),
-  //                     productIdentifier(),
-  //                     deliveryPrice(),
-  //                     description(),
-  //                     if (isMobile) productSizeView(),
-  //                     if (isMobile) productSizeListView(),
-  //                     if (isMobile) fileUpload(),
-  //                     if (isMobile) selectedImageList(),
-  //                   ],
-  //                 ),
-  //               ),
-  //               if (!isMobile)
-  //                 Expanded(
-  //                   flex: 3,
-  //                   child: Column(
-  //                     children: [productSizeView(), productSizeListView()],
-  //                   ),
-  //                 ),
-  //               if (!isMobile)
-  //                 Expanded(
-  //                   flex: 3,
-  //                   child: Column(
-  //                     children: [
-  //                       fileUpload(),
-  //                       selectedImageList(),
-  //                     ],
-  //                   ),
-  //                 ),
-  //             ],
-  //           ),
-  //           // Render only on mobile
-  //         ],
-  //       ),
-  //     ),
-  //   ),
-  // ),
 
   Widget _buildTab1(bool isMobile) {
     return SingleChildScrollView(
@@ -172,15 +132,16 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
                 ],
               ),
             ),
-            Expanded(
-              flex: 2,
-              child: Column(
-                children: [
-                  fileUpload(),
-                  selectedImageList(),
-                ],
+            if (!isMobile)
+              Expanded(
+                flex: 2,
+                child: Column(
+                  children: [
+                    fileUpload(),
+                    selectedImageList(),
+                  ],
+                ),
               ),
-            ),
           ],
         ));
   }
@@ -188,11 +149,26 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
   Widget _buildTab2(bool isMobile) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(8),
-      child: Column(
+      child: Row(
         children: [
-          productSizeView(),
-          productSizeListView(),
-          // _buildActionButton(),
+          Expanded(
+            flex: isMobile ? 1 : 2, // Adjust flex based on device
+            child: Column(
+              children: [
+                productSizeView(),
+                if (isMobile) productSizeListView(),
+              ],
+            ),
+          ),
+          if (!isMobile)
+            Expanded(
+              flex: 2,
+              child: Column(
+                children: [
+                  productSizeListView(),
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -500,7 +476,20 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
         }).toList(),
       );
     } else {
-      return Container();
+      return Container(
+        height: 200.0,
+        margin: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300, width: 1.0),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: const Center(
+          child: Text(
+            'Please select the product images',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      );
     }
   }
 
@@ -574,115 +563,146 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
   }
 
   Widget productSizeListView() {
-    if (productSizeList != null && productSizeList!.isNotEmpty) {
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300, width: 1.0),
-            borderRadius: BorderRadius.circular(4)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 10.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Size Name',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+    if (productSizeList == null || productSizeList!.isEmpty) {
+      return Container();
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300, width: 1.0),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Size Name',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Expanded(
-                    child: Text(
-                      'Quantity',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                ),
+                Expanded(
+                  child: Text(
+                    'Quantity',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Expanded(
-                    child: Text(
-                      'Price',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                ),
+                Expanded(
+                  child: Text(
+                    'Price',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Expanded(
-                    child: Text(
-                      '',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                ),
+                Expanded(
+                  child: Text(
+                    '',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Expanded(
-                    child: Text(
-                      '',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                ),
+                Expanded(
+                  child: Text(
+                    '',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Wrap(
-              spacing: 10.0,
-              children: productSizeList!.asMap().entries.map((entry) {
-                final productSize = entry.value;
-                return Column(
+          ),
+          const Divider(
+            color: Colors.grey,
+            thickness: 1.0,
+          ),
+          Column(
+            children: productSizeList!.asMap().entries.map((entry) {
+              int index = entry.key;
+              ProductSize productSize = entry.value;
+
+              return Container(
+                margin: const EdgeInsets.all(10.0),
+                child: Row(
                   children: [
-                    const Divider(
-                      // Add a Divider between rows
-                      color: Colors.grey, // Set the color of the Divider
-                      thickness: 1.0, // Set the thickness of the Divider
+                    Expanded(
+                      child: Text(
+                        productSize.sizeName,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.all(10.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              productSize.sizeName,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              productSize.quantity,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              productSize.price,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              'Edit',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              'Delete',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
+                    Expanded(
+                      child: Text(
+                        productSize.quantity,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        productSize.price,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => editProductSize(index),
+                        child: const Text(
+                          'Edit',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => deleteProductSize(index),
+                        child: const Text(
+                          'Delete',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
                     ),
                   ],
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Container();
-    }
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void editProductSize(int index) {
+    final productSize = productSizeList![index];
+    setState(() {
+      _editingIndex = index;
+      _sizeNameController.text = productSize.sizeName;
+      _sizeQuantityController.text = productSize.quantity;
+      _sizePriceController.text = productSize.price;
+    });
+  }
+
+  void deleteProductSize(int index) {
+    showCustomDialog(
+      context,
+      'Confirm Deletion',
+      'Are you sure you want to delete this item?',
+      () {
+        setState(() {
+          productSizeList!.removeAt(index);
+          _editingIndex = null;
+        });
+      },
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    );
   }
 
   String? sizeNameValidator(text) {
@@ -692,7 +712,13 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
     return null;
   }
 
-  productSizeView() {
+  bool isDuplicateSizeName(String sizeName) {
+    return productSizeList != null &&
+        productSizeList!.any((productSize) =>
+            productSize.sizeName.toLowerCase() == sizeName.toLowerCase());
+  }
+
+  Widget productSizeView() {
     return SafeArea(
       child: Form(
         key: _formSizeKey,
@@ -700,34 +726,12 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Size Name',
-                    style: GoogleFonts.lato(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: _sizeNameController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      hintText: 'Enter size name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade300,
-                          width: 1.0,
-                        ),
-                      ),
-                    ),
-                    validator: sizeNameValidator,
-                    onChanged: (text) => setState(() => _sizeName = text),
-                  )
-                ],
+              child: _buildFormField(
+                label: 'Size Name',
+                controller: _sizeNameController,
+                hintText: 'Enter size name',
+                validator: sizeNameValidator,
+                onChanged: (text) => setState(() => _sizeName = text),
               ),
             ),
             Row(
@@ -736,39 +740,16 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Quantity',
-                          style: GoogleFonts.lato(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _sizeQuantityController,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          decoration: InputDecoration(
-                            hintText: 'Enter total quantity',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              borderSide: BorderSide(
-                                color: Colors.grey.shade300,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          validator: priceValidator,
-                          onChanged: (text) =>
-                              setState(() => _sizeQuantity = text),
-                        )
+                    child: _buildFormField(
+                      label: 'Quantity',
+                      controller: _sizeQuantityController,
+                      hintText: 'Enter total quantity',
+                      validator: priceValidator,
+                      onChanged: (text) => setState(() => _sizeQuantity = text),
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       ],
                     ),
                   ),
@@ -777,39 +758,16 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Price',
-                          style: GoogleFonts.lato(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _sizePriceController,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          decoration: InputDecoration(
-                            hintText: 'Enter per quantity price.',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              borderSide: BorderSide(
-                                color: Colors.grey.shade300,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          validator: priceValidator,
-                          onChanged: (text) =>
-                              setState(() => _sizePrice = text),
-                        )
+                    child: _buildFormField(
+                      label: 'Price',
+                      controller: _sizePriceController,
+                      hintText: 'Enter per quantity price',
+                      validator: priceValidator,
+                      onChanged: (text) => setState(() => _sizePrice = text),
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       ],
                     ),
                   ),
@@ -819,16 +777,11 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: AppButton(
-                text: AppTexts.addNewSize,
-                onTap: () {
-                  if (_formSizeKey.currentState!.validate()) {
-                    productSizeList?.add(ProductSize(
-                        sizeName: _sizeName,
-                        price: _sizePrice,
-                        quantity: _sizeQuantity));
-                    setState(() {});
-                  }
-                },
+                text: _editingIndex == null
+                    ? AppTexts.addNewSize
+                    : AppTexts.updateSize,
+                onTap:
+                    _editingIndex == null ? _addOrUpdateSize : _addOrUpdateSize,
                 textSize: 18,
                 textColor: AppColors.white100,
                 color: AppColors.primaryColor.withAlpha(150),
@@ -837,6 +790,112 @@ class _AddNewProductState extends ConsumerState<AddNewProduct>
           ],
         ),
       ),
+    );
+  }
+
+// Function to add or update size
+  void _addOrUpdateSize() {
+    if (_formSizeKey.currentState!.validate()) {
+      if (_editingIndex == null) {
+        _addNewSize();
+      } else {
+        _updateExistingSize();
+      }
+    }
+  }
+
+// Function to add a new size
+  void _addNewSize() {
+    if (isDuplicateSizeName(_sizeName)) {
+      _showDuplicateNameDialog();
+    } else {
+      productSizeList?.add(ProductSize(
+        sizeName: _sizeName,
+        price: _sizePrice,
+        quantity: _sizeQuantity,
+      ));
+      _editingIndex = null;
+      _clearFormFields();
+    }
+  }
+
+// Function to update an existing size
+  void _updateExistingSize() {
+    final existingIndex = productSizeList!.indexWhere((productSize) =>
+        productSize.sizeName.toLowerCase() == _sizeName.toLowerCase() &&
+        productSize != productSizeList![_editingIndex!]);
+    if (existingIndex != -1) {
+      _showDuplicateNameDialog();
+    } else {
+      productSizeList![_editingIndex!] = ProductSize(
+        sizeName: _sizeName,
+        price: _sizePrice,
+        quantity: _sizeQuantity,
+      );
+      _editingIndex = null;
+      _clearFormFields();
+    }
+  }
+
+// Function to show a dialog for duplicate size name
+  void _showDuplicateNameDialog() {
+    showCustomDialog(
+      context,
+      'Duplicate Size Name',
+      'The size name already exists. Please enter a different size name.',
+      () {},
+      confirmText: 'OK',
+    );
+  }
+
+// Function to clear form fields
+  void _clearFormFields() {
+    setState(() {
+      // _sizeNameController.text = "";
+      // _sizeQuantityController.text = "";
+      // _sizePriceController.text = "";
+    });
+  }
+
+  Widget _buildFormField({
+    required String label,
+    required TextEditingController controller,
+    required String hintText,
+    required String? Function(String?) validator,
+    required Function(String) onChanged,
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.lato(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextFormField(
+          controller: controller,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          decoration: InputDecoration(
+            hintText: hintText,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: BorderSide(
+                color: Colors.grey.shade300,
+                width: 1.0,
+              ),
+            ),
+          ),
+          validator: validator,
+          onChanged: onChanged,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
+        ),
+      ],
     );
   }
 }

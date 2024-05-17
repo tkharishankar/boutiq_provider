@@ -12,7 +12,7 @@ class ProductCard extends StatelessWidget {
   final bool isFavorited;
   final String imageUrl;
 
-  ProductCard({
+  const ProductCard({super.key,
     required this.productName,
     required this.brandName,
     required this.price,
@@ -23,11 +23,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        GoRouter.of(context).pushReplacementNamed(RouteConstants.productDetail);
-      },
-      child: Padding(
+    return Padding(
         padding: const EdgeInsets.all(8),
         child: Stack(
           alignment: Alignment.topLeft,
@@ -36,7 +32,6 @@ class ProductCard extends StatelessWidget {
             ratingView(productName),
           ],
         ),
-      ),
     );
   }
 
@@ -46,7 +41,7 @@ class ProductCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.transparentWhite,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(8.0), topLeft: Radius.circular(8.0)),
             border: Border.all(
               color: AppColors.transparentWhite,

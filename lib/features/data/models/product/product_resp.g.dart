@@ -19,31 +19,37 @@ Map<String, dynamic> _$$AddProductRespImplToJson(
 
 _$ProductImpl _$$ProductImplFromJson(Map<String, dynamic> json) =>
     _$ProductImpl(
-      name: json['name'] as String? ?? '',
+      productId: json['productId'] as String? ?? '',
+      providerId: json['providerId'] as String? ?? '',
       category: json['category'] as String? ?? '',
-      price: json['price'] as String? ?? '',
       deliveryPrice: json['deliveryPrice'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      price: json['price'] as String? ?? '',
       subCategory: json['subCategory'] as String? ?? '',
       subCategoryType: json['subCategoryType'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      tags:
-          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              const [],
       imageUrls: (json['imageUrls'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          const [],
+          const <String>[],
+      currency: json['currency'] as String? ?? 'INR',
+      createdAt: (json['createdAt'] as num?)?.toInt() ?? 0,
+      updatedAt: (json['updatedAt'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
     <String, dynamic>{
-      'name': instance.name,
+      'productId': instance.productId,
+      'providerId': instance.providerId,
       'category': instance.category,
-      'price': instance.price,
       'deliveryPrice': instance.deliveryPrice,
+      'description': instance.description,
+      'name': instance.name,
+      'price': instance.price,
       'subCategory': instance.subCategory,
       'subCategoryType': instance.subCategoryType,
-      'description': instance.description,
-      'tags': instance.tags,
       'imageUrls': instance.imageUrls,
+      'currency': instance.currency,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
