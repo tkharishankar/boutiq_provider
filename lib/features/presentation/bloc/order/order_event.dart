@@ -21,3 +21,10 @@ class GetOrderStatusTraces extends OrderEvent {
 
   const GetOrderStatusTraces({required this.orderId});
 }
+
+class UpdateOrderStatus extends OrderEvent {
+  final String orderId;
+  final OrderStatus status;
+
+  const UpdateOrderStatus({required this.orderId, required this.status});
+}

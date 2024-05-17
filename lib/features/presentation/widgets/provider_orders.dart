@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:boutiq_provider/core/common/extension/string_ext.dart';
 import 'package:boutiq_provider/features/data/models/order/order_summary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/themes/color_scheme.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/utils/size.dart';
 import '../bloc/order/order_bloc.dart';
@@ -87,6 +89,19 @@ class _ProviderOrderState extends State<ProviderOrder> {
     );
   }
 
+  Color _getStatusColor(OrderStatus? status) {
+    switch (status) {
+      case OrderStatus.CREATED:
+        return AppColors.orange.withOpacity(0.5);
+      case OrderStatus.SHIPPED:
+        return AppColors.yellow.withOpacity(0.5);
+      case OrderStatus.DELIVERED:
+        return AppColors.green.withOpacity(0.5);
+      default:
+        return Colors.grey; // Default color for other statuses
+    }
+  }
+
   Widget _buildOrderDataTable() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -115,7 +130,20 @@ class _ProviderOrderState extends State<ProviderOrder> {
                 DataCell(Text(order.orderId ?? '')),
                 DataCell(Text(address.name ?? '')),
                 DataCell(Text((order.productItems?.length ?? 0).toString())),
-                DataCell(Text(order.status?.name ?? '')),
+                DataCell(
+                    Container(
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(order.status), // Set your desired background color here
+                        borderRadius: BorderRadius.circular(10), // Set the border radius
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                        child: Text(
+                          order.status?.name.toLowerCase().capitalize() ?? '',
+                          style: const TextStyle(color: Colors.black), // Set the text color
+                        ),
+                      ),
+                    )),
                 DataCell(Text(paymentData.totalAmount.toString())),
               ],
             );
@@ -144,10 +172,46 @@ class OrderDetail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Delivery address (${orderSummary.address?.label})',
-                  style: const TextStyle(
-                      fontSize: 18.0, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: const Text('Status detail',
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              ),
+              Column(
+                children: [
+                  BlocBuilder<OrderBloc, OrderState>(
+                    bloc: context.read<OrderBloc>()
+                      ..add(GetOrderStatusTraces(
+                          orderId: orderSummary.orderId ?? "")),
+                    builder: (context, state) {
+                      return state.maybeWhen(
+                        orElse: () {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                        orderStatusTracesList: (orderStatusTraces) {
+                          return TrackingView(
+                              orderStatusTraces: orderStatusTraces);
+                        },
+                        orderStatusTracesListError: (message) {
+                          return Center(
+                            child: Text(message),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const Divider(thickness: 1.0),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                      'Delivery address (${orderSummary.address?.label})',
+                      style: const TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold))),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -165,46 +229,6 @@ class OrderDetail extends StatelessWidget {
                     Text('${orderSummary.address?.mobileNumber}'),
                   ],
                 ),
-              ),
-              const Divider(thickness: 1.0),
-              const Text('Item Summary',
-                  style:
-                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8.0),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: orderSummary.productItems?.length,
-                itemBuilder: (context, index) {
-                  final productItem = orderSummary.productItems?[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      children: [
-                        kIsWeb
-                            ? Image.network(
-                                productItem!.imageUrl ?? "",
-                                width: 100,
-                                height: 100,
-                              )
-                            : Image.file(
-                                File(productItem!.imageUrl ?? ""),
-                                width: 100,
-                                height: 100,
-                              ),
-                        const HorizontalMargin(10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(productItem.name.toString()),
-                            Text(
-                                '${productItem.productSize} * ${productItem.quantity}'),
-                            Text('Total: ₹ ${productItem.totalAmount}'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
               ),
               const Divider(thickness: 1.0),
               Padding(
@@ -252,37 +276,136 @@ class OrderDetail extends StatelessWidget {
                   ],
                 ),
               ),
-              Column(
-                children: [
-                  BlocBuilder<OrderBloc, OrderState>(
-                    bloc: context.read<OrderBloc>()
-                      ..add(GetOrderStatusTraces(
-                          orderId: orderSummary.orderId ?? "")),
-                    builder: (context, state) {
-                      return state.maybeWhen(
-                        orElse: () {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                        orderStatusTracesList: (orderStatusTraces) {
-                          return TrackingView(
-                              orderStatusTraces: orderStatusTraces);
-                        },
-                        orderStatusTracesListError: (message) {
-                          return Center(
-                            child: Text(message),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ],
-              )
+              const Divider(thickness: 1.0),
+              const Text('Item Summary',
+                  style:
+                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8.0),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: orderSummary.productItems?.length,
+                itemBuilder: (context, index) {
+                  final productItem = orderSummary.productItems?[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Row(
+                      children: [
+                        kIsWeb
+                            ? Image.network(
+                                productItem!.imageUrl ?? "",
+                                width: 100,
+                                height: 100,
+                              )
+                            : Image.file(
+                                File(productItem!.imageUrl ?? ""),
+                                width: 100,
+                                height: 100,
+                              ),
+                        const HorizontalMargin(10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(productItem.name.toString()),
+                            Text(
+                                '${productItem.productSize} * ${productItem.quantity}'),
+                            Text('Total: ₹ ${productItem.totalAmount}'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _showActionsBottomSheet(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 18),
+                    backgroundColor: AppColors.primaryColor,
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('Change Status',
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  void _showActionsBottomSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Text(
+                'Mark order as',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600], // Light gray color
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text('Shipped',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black, // Light gray color
+                        fontWeight: FontWeight.bold,
+                      ))),
+              onTap: () {
+                Navigator.pop(context);
+                _performAction(context, OrderStatus.SHIPPED);
+              },
+            ),
+            ListTile(
+              title: const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text('Delivered',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black, // Light gray color
+                        fontWeight: FontWeight.bold,
+                      ))),
+              onTap: () {
+                Navigator.pop(context);
+                _performAction(context, OrderStatus.DELIVERED);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _performAction(BuildContext context, OrderStatus state) {
+    context.read<OrderBloc>().add(UpdateOrderStatus(
+          orderId: orderSummary.orderId ?? "",
+          status: state,
+        ));
   }
 }

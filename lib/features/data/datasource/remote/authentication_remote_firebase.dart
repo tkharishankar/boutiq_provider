@@ -28,7 +28,6 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
   Future<Either<ApiError, RegisterResponse>> createAccount(Map<String, dynamic> body) async {
     try {
       final response = await apiService!.providerRegistration(body);
-      debugPrint("Provider Reg response ${response.response.statusCode}");
 
       if (response.response.statusCode == 200) {
         final data = {

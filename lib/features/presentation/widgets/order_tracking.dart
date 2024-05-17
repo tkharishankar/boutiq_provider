@@ -1,3 +1,4 @@
+import 'package:boutiq_provider/core/common/extension/string_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -6,8 +7,7 @@ import '../../data/models/order/order_summary.dart';
 class TrackingView extends StatelessWidget {
   final List<OrderStatusTrace> orderStatusTraces;
 
-  const TrackingView({Key? key, required this.orderStatusTraces})
-      : super(key: key);
+  const TrackingView({super.key, required this.orderStatusTraces});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class TrackingView extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             // Disable scrolling for the inner ListView
             itemCount: orderStatusTraces.length,
-            separatorBuilder: (context, index) => Divider(),
+            separatorBuilder: (context, index) => const Divider(),
             // Add a divider between list tiles
             itemBuilder: (context, index) {
               final trace = orderStatusTraces[index];
@@ -29,7 +29,7 @@ class TrackingView extends StatelessWidget {
               );
               return ListTile(
                 contentPadding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    const EdgeInsets.all(8.0),
                 leading: CircleAvatar(
                   backgroundColor: Colors.blue,
                   // Show order step number
@@ -38,7 +38,7 @@ class TrackingView extends StatelessWidget {
                   child: Text((index + 1).toString()),
                 ),
                 title: Text(
-                  trace.orderStatus.name,
+                  trace.orderStatus.name.toLowerCase().capitalize(),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),

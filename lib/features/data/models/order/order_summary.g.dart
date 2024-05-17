@@ -125,3 +125,15 @@ Map<String, dynamic> _$$OrderStatusTraceImplToJson(
       'orderStatus': _$OrderStatusEnumMap[instance.orderStatus]!,
       'timestamp': instance.timestamp,
     };
+
+_$OrderStatusUpdateReqImpl _$$OrderStatusUpdateReqImplFromJson(
+        Map<String, dynamic> json) =>
+    _$OrderStatusUpdateReqImpl(
+      orderStatus: $enumDecode(_$OrderStatusEnumMap, json['orderStatus']),
+    );
+
+Map<String, dynamic> _$$OrderStatusUpdateReqImplToJson(
+        _$OrderStatusUpdateReqImpl instance) =>
+    <String, dynamic>{
+      'orderStatus': _$OrderStatusEnumMap[instance.orderStatus]!,
+    };

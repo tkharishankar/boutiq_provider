@@ -1278,3 +1278,144 @@ abstract class _OrderStatusTrace implements OrderStatusTrace {
   _$$OrderStatusTraceImplCopyWith<_$OrderStatusTraceImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+OrderStatusUpdateReq _$OrderStatusUpdateReqFromJson(Map<String, dynamic> json) {
+  return _OrderStatusUpdateReq.fromJson(json);
+}
+
+/// @nodoc
+mixin _$OrderStatusUpdateReq {
+  OrderStatus get orderStatus => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $OrderStatusUpdateReqCopyWith<OrderStatusUpdateReq> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $OrderStatusUpdateReqCopyWith<$Res> {
+  factory $OrderStatusUpdateReqCopyWith(OrderStatusUpdateReq value,
+          $Res Function(OrderStatusUpdateReq) then) =
+      _$OrderStatusUpdateReqCopyWithImpl<$Res, OrderStatusUpdateReq>;
+  @useResult
+  $Res call({OrderStatus orderStatus});
+}
+
+/// @nodoc
+class _$OrderStatusUpdateReqCopyWithImpl<$Res,
+        $Val extends OrderStatusUpdateReq>
+    implements $OrderStatusUpdateReqCopyWith<$Res> {
+  _$OrderStatusUpdateReqCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? orderStatus = null,
+  }) {
+    return _then(_value.copyWith(
+      orderStatus: null == orderStatus
+          ? _value.orderStatus
+          : orderStatus // ignore: cast_nullable_to_non_nullable
+              as OrderStatus,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$OrderStatusUpdateReqImplCopyWith<$Res>
+    implements $OrderStatusUpdateReqCopyWith<$Res> {
+  factory _$$OrderStatusUpdateReqImplCopyWith(_$OrderStatusUpdateReqImpl value,
+          $Res Function(_$OrderStatusUpdateReqImpl) then) =
+      __$$OrderStatusUpdateReqImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({OrderStatus orderStatus});
+}
+
+/// @nodoc
+class __$$OrderStatusUpdateReqImplCopyWithImpl<$Res>
+    extends _$OrderStatusUpdateReqCopyWithImpl<$Res, _$OrderStatusUpdateReqImpl>
+    implements _$$OrderStatusUpdateReqImplCopyWith<$Res> {
+  __$$OrderStatusUpdateReqImplCopyWithImpl(_$OrderStatusUpdateReqImpl _value,
+      $Res Function(_$OrderStatusUpdateReqImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? orderStatus = null,
+  }) {
+    return _then(_$OrderStatusUpdateReqImpl(
+      orderStatus: null == orderStatus
+          ? _value.orderStatus
+          : orderStatus // ignore: cast_nullable_to_non_nullable
+              as OrderStatus,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$OrderStatusUpdateReqImpl implements _OrderStatusUpdateReq {
+  const _$OrderStatusUpdateReqImpl({required this.orderStatus});
+
+  factory _$OrderStatusUpdateReqImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OrderStatusUpdateReqImplFromJson(json);
+
+  @override
+  final OrderStatus orderStatus;
+
+  @override
+  String toString() {
+    return 'OrderStatusUpdateReq(orderStatus: $orderStatus)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$OrderStatusUpdateReqImpl &&
+            (identical(other.orderStatus, orderStatus) ||
+                other.orderStatus == orderStatus));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, orderStatus);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$OrderStatusUpdateReqImplCopyWith<_$OrderStatusUpdateReqImpl>
+      get copyWith =>
+          __$$OrderStatusUpdateReqImplCopyWithImpl<_$OrderStatusUpdateReqImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$OrderStatusUpdateReqImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _OrderStatusUpdateReq implements OrderStatusUpdateReq {
+  const factory _OrderStatusUpdateReq(
+      {required final OrderStatus orderStatus}) = _$OrderStatusUpdateReqImpl;
+
+  factory _OrderStatusUpdateReq.fromJson(Map<String, dynamic> json) =
+      _$OrderStatusUpdateReqImpl.fromJson;
+
+  @override
+  OrderStatus get orderStatus;
+  @override
+  @JsonKey(ignore: true)
+  _$$OrderStatusUpdateReqImplCopyWith<_$OrderStatusUpdateReqImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}

@@ -118,8 +118,6 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
 
     try {
       final response = await apiService!.getProviderProductsList(providerID);
-      debugPrint("Provider Reg response ${response.response.data}");
-
       if (response.response.statusCode == 200) {
 
         List<Map<String, dynamic>> jsonList = response.response.data.cast<Map<String, dynamic>>();

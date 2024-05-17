@@ -76,3 +76,12 @@ class OrderStatusTrace with _$OrderStatusTrace {
 enum OrderStatus {
   CART, INITIATED, CREATED, SHIPPED, DISPATCHED, DELIVERED, CANCELED,
 }
+
+@freezed
+class OrderStatusUpdateReq with _$OrderStatusUpdateReq {
+  const factory OrderStatusUpdateReq({
+    required OrderStatus orderStatus,
+  }) = _OrderStatusUpdateReq;
+
+  factory OrderStatusUpdateReq.fromJson(Map<String, dynamic> json) => _$OrderStatusUpdateReqFromJson(json);
+}
