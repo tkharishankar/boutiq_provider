@@ -23,13 +23,12 @@ class TrackingView extends StatelessWidget {
             // Add a divider between list tiles
             itemBuilder: (context, index) {
               final trace = orderStatusTraces[index];
+
               final formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(
-                DateTime.fromMillisecondsSinceEpoch(trace.timestamp * 1000,
-                    isUtc: true),
-              );
+                  DateTime.fromMillisecondsSinceEpoch(trace.timestamp * 1000));
+
               return ListTile(
-                contentPadding:
-                    const EdgeInsets.all(8.0),
+                contentPadding: const EdgeInsets.all(8.0),
                 leading: CircleAvatar(
                   backgroundColor: Colors.blue,
                   // Show order step number

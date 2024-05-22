@@ -28,7 +28,7 @@ _$PaymentDataImpl _$$PaymentDataImplFromJson(Map<String, dynamic> json) =>
     _$PaymentDataImpl(
       transactionId: json['transactionId'] as String?,
       totalAmount: (json['totalAmount'] as num?)?.toInt(),
-      deliveryFee: (json['deliveryFee'] as num?)?.toInt(),
+      deliveryCharge: (json['deliveryCharge'] as num?)?.toInt(),
       subTotalAmount: (json['subTotalAmount'] as num?)?.toInt(),
       paymentState: json['paymentState'] as String?,
     );
@@ -37,7 +37,7 @@ Map<String, dynamic> _$$PaymentDataImplToJson(_$PaymentDataImpl instance) =>
     <String, dynamic>{
       'transactionId': instance.transactionId,
       'totalAmount': instance.totalAmount,
-      'deliveryFee': instance.deliveryFee,
+      'deliveryCharge': instance.deliveryCharge,
       'subTotalAmount': instance.subTotalAmount,
       'paymentState': instance.paymentState,
     };
@@ -86,6 +86,7 @@ _$OrderSummaryImpl _$$OrderSummaryImplFromJson(Map<String, dynamic> json) =>
               : ProductItem.fromJson(e as Map<String, dynamic>))
           .toList(),
       updatedAt: (json['updatedAt'] as num?)?.toInt(),
+      createdAt: (json['createdAt'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$OrderSummaryImplToJson(_$OrderSummaryImpl instance) =>
@@ -98,6 +99,7 @@ Map<String, dynamic> _$$OrderSummaryImplToJson(_$OrderSummaryImpl instance) =>
       'address': instance.address,
       'productItems': instance.productItems,
       'updatedAt': instance.updatedAt,
+      'createdAt': instance.createdAt,
     };
 
 const _$OrderStatusEnumMap = {

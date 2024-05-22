@@ -11,44 +11,15 @@ class DashboardDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double screenWidth = MediaQuery.of(context).size.width;
     int crossAxisCount = (screenWidth / 150).floor();
     crossAxisCount = crossAxisCount.clamp(1, 4);
     final isMobile = Responsive.isMobile(context);
+
     return Column(
       children: [
         Expanded(
-            child:
-            _buildGridView([], 6)
-          // BlocBuilder<OrderBloc, OrderState>(
-          //   bloc: context.read<OrderBloc>()
-          //     ..add(const GetProviderDashBoard(providerID: '2342024PROV0662')),
-          //   builder: (context, state) {
-          //     return state.maybeWhen(
-          //       orElse: () {
-          //         return const Center(
-          //           child: CircularProgressIndicator(),
-          //         );
-          //       },
-          //       onProductList: (products) {
-          //         // _overlayEntry?.remove();
-          //         if (isMobile) {
-          //           return _buildGridView(products, 2);
-          //         } else {
-          //           return _buildGridView(products, 6);
-          //         }
-          //       },
-          //       onProductListError: (message) {
-          //         return Center(
-          //           child: Text(message),
-          //         );
-          //       },
-          //     );
-          //   },
-          // ),
+          child: isMobile ? _buildGridView([], 2) : _buildGridView([], 6),
         ),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:boutiq_provider/features/data/models/order/order_summary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/themes/color_scheme.dart';
 import '../../../core/utils/responsive.dart';
@@ -32,53 +33,66 @@ class _ProviderOrderState extends State<ProviderOrder> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
     return Row(
       children: [
         Expanded(
-          flex: 6,
+          flex: 7,
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                BlocListener<OrderBloc, OrderState>(
-                  bloc: _orderBloc,
-                  listener: (context, state) {
-                    state.maybeWhen(
-                      onOrderList: (orders) {
-                        setState(() {
-                          _orders = orders;
-                        });
-                      },
-                      orElse: () {},
-                    );
-                  },
-                  child: BlocBuilder<OrderBloc, OrderState>(
+            child: Container(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height, // Make sure the container takes the full height
+              child: Column(
+                children: [
+                  BlocListener<OrderBloc, OrderState>(
                     bloc: _orderBloc,
-                    builder: (context, state) {
-                      return state.maybeWhen(
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        onOrderList: (orders) => _orders.isNotEmpty
-                            ? _buildOrderDataTable()
-                            : Container(),
-                        onOrderListError: (message) =>
-                            Center(child: Text(message)),
-                        orElse: () => _orders.isNotEmpty
-                            ? _buildOrderDataTable()
-                            : Container(),
+                    listener: (context, state) {
+                      state.maybeWhen(
+                        onOrderList: (orders) {
+                          setState(() {
+                            _orders = orders;
+                          });
+                        },
+                        orElse: () {},
                       );
                     },
+                    child: BlocBuilder<OrderBloc, OrderState>(
+                      bloc: _orderBloc,
+                      builder: (context, state) {
+                        return state.maybeWhen(
+                          loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                          onOrderList: (orders) =>
+                          _orders.isNotEmpty
+                              ? _buildOrderDataTable()
+                              : Container(),
+                          onOrderListError: (message) =>
+                              Center(child: Text(message)),
+                          orElse: () =>
+                          _orders.isNotEmpty
+                              ? _buildOrderDataTable()
+                              : Container(),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
         if (!isMobile)
           Expanded(
-            flex: 4,
-            child: Padding(
+            flex: 3,
+            child: Container(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height, // Make sure the container takes the full height
               padding: const EdgeInsets.all(0.0),
               child: _selectedOrder != null
                   ? OrderDetail(orderSummary: _selectedOrder!)
@@ -88,6 +102,7 @@ class _ProviderOrderState extends State<ProviderOrder> {
       ],
     );
   }
+
 
   Color _getStatusColor(OrderStatus? status) {
     switch (status) {
@@ -108,6 +123,7 @@ class _ProviderOrderState extends State<ProviderOrder> {
       child: DataTable(
         columns: const [
           DataColumn(label: Text('Order ID')),
+          DataColumn(label: Text('Date')),
           DataColumn(label: Text('Customer Name')),
           DataColumn(label: Text('Products')),
           DataColumn(label: Text('Order Status')),
@@ -117,6 +133,10 @@ class _ProviderOrderState extends State<ProviderOrder> {
           ..._orders.map((order) {
             final address = order.address!;
             final paymentData = order.paymentData!;
+            final formattedDateTime = order.updatedAt != null
+                ? DateFormat('yyyy-MM-dd HH:mm').format(
+                DateTime.fromMillisecondsSinceEpoch(order.updatedAt! * 1000)
+            ) : 'N/A';
             return DataRow(
               selected: _selectedOrder == order,
               onSelectChanged: (selected) {
@@ -128,19 +148,24 @@ class _ProviderOrderState extends State<ProviderOrder> {
               },
               cells: [
                 DataCell(Text(order.orderId ?? '')),
+                DataCell(Text(formattedDateTime)),
                 DataCell(Text(address.name ?? '')),
                 DataCell(Text((order.productItems?.length ?? 0).toString())),
                 DataCell(
                     Container(
                       decoration: BoxDecoration(
-                        color: _getStatusColor(order.status), // Set your desired background color here
-                        borderRadius: BorderRadius.circular(10), // Set the border radius
+                        color: _getStatusColor(order.status),
+                        // Set your desired background color here
+                        borderRadius: BorderRadius.circular(
+                            10), // Set the border radius
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4.0, horizontal: 8.0),
                         child: Text(
                           order.status?.name.toLowerCase().capitalize() ?? '',
-                          style: const TextStyle(color: Colors.black), // Set the text color
+                          style: const TextStyle(color: Colors
+                              .black), // Set the text color
                         ),
                       ),
                     )),
@@ -176,7 +201,7 @@ class OrderDetail extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: const Text('Status detail',
                     style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                    TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
               ),
               Column(
                 children: [
@@ -235,12 +260,12 @@ class OrderDetail extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: const Text('Payment detail',
                     style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                    TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 8.0),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -251,12 +276,12 @@ class OrderDetail extends StatelessWidget {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Shipping Fee'),
-                    Text('₹ ${orderSummary.paymentData?.deliveryFee}'),
+                    Text('₹ ${orderSummary.paymentData?.deliveryCharge}'),
                   ],
                 ),
               ),
@@ -279,7 +304,7 @@ class OrderDetail extends StatelessWidget {
               const Divider(thickness: 1.0),
               const Text('Item Summary',
                   style:
-                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                  TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8.0),
               ListView.builder(
                 shrinkWrap: true,
@@ -292,22 +317,23 @@ class OrderDetail extends StatelessWidget {
                       children: [
                         kIsWeb
                             ? Image.network(
-                                productItem!.imageUrl ?? "",
-                                width: 100,
-                                height: 100,
-                              )
+                          productItem!.imageUrl ?? "",
+                          width: 100,
+                          height: 100,
+                        )
                             : Image.file(
-                                File(productItem!.imageUrl ?? ""),
-                                width: 100,
-                                height: 100,
-                              ),
+                          File(productItem!.imageUrl ?? ""),
+                          width: 100,
+                          height: 100,
+                        ),
                         const HorizontalMargin(10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(productItem.name.toString()),
                             Text(
-                                '${productItem.productSize} * ${productItem.quantity}'),
+                                '${productItem.productSize} * ${productItem
+                                    .quantity}'),
                             Text('Total: ₹ ${productItem.totalAmount}'),
                           ],
                         ),
@@ -404,8 +430,8 @@ class OrderDetail extends StatelessWidget {
 
   void _performAction(BuildContext context, OrderStatus state) {
     context.read<OrderBloc>().add(UpdateOrderStatus(
-          orderId: orderSummary.orderId ?? "",
-          status: state,
-        ));
+      orderId: orderSummary.orderId ?? "",
+      status: state,
+    ));
   }
 }

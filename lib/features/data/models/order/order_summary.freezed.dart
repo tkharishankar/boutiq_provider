@@ -241,7 +241,7 @@ PaymentData _$PaymentDataFromJson(Map<String, dynamic> json) {
 mixin _$PaymentData {
   String? get transactionId => throw _privateConstructorUsedError;
   int? get totalAmount => throw _privateConstructorUsedError;
-  int? get deliveryFee => throw _privateConstructorUsedError;
+  int? get deliveryCharge => throw _privateConstructorUsedError;
   int? get subTotalAmount => throw _privateConstructorUsedError;
   String? get paymentState => throw _privateConstructorUsedError;
 
@@ -260,7 +260,7 @@ abstract class $PaymentDataCopyWith<$Res> {
   $Res call(
       {String? transactionId,
       int? totalAmount,
-      int? deliveryFee,
+      int? deliveryCharge,
       int? subTotalAmount,
       String? paymentState});
 }
@@ -280,7 +280,7 @@ class _$PaymentDataCopyWithImpl<$Res, $Val extends PaymentData>
   $Res call({
     Object? transactionId = freezed,
     Object? totalAmount = freezed,
-    Object? deliveryFee = freezed,
+    Object? deliveryCharge = freezed,
     Object? subTotalAmount = freezed,
     Object? paymentState = freezed,
   }) {
@@ -293,9 +293,9 @@ class _$PaymentDataCopyWithImpl<$Res, $Val extends PaymentData>
           ? _value.totalAmount
           : totalAmount // ignore: cast_nullable_to_non_nullable
               as int?,
-      deliveryFee: freezed == deliveryFee
-          ? _value.deliveryFee
-          : deliveryFee // ignore: cast_nullable_to_non_nullable
+      deliveryCharge: freezed == deliveryCharge
+          ? _value.deliveryCharge
+          : deliveryCharge // ignore: cast_nullable_to_non_nullable
               as int?,
       subTotalAmount: freezed == subTotalAmount
           ? _value.subTotalAmount
@@ -320,7 +320,7 @@ abstract class _$$PaymentDataImplCopyWith<$Res>
   $Res call(
       {String? transactionId,
       int? totalAmount,
-      int? deliveryFee,
+      int? deliveryCharge,
       int? subTotalAmount,
       String? paymentState});
 }
@@ -338,7 +338,7 @@ class __$$PaymentDataImplCopyWithImpl<$Res>
   $Res call({
     Object? transactionId = freezed,
     Object? totalAmount = freezed,
-    Object? deliveryFee = freezed,
+    Object? deliveryCharge = freezed,
     Object? subTotalAmount = freezed,
     Object? paymentState = freezed,
   }) {
@@ -351,9 +351,9 @@ class __$$PaymentDataImplCopyWithImpl<$Res>
           ? _value.totalAmount
           : totalAmount // ignore: cast_nullable_to_non_nullable
               as int?,
-      deliveryFee: freezed == deliveryFee
-          ? _value.deliveryFee
-          : deliveryFee // ignore: cast_nullable_to_non_nullable
+      deliveryCharge: freezed == deliveryCharge
+          ? _value.deliveryCharge
+          : deliveryCharge // ignore: cast_nullable_to_non_nullable
               as int?,
       subTotalAmount: freezed == subTotalAmount
           ? _value.subTotalAmount
@@ -373,7 +373,7 @@ class _$PaymentDataImpl implements _PaymentData {
   const _$PaymentDataImpl(
       {this.transactionId,
       this.totalAmount,
-      this.deliveryFee,
+      this.deliveryCharge,
       this.subTotalAmount,
       this.paymentState});
 
@@ -385,7 +385,7 @@ class _$PaymentDataImpl implements _PaymentData {
   @override
   final int? totalAmount;
   @override
-  final int? deliveryFee;
+  final int? deliveryCharge;
   @override
   final int? subTotalAmount;
   @override
@@ -393,7 +393,7 @@ class _$PaymentDataImpl implements _PaymentData {
 
   @override
   String toString() {
-    return 'PaymentData(transactionId: $transactionId, totalAmount: $totalAmount, deliveryFee: $deliveryFee, subTotalAmount: $subTotalAmount, paymentState: $paymentState)';
+    return 'PaymentData(transactionId: $transactionId, totalAmount: $totalAmount, deliveryCharge: $deliveryCharge, subTotalAmount: $subTotalAmount, paymentState: $paymentState)';
   }
 
   @override
@@ -405,8 +405,8 @@ class _$PaymentDataImpl implements _PaymentData {
                 other.transactionId == transactionId) &&
             (identical(other.totalAmount, totalAmount) ||
                 other.totalAmount == totalAmount) &&
-            (identical(other.deliveryFee, deliveryFee) ||
-                other.deliveryFee == deliveryFee) &&
+            (identical(other.deliveryCharge, deliveryCharge) ||
+                other.deliveryCharge == deliveryCharge) &&
             (identical(other.subTotalAmount, subTotalAmount) ||
                 other.subTotalAmount == subTotalAmount) &&
             (identical(other.paymentState, paymentState) ||
@@ -416,7 +416,7 @@ class _$PaymentDataImpl implements _PaymentData {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, transactionId, totalAmount,
-      deliveryFee, subTotalAmount, paymentState);
+      deliveryCharge, subTotalAmount, paymentState);
 
   @JsonKey(ignore: true)
   @override
@@ -436,7 +436,7 @@ abstract class _PaymentData implements PaymentData {
   const factory _PaymentData(
       {final String? transactionId,
       final int? totalAmount,
-      final int? deliveryFee,
+      final int? deliveryCharge,
       final int? subTotalAmount,
       final String? paymentState}) = _$PaymentDataImpl;
 
@@ -448,7 +448,7 @@ abstract class _PaymentData implements PaymentData {
   @override
   int? get totalAmount;
   @override
-  int? get deliveryFee;
+  int? get deliveryCharge;
   @override
   int? get subTotalAmount;
   @override
@@ -781,6 +781,7 @@ mixin _$OrderSummary {
   Address? get address => throw _privateConstructorUsedError;
   List<ProductItem?>? get productItems => throw _privateConstructorUsedError;
   int? get updatedAt => throw _privateConstructorUsedError;
+  int? get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -802,7 +803,8 @@ abstract class $OrderSummaryCopyWith<$Res> {
       PaymentData? paymentData,
       Address? address,
       List<ProductItem?>? productItems,
-      int? updatedAt});
+      int? updatedAt,
+      int? createdAt});
 
   $PaymentDataCopyWith<$Res>? get paymentData;
   $AddressCopyWith<$Res>? get address;
@@ -829,6 +831,7 @@ class _$OrderSummaryCopyWithImpl<$Res, $Val extends OrderSummary>
     Object? address = freezed,
     Object? productItems = freezed,
     Object? updatedAt = freezed,
+    Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
       customerId: freezed == customerId
@@ -862,6 +865,10 @@ class _$OrderSummaryCopyWithImpl<$Res, $Val extends OrderSummary>
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
+              as int?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
               as int?,
     ) as $Val);
   }
@@ -907,7 +914,8 @@ abstract class _$$OrderSummaryImplCopyWith<$Res>
       PaymentData? paymentData,
       Address? address,
       List<ProductItem?>? productItems,
-      int? updatedAt});
+      int? updatedAt,
+      int? createdAt});
 
   @override
   $PaymentDataCopyWith<$Res>? get paymentData;
@@ -934,6 +942,7 @@ class __$$OrderSummaryImplCopyWithImpl<$Res>
     Object? address = freezed,
     Object? productItems = freezed,
     Object? updatedAt = freezed,
+    Object? createdAt = freezed,
   }) {
     return _then(_$OrderSummaryImpl(
       customerId: freezed == customerId
@@ -968,6 +977,10 @@ class __$$OrderSummaryImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as int?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -983,7 +996,8 @@ class _$OrderSummaryImpl implements _OrderSummary {
       this.paymentData,
       this.address,
       final List<ProductItem?>? productItems,
-      this.updatedAt})
+      this.updatedAt,
+      this.createdAt})
       : _productItems = productItems;
 
   factory _$OrderSummaryImpl.fromJson(Map<String, dynamic> json) =>
@@ -1013,10 +1027,12 @@ class _$OrderSummaryImpl implements _OrderSummary {
 
   @override
   final int? updatedAt;
+  @override
+  final int? createdAt;
 
   @override
   String toString() {
-    return 'OrderSummary(customerId: $customerId, orderId: $orderId, providerId: $providerId, status: $status, paymentData: $paymentData, address: $address, productItems: $productItems, updatedAt: $updatedAt)';
+    return 'OrderSummary(customerId: $customerId, orderId: $orderId, providerId: $providerId, status: $status, paymentData: $paymentData, address: $address, productItems: $productItems, updatedAt: $updatedAt, createdAt: $createdAt)';
   }
 
   @override
@@ -1036,7 +1052,9 @@ class _$OrderSummaryImpl implements _OrderSummary {
             const DeepCollectionEquality()
                 .equals(other._productItems, _productItems) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt));
   }
 
   @JsonKey(ignore: true)
@@ -1050,7 +1068,8 @@ class _$OrderSummaryImpl implements _OrderSummary {
       paymentData,
       address,
       const DeepCollectionEquality().hash(_productItems),
-      updatedAt);
+      updatedAt,
+      createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -1075,7 +1094,8 @@ abstract class _OrderSummary implements OrderSummary {
       final PaymentData? paymentData,
       final Address? address,
       final List<ProductItem?>? productItems,
-      final int? updatedAt}) = _$OrderSummaryImpl;
+      final int? updatedAt,
+      final int? createdAt}) = _$OrderSummaryImpl;
 
   factory _OrderSummary.fromJson(Map<String, dynamic> json) =
       _$OrderSummaryImpl.fromJson;
@@ -1096,6 +1116,8 @@ abstract class _OrderSummary implements OrderSummary {
   List<ProductItem?>? get productItems;
   @override
   int? get updatedAt;
+  @override
+  int? get createdAt;
   @override
   @JsonKey(ignore: true)
   _$$OrderSummaryImplCopyWith<_$OrderSummaryImpl> get copyWith =>

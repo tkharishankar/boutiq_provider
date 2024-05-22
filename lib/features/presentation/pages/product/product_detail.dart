@@ -49,9 +49,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
   String _productIdentifier = "";
   final TextEditingController _priceController = TextEditingController();
   String _price = "";
-  final TextEditingController _deliveryAmountController =
-      TextEditingController();
-  String _deliveryAmount = "";
   final TextEditingController _descriptionController = TextEditingController();
   String _description = "";
 
@@ -73,7 +70,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     if (widget.productId.isNotEmpty && widget.productId != "XXX") {
       context
           .read<ProductBloc>()
@@ -92,7 +89,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     _productNameController.text = resp.product.name;
     _productIdentifierController.text = resp.product.productId;
     _priceController.text = resp.product.price;
-    _deliveryAmountController.text = resp.product.deliveryPrice;
     _descriptionController.text = resp.product.description;
     productSizeList = resp.productSize;
   }
@@ -133,6 +129,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
             tabs: const [
               Tab(text: 'Product Detail'),
               Tab(text: 'Variant & Quantity'),
+              Tab(text: 'Delivery Charge'),
             ],
           ),
           Expanded(
@@ -141,6 +138,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
               children: [
                 _buildTab1(isMobile),
                 _buildTab2(isMobile),
+                _buildTab3(isMobile),
               ],
             ),
           ),
@@ -151,34 +149,50 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
 
   Widget _buildTab1(bool isMobile) {
     return SingleChildScrollView(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          children: [
-            Expanded(
-              flex: isMobile ? 1 : 2, // Adjust flex based on device
-              child: Column(
-                children: [
-                  productName(),
-                  productIdentifier(),
-                  deliveryPrice(),
-                  description(),
-                  if (isMobile) fileUpload(),
-                  if (isMobile) selectedImageList(),
-                ],
-              ),
-            ),
-            if (!isMobile)
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          Row(
+            children: [
               Expanded(
-                flex: 2,
+                flex: isMobile ? 1 : 2, // Adjust flex based on device
                 child: Column(
                   children: [
-                    fileUpload(),
-                    selectedImageList(),
+                    productName(),
+                    productIdentifier(),
+                    description(),
+                    if (isMobile) fileUpload(),
+                    if (isMobile) selectedImageList(),
                   ],
                 ),
               ),
-          ],
-        ));
+              if (!isMobile)
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      fileUpload(),
+                      selectedImageList(),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: AppElevatedButton(
+              text: AppTexts.confirm,
+              // onTap:
+              //     _editingIndex == null ? _addOrUpdateSize : _addOrUpdateSize,
+              // textSize: 18,
+              // textColor: AppColors.white100,
+              // color: AppColors.primaryColor.withAlpha(150),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   Widget _buildTab2(bool isMobile) {
@@ -347,46 +361,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     return null;
   }
 
-  deliveryPrice() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Delivery Amount',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          VerticalMargin(10),
-          // Editable Text Field
-          TextFormField(
-            controller: _deliveryAmountController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-            ],
-            decoration: InputDecoration(
-              hintText: 'Enter delivery amount.',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            validator: priceValidator,
-            onChanged: (text) => setState(() => _deliveryAmount = text),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget description() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -545,7 +519,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                 name: _productName,
                 identifier: _productIdentifier,
                 price: _price,
-                deliveryPrice: _deliveryAmount,
+                deliveryPrice: "",
                 description: _description,
                 images: selectedImages!),
           );
@@ -934,5 +908,27 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
         ),
       ],
     );
+  }
+
+  Widget _buildTab3(bool isMobile) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        children: [
+          Expanded(
+            flex: isMobile ? 1 : 2, // Adjust flex based on device
+            child: Column(
+              children: [
+                descriptionDetail(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  descriptionDetail() {
+    return Container();
   }
 }

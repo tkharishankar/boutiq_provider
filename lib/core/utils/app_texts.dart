@@ -26,5 +26,6 @@ class AppTexts {
   static String updateProduct = "Update product";
   static String addNewSize = "add new size";
   static String updateSize = "Update size";
+  static String confirm = "Confirm";
 
 }

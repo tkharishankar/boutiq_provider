@@ -21,7 +21,7 @@ class PaymentData with _$PaymentData {
   const factory PaymentData({
     String? transactionId,
     int? totalAmount,
-    int? deliveryFee,
+    int? deliveryCharge,
     int? subTotalAmount,
     String? paymentState,
   }) = _PaymentData;
@@ -57,6 +57,7 @@ class OrderSummary with _$OrderSummary {
     Address? address,
     List<ProductItem?>? productItems,
     int? updatedAt,
+    int? createdAt,
   }) = _OrderSummary;
 
   factory OrderSummary.fromJson(Map<String, dynamic> json) => _$OrderSummaryFromJson(json);
