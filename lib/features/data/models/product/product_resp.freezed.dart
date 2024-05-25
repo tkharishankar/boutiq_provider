@@ -582,6 +582,7 @@ mixin _$ProductSize {
   String get productSize => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
   int get selectedQuantity => throw _privateConstructorUsedError;
+  int get weight => throw _privateConstructorUsedError;
   double get price => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -602,6 +603,7 @@ abstract class $ProductSizeCopyWith<$Res> {
       String productSize,
       int quantity,
       int selectedQuantity,
+      int weight,
       double price});
 }
 
@@ -623,6 +625,7 @@ class _$ProductSizeCopyWithImpl<$Res, $Val extends ProductSize>
     Object? productSize = null,
     Object? quantity = null,
     Object? selectedQuantity = null,
+    Object? weight = null,
     Object? price = null,
   }) {
     return _then(_value.copyWith(
@@ -646,6 +649,10 @@ class _$ProductSizeCopyWithImpl<$Res, $Val extends ProductSize>
           ? _value.selectedQuantity
           : selectedQuantity // ignore: cast_nullable_to_non_nullable
               as int,
+      weight: null == weight
+          ? _value.weight
+          : weight // ignore: cast_nullable_to_non_nullable
+              as int,
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
@@ -668,6 +675,7 @@ abstract class _$$ProductSizeImplCopyWith<$Res>
       String productSize,
       int quantity,
       int selectedQuantity,
+      int weight,
       double price});
 }
 
@@ -687,6 +695,7 @@ class __$$ProductSizeImplCopyWithImpl<$Res>
     Object? productSize = null,
     Object? quantity = null,
     Object? selectedQuantity = null,
+    Object? weight = null,
     Object? price = null,
   }) {
     return _then(_$ProductSizeImpl(
@@ -710,6 +719,10 @@ class __$$ProductSizeImplCopyWithImpl<$Res>
           ? _value.selectedQuantity
           : selectedQuantity // ignore: cast_nullable_to_non_nullable
               as int,
+      weight: null == weight
+          ? _value.weight
+          : weight // ignore: cast_nullable_to_non_nullable
+              as int,
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
@@ -727,6 +740,7 @@ class _$ProductSizeImpl implements _ProductSize {
       this.productSize = '',
       this.quantity = 0,
       this.selectedQuantity = 0,
+      this.weight = 0,
       this.price = 0.0});
 
   factory _$ProductSizeImpl.fromJson(Map<String, dynamic> json) =>
@@ -749,11 +763,14 @@ class _$ProductSizeImpl implements _ProductSize {
   final int selectedQuantity;
   @override
   @JsonKey()
+  final int weight;
+  @override
+  @JsonKey()
   final double price;
 
   @override
   String toString() {
-    return 'ProductSize(sizeId: $sizeId, productId: $productId, productSize: $productSize, quantity: $quantity, selectedQuantity: $selectedQuantity, price: $price)';
+    return 'ProductSize(sizeId: $sizeId, productId: $productId, productSize: $productSize, quantity: $quantity, selectedQuantity: $selectedQuantity, weight: $weight, price: $price)';
   }
 
   @override
@@ -770,13 +787,14 @@ class _$ProductSizeImpl implements _ProductSize {
                 other.quantity == quantity) &&
             (identical(other.selectedQuantity, selectedQuantity) ||
                 other.selectedQuantity == selectedQuantity) &&
+            (identical(other.weight, weight) || other.weight == weight) &&
             (identical(other.price, price) || other.price == price));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, sizeId, productId, productSize,
-      quantity, selectedQuantity, price);
+      quantity, selectedQuantity, weight, price);
 
   @JsonKey(ignore: true)
   @override
@@ -799,6 +817,7 @@ abstract class _ProductSize implements ProductSize {
       final String productSize,
       final int quantity,
       final int selectedQuantity,
+      final int weight,
       final double price}) = _$ProductSizeImpl;
 
   factory _ProductSize.fromJson(Map<String, dynamic> json) =
@@ -814,6 +833,8 @@ abstract class _ProductSize implements ProductSize {
   int get quantity;
   @override
   int get selectedQuantity;
+  @override
+  int get weight;
   @override
   double get price;
   @override

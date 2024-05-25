@@ -61,6 +61,7 @@ _$ProductSizeImpl _$$ProductSizeImplFromJson(Map<String, dynamic> json) =>
       productSize: json['productSize'] as String? ?? '',
       quantity: (json['quantity'] as num?)?.toInt() ?? 0,
       selectedQuantity: (json['selectedQuantity'] as num?)?.toInt() ?? 0,
+      weight: (json['weight'] as num?)?.toInt() ?? 0,
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
     );
 
@@ -71,6 +72,7 @@ Map<String, dynamic> _$$ProductSizeImplToJson(_$ProductSizeImpl instance) =>
       'productSize': instance.productSize,
       'quantity': instance.quantity,
       'selectedQuantity': instance.selectedQuantity,
+      'weight': instance.weight,
       'price': instance.price,
     };
 

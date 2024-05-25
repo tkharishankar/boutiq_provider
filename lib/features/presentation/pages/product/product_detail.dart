@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -16,7 +15,6 @@ import '../../../../core/utils/app_texts.dart';
 import '../../../../core/utils/input_validation.dart';
 import '../../../../core/utils/loading_overlay.dart';
 import '../../../../core/utils/responsive.dart';
-import '../../../../router/router.dart';
 import '../../../data/models/product/product_resp.dart';
 import '../../bloc/product/product_bloc.dart';
 import '../../widgets/app_dialog.dart';
@@ -28,7 +26,7 @@ class ProductDetail extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
-    return _AddNewProductState(productId);
+    return _AddNewProductState();
   }
 }
 
@@ -36,86 +34,168 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     with LoadingOverlayMixin, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formSizeKey = GlobalKey();
-
-  final String productId;
-
-  _AddNewProductState(this.productId);
-
   OverlayEntry? _overlayEntry;
+
   final TextEditingController _productNameController = TextEditingController();
-  String _productName = "";
   final TextEditingController _productIdentifierController =
       TextEditingController();
-  String _productIdentifier = "";
   final TextEditingController _priceController = TextEditingController();
-  String _price = "";
   final TextEditingController _descriptionController = TextEditingController();
-  String _description = "";
 
   final ImagePicker imagePicker = ImagePicker();
   List<XFile>? selectedImages;
-
   List<ProductSize> productSizeList = [];
 
   final TextEditingController _sizeNameController = TextEditingController();
-  String _sizeName = "";
+  final TextEditingController _sizeWeightController = TextEditingController();
   final TextEditingController _sizeQuantityController = TextEditingController();
-  String _sizeQuantity = "";
   final TextEditingController _sizePriceController = TextEditingController();
-  String _sizePrice = "";
 
   late TabController _tabController;
   int? _editingIndex;
+  bool _detailsPopulated = false; // Flag to track initialization
+  bool _isLoading = false; // Flag to track loading state
+  double oneThirdScreenWidth = 0;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    print("resp initState");
+    _tabController = TabController(length: 2, vsync: this);
+    _loadProductDetails();
+  }
+
+  @override
+  void didUpdateWidget(covariant ProductDetail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("resp didUpdateWidget");
+    if (oldWidget.productId != widget.productId) {
+      _loadProductDetails();
+    }
+  }
+
+  void _loadProductDetails() {
+    print("resp _loadProductDetails");
     if (widget.productId.isNotEmpty && widget.productId != "XXX") {
+      setState(() {
+        _isLoading = true; // Set loading state
+      });
       context
           .read<ProductBloc>()
           .add(GetProductDetail(productId: widget.productId));
+    } else {
+      clearProductDetail();
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
     _tabController.dispose();
+    _productNameController.dispose();
+    _productIdentifierController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+    _sizeNameController.dispose();
+    _sizeQuantityController.dispose();
+    _sizePriceController.dispose();
+    _sizeWeightController.dispose();
+    super.dispose();
+  }
+
+  void clearProductDetail() {
+    setState(() {
+      _productNameController.clear();
+      _productIdentifierController.clear();
+      _priceController.clear();
+      _descriptionController.clear();
+      productSizeList = [];
+      _detailsPopulated = false; // Reset the flag when clearing details
+      _isLoading = false;
+    });
   }
 
   void _populateProductDetails(ProductDetailResp resp) {
-    print("object $resp");
-    _productNameController.text = resp.product.name;
-    _productIdentifierController.text = resp.product.productId;
-    _priceController.text = resp.product.price;
-    _descriptionController.text = resp.product.description;
-    productSizeList = resp.productSize;
+    print("resp _populateProductDetails");
+    if (!_detailsPopulated) {
+      // Check if the details have already been populated
+      setState(() {
+        _productNameController.text = resp.product.name;
+        _productIdentifierController.text = resp.product.productId;
+        _priceController.text = resp.product.price;
+        _descriptionController.text = resp.product.description;
+        productSizeList = List.from(resp.productSize);
+        _detailsPopulated = true; // Set the flag after populating details
+        _isLoading = false;
+        _clearFormFields();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          productId == "XXX" ? "Add New Product" : "Update Product",
-          style: GoogleFonts.lato(),
+    double screenWidth = MediaQuery.of(context).size.width;
+    oneThirdScreenWidth = screenWidth / 3;
+    return WillPopScope(
+      onWillPop: () async {
+        bool shouldLeave = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Confirm Exit'),
+            content: const Text('Do you really want to go back?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  clearProductDetail();
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        );
+        return shouldLeave;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.productId == "XXX" ? "Add New Product" : "Update Product",
+            style: GoogleFonts.lato(),
+          ),
         ),
-      ),
-      body: BlocBuilder<ProductBloc, ProductState>(
-        builder: (context, state) {
-          return state.maybeWhen(
-            onProductDetailLoading: () =>
-                const Center(child: CircularProgressIndicator()),
-            onProductDetail: (product) {
-              Future.microtask(() => _populateProductDetails(product));
-              return _buildForm(isMobile);
-            },
-            onProductDetailError: (message) => Center(child: Text(message)),
-            orElse: () => _buildForm(isMobile),
-          );
-        },
+        body: Stack(
+          children: [
+            _buildForm(isMobile),
+            BlocListener<ProductBloc, ProductState>(
+              listener: (context, state) {
+                state.maybeWhen(
+                  onProductDetail: (product) {
+                    _populateProductDetails(product);
+                  },
+                  onProductDetailError: (message) {
+                    setState(() {
+                      _isLoading =
+                          false; // Set loading state to false if there's an error
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(message)),
+                    );
+                  },
+                  orElse: () {},
+                );
+              },
+              child: Container(),
+            ),
+            if (_isLoading) // Show loading indicator if loading
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -129,7 +209,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
             tabs: const [
               Tab(text: 'Product Detail'),
               Tab(text: 'Variant & Quantity'),
-              Tab(text: 'Delivery Charge'),
             ],
           ),
           Expanded(
@@ -138,7 +217,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
               children: [
                 _buildTab1(isMobile),
                 _buildTab2(isMobile),
-                _buildTab3(isMobile),
               ],
             ),
           ),
@@ -148,164 +226,174 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
   }
 
   Widget _buildTab1(bool isMobile) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          Row(
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: isMobile ? 1 : 2, // Adjust flex based on device
-                child: Column(
-                  children: [
-                    productName(),
-                    productIdentifier(),
-                    description(),
-                    if (isMobile) fileUpload(),
-                    if (isMobile) selectedImageList(),
-                  ],
-                ),
-              ),
-              if (!isMobile)
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      fileUpload(),
-                      selectedImageList(),
-                    ],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: isMobile ? 1 : 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildProductNameField(),
+                        _buildProductIdentifierField(),
+                        _buildDescriptionField(),
+                        if (isMobile) fileUpload(),
+                        if (isMobile) selectedImageList(),
+                      ],
+                    ),
                   ),
-                ),
+                  if (!isMobile)
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          fileUpload(),
+                          selectedImageList(),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 20),
             ],
           ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: AppElevatedButton(
-              text: AppTexts.confirm,
-              // onTap:
-              //     _editingIndex == null ? _addOrUpdateSize : _addOrUpdateSize,
-              // textSize: 18,
-              // textColor: AppColors.white100,
-              // color: AppColors.primaryColor.withAlpha(150),
+        ),
+        Positioned(
+          left: isMobile ? 20 : oneThirdScreenWidth,
+          right: isMobile ? 20 : oneThirdScreenWidth,
+          bottom: 10,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: AppButton(
+              text: AppTexts.save,
+              onTap: () {},
+              textSize: 18,
+              textColor: AppColors.white100,
+              color: AppColors.primaryColor,
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildTab2(bool isMobile) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          Expanded(
-            flex: isMobile ? 1 : 2, // Adjust flex based on device
-            child: Column(
-              children: [
-                productSizeView(),
-                if (isMobile) productSizeListView(),
-              ],
-            ),
-          ),
-          if (!isMobile)
+    return Stack(children: [
+      SingleChildScrollView(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          // Align children to the top
+          children: [
             Expanded(
-              flex: 2,
+              flex: isMobile ? 1 : 2, // Adjust flex based on device
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  productSizeListView(),
+                  productSizeView(),
+                  if (isMobile) productSizeListView(),
                 ],
               ),
             ),
-        ],
+            if (!isMobile)
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    productSizeListView(),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
+      Positioned(
+        left: isMobile ? 20 : oneThirdScreenWidth,
+        right: isMobile ? 20 : oneThirdScreenWidth,
+        bottom: 10,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: AppButton(
+            text: AppTexts.save,
+            onTap: () {},
+            textSize: 18,
+            textColor: AppColors.white100,
+            color: AppColors.primaryColor,
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget _buildProductNameField() {
+    return _buildTextField(
+      controller: _productNameController,
+      label: 'Product Name',
+      hint: 'Enter product name.',
+      validator: _productNameValidator,
     );
   }
 
-  Widget productName() {
+  Widget _buildProductIdentifierField() {
+    return _buildTextField(
+      controller: _productIdentifierController,
+      label: 'Product Identifier',
+      hint: 'Enter product identifier.',
+      validator: _productIdentifierValidator,
+    );
+  }
+
+  Widget _buildDescriptionField() {
+    return _buildTextField(
+      controller: _descriptionController,
+      label: 'Description',
+      hint: 'Enter description.',
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    String? Function(String?)? validator,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Product Name',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            label,
+            style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
-          // Editable Text Field
+          const SizedBox(height: 10),
           TextFormField(
-            controller: _productNameController,
+            controller: controller,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              hintText: 'Enter product name.',
+              hintText: hint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
               ),
             ),
-            validator: productNameValidator,
-            onChanged: (text) => setState(() => _productName = text),
+            validator: validator,
           ),
         ],
       ),
     );
   }
 
-  productIdentifier() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Product Identifier',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10),
-          // Editable Text Field
-          TextFormField(
-            controller: _productIdentifierController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            decoration: InputDecoration(
-              hintText: 'Enter product color/shade/code',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            validator: productIdentifierValidator,
-            onChanged: (text) => setState(() => _productIdentifier = text),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String? productIdentifierValidator(text) {
-    if (text == null || text.isEmpty) {
-      return 'Can\'t be empty';
-    }
-    if (text.length < 3) {
-      return 'Too short';
-    }
-    return null;
-  }
-
-  String? productNameValidator(text) {
+  String? _productNameValidator(String? text) {
     if (text == null || text.isEmpty) {
       return 'Can\'t be empty';
     }
@@ -315,43 +403,14 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     return null;
   }
 
-  Widget price() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Price',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
-          TextFormField(
-            controller: _priceController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-            ],
-            decoration: InputDecoration(
-              hintText: 'Enter price.',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            validator: priceValidator,
-            onChanged: (text) => setState(() => _price = text),
-          ),
-        ],
-      ),
-    );
+  String? _productIdentifierValidator(String? text) {
+    if (text == null || text.isEmpty) {
+      return 'Can\'t be empty';
+    }
+    if (text.length < 3) {
+      return 'Too short';
+    }
+    return null;
   }
 
   String? priceValidator(text) {
@@ -359,41 +418,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       return 'Can\'t be empty';
     }
     return null;
-  }
-
-  Widget description() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Description',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10), // Replaced VerticalMargin with SizedBox
-          TextFormField(
-            controller: _descriptionController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            decoration: InputDecoration(
-              hintText: 'Enter description about the product.',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            validator: descriptionValidator,
-            onChanged: (text) => setState(() => _description = text),
-          ),
-        ],
-      ),
-    );
   }
 
   String? descriptionValidator(text) {
@@ -514,15 +538,15 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
             "Please select the product images.");
         return;
       }
-      context.read<ProductBloc>().add(
-            AddProductReq(
-                name: _productName,
-                identifier: _productIdentifier,
-                price: _price,
-                deliveryPrice: "",
-                description: _description,
-                images: selectedImages!),
-          );
+      // context.read<ProductBloc>().add(
+      //       AddProductReq(
+      //           name: _productName,
+      //           identifier: _productIdentifier,
+      //           price: _price,
+      //           deliveryPrice: "",
+      //           description: _description,
+      //           images: selectedImages!),
+      //     );
     }
     return;
   }
@@ -539,37 +563,37 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     }
   }
 
-  void _listener(BuildContext context, ProductState state) {
-    state.maybeWhen(orElse: () {
-      _overlayEntry?.remove();
-    }, loading: () {
-      _overlayEntry = showLoadingOverlay(context, _overlayEntry);
-    }, addProductError: (message) {
-      _overlayEntry?.remove();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: AppColors.errorColor,
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }, addProductSuccessful: (message) {
-      _overlayEntry = hideLoadingOverlay(context, _overlayEntry);
-      showActionAlertDialog(
-        context,
-        "Product Added successfully.",
-        "",
-        [
-          AlertAction(
-            label: 'Ok',
-            onTap: () {
-              GoRouter.of(context).replaceNamed(RouteConstants.home);
-            },
-          ),
-        ],
-      );
-    });
-  }
+// void _listener(BuildContext context, ProductState state) {
+//   state.maybeWhen(orElse: () {
+//     _overlayEntry?.remove();
+//   }, loading: () {
+//     _overlayEntry = showLoadingOverlay(context, _overlayEntry);
+//   }, addProductError: (message) {
+//     _overlayEntry?.remove();
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(
+//         content: Text(message),
+//         backgroundColor: AppColors.errorColor,
+//         duration: const Duration(seconds: 3),
+//       ),
+//     );
+//   }, addProductSuccessful: (message) {
+//     _overlayEntry = hideLoadingOverlay(context, _overlayEntry);
+//     showActionAlertDialog(
+//       context,
+//       "Product Added successfully.",
+//       "",
+//       [
+//         AlertAction(
+//           label: 'Ok',
+//           onTap: () {
+//             GoRouter.of(context).replaceNamed(RouteConstants.home);
+//           },
+//         ),
+//       ],
+//     );
+//   });
+// }
 
   Widget productSizeListView() {
     if (productSizeList.isEmpty) {
@@ -599,6 +623,13 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                 Expanded(
                   child: Text(
                     'Quantity',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    'Weight(g)',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -647,7 +678,13 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                     ),
                     Expanded(
                       child: Text(
-                        productSize.quantity as String,
+                        productSize.quantity.toString(),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        productSize.weight.toString(),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -689,12 +726,11 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
 
   void editProductSize(int index) {
     final productSize = productSizeList[index];
-    setState(() {
-      _editingIndex = index;
-      _sizeNameController.text = productSize.productSize;
-      _sizeQuantityController.text = productSize.quantity.toString();
-      _sizePriceController.text = productSize.price.toString();
-    });
+    _editingIndex = index;
+    _sizeNameController.text = productSize.productSize;
+    _sizeQuantityController.text = productSize.quantity.toString();
+    _sizePriceController.text = productSize.price.toString();
+    _clearFormFields();
   }
 
   void deleteProductSize(int index) {
@@ -704,6 +740,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       'Are you sure you want to delete this item?',
       () {
         setState(() {
+          productSizeList = List<ProductSize>.from(productSizeList);
           productSizeList.removeAt(index);
           _editingIndex = null;
         });
@@ -738,7 +775,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                 controller: _sizeNameController,
                 hintText: 'Enter size name',
                 validator: sizeNameValidator,
-                onChanged: (text) => setState(() => _sizeName = text),
               ),
             ),
             Row(
@@ -752,9 +788,8 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                       controller: _sizeQuantityController,
                       hintText: 'Enter total quantity',
                       validator: priceValidator,
-                      onChanged: (text) => setState(() => _sizeQuantity = text),
                       keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: false),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       ],
@@ -770,9 +805,8 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                       controller: _sizePriceController,
                       hintText: 'Enter per quantity price',
                       validator: priceValidator,
-                      onChanged: (text) => setState(() => _sizePrice = text),
                       keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: false),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       ],
@@ -782,18 +816,35 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: AppButton(
-                text: _editingIndex == null
-                    ? AppTexts.addNewSize
-                    : AppTexts.updateSize,
-                onTap:
-                    _editingIndex == null ? _addOrUpdateSize : _addOrUpdateSize,
-                textSize: 18,
-                textColor: AppColors.white100,
-                color: AppColors.primaryColor.withAlpha(150),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: _buildFormField(
+                label: 'Actual Weight (in Grams)',
+                controller: _sizeWeightController,
+                hintText: 'Enter weight',
+                validator: sizeNameValidator,
+                keyboardType:
+                const TextInputType.numberWithOptions(decimal: false),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                ],
               ),
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: SizedBox(
+                width: 200,
+                child: AppButton(
+                  text: _editingIndex == null
+                      ? AppTexts.add
+                      : AppTexts.updateSize,
+                  onTap:
+                  _editingIndex == null ? _addOrUpdateSize : _addOrUpdateSize,
+                  textSize: 18,
+                  textColor: AppColors.white100,
+                  color: AppColors.primaryColor.withAlpha(150),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -813,38 +864,45 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
 
 // Function to add a new size
   void _addNewSize() {
-    if (isDuplicateSizeName(_sizeName)) {
+    if (isDuplicateSizeName(_sizeNameController.text)) {
       _showDuplicateNameDialog();
     } else {
-      final int quantity = int.parse(_sizeQuantity);
-      final double price = double.parse(_sizePrice);
-      productSizeList.add(ProductSize(
-        productSize: _sizeName,
-        price: price,
-        quantity: quantity,
-      ));
-      _editingIndex = null;
-      _clearFormFields();
+      final int quantity = int.parse(_sizeQuantityController.text);
+      final double price = double.parse(_sizePriceController.text);
+      final int weight = int.parse(_sizeWeightController.text);
+      setState(() {
+        productSizeList = List.from(productSizeList)
+          ..add(ProductSize(
+            productSize: _sizeNameController.text,
+            price: price,
+            quantity: quantity,
+              weight:weight
+          ));
+        _editingIndex = null;
+      });
     }
   }
 
 // Function to update an existing size
   void _updateExistingSize() {
     final existingIndex = productSizeList.indexWhere((productSize) =>
-        productSize.productSize.toLowerCase() == _sizeName.toLowerCase() &&
+        productSize.productSize.toLowerCase() ==
+            _sizeNameController.text.toLowerCase() &&
         productSize != productSizeList[_editingIndex!]);
     if (existingIndex != -1) {
       _showDuplicateNameDialog();
     } else {
-      final int quantity = int.parse(_sizeQuantity);
-      final double price = double.parse(_sizePrice);
-      productSizeList[_editingIndex!] = ProductSize(
-        productSize: _sizeName,
-        price: price,
-        quantity: quantity,
-      );
-      _editingIndex = null;
-      _clearFormFields();
+      final int quantity = int.parse(_sizeQuantityController.text);
+      final double price = double.parse(_sizePriceController.text);
+      setState(() {
+        productSizeList = List.from(productSizeList)
+          ..[(_editingIndex ?? 0)] = ProductSize(
+            productSize: _sizeNameController.text,
+            price: price,
+            quantity: quantity,
+          );
+        _editingIndex = null;
+      });
     }
   }
 
@@ -861,11 +919,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
 
 // Function to clear form fields
   void _clearFormFields() {
-    setState(() {
-      // _sizeNameController.text = "";
-      // _sizeQuantityController.text = "";
-      // _sizePriceController.text = "";
-    });
+    setState(() {});
   }
 
   Widget _buildFormField({
@@ -873,7 +927,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     required TextEditingController controller,
     required String hintText,
     required String? Function(String?) validator,
-    required Function(String) onChanged,
     TextInputType keyboardType = TextInputType.text,
     List<TextInputFormatter>? inputFormatters,
   }) {
@@ -902,7 +955,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
             ),
           ),
           validator: validator,
-          onChanged: onChanged,
           keyboardType: keyboardType,
           inputFormatters: inputFormatters,
         ),

@@ -1,3 +1,4 @@
+import 'package:boutiq_provider/features/data/models/deliverycharge/delivery_charge.dart';
 import 'package:boutiq_provider/features/data/models/login/login_response.dart';
 import 'package:boutiq_provider/features/data/models/order/order_summary.dart';
 import 'package:boutiq_provider/features/data/models/product/product_resp.dart';
@@ -43,4 +44,14 @@ abstract class ApiService {
   @GET('api/v1/products/detail/{productId}')
   Future<HttpResponse<Product>> getProductDetail(
       @Path('productId') String productId);
+
+  @GET('api/v1/providers/delivery-charge/{providerID}')
+  Future<HttpResponse<List<Region>>> getRegionList(
+      @Path('providerID') String providerID);
+
+  @POST('api/v1/providers/delivery-charge/{providerID}')
+  Future<HttpResponse<String>> updateDeliveryCharges(
+    @Path('providerID') String providerID,
+    @Body() DeliveryChargeReq req,
+  );
 }

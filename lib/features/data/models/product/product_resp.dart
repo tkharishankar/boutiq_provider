@@ -40,6 +40,7 @@ class ProductSize with _$ProductSize {
     @Default('') String productSize,
     @Default(0) int quantity,
     @Default(0) int selectedQuantity,
+    @Default(0) int weight,
     @Default(0.0) double price,
   }) = _ProductSize;
 

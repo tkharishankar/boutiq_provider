@@ -7,9 +7,7 @@ import '../../../data/models/product/product_resp.dart';
 import '../../../domain/repositories/product_repo.dart';
 
 part 'product_bloc.freezed.dart';
-
 part 'product_event.dart';
-
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
@@ -49,6 +47,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future<void> _getProductDetail(
       GetProductDetail getProductDetail, Emitter<ProductState> emit) async {
     emit(const ProductState.onProductDetailLoading());
+    print("_getProductDetail called");
     final failureOrSuccess =
         await productRepo.getProductDetail(getProductDetail.productId);
     failureOrSuccess.fold((failure) {

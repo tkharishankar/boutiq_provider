@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/themes/color_scheme.dart';
-import '../../../../router/router.dart';
 
 class ProductCard extends StatelessWidget {
   final String productName;

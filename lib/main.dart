@@ -1,4 +1,6 @@
+import 'package:boutiq_provider/di/delivery_charge_locator.dart';
 import 'package:boutiq_provider/di/order_locator.dart';
+import 'package:boutiq_provider/features/presentation/bloc/deliverycharge/region_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,6 +67,9 @@ class _AppState extends ConsumerState<App> {
           ),
           BlocProvider<OrderBloc>(
             create: (context) => orderLocator<OrderBloc>(),
+          ),
+          BlocProvider<RegionBloc>(
+            create: (context) => deliveryChargeLocator<RegionBloc>(),
           ),
         ],
         child: MaterialApp.router(

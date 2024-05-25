@@ -1,10 +1,7 @@
-import 'package:boutiq_provider/features/presentation/bloc/order/order_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/responsive.dart';
 import '../../data/models/product/product_resp.dart';
-import '../bloc/product/product_bloc.dart';
 
 class DashboardDetail extends StatelessWidget {
   const DashboardDetail({super.key});

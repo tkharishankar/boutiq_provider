@@ -2,7 +2,6 @@
 
 import 'package:boutiq_provider/core/utils/size.dart';
 import 'package:flutter/material.dart';
-
 // 📦 Package imports:
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,6 +21,7 @@ class AppButton extends StatelessWidget {
     this.textSize = 16,
     this.borderColor,
     this.isRounded = false,
+    this.width = double.infinity,
     required this.onTap,
   });
 
@@ -33,6 +33,7 @@ class AppButton extends StatelessWidget {
   final String? iconRtr;
   final Color textColor;
   final double? textSize;
+  final double? width;
   final bool? gradient;
   final void Function()? onTap;
   final Color? borderColor;
@@ -43,6 +44,7 @@ class AppButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       child: Container(
         height: 55,
+        width: width,
         decoration: BoxDecoration(
           color: isActive! ? color : AppColors.grey200,
           borderRadius: BorderRadius.circular(isRounded == true ? 40 : 15),

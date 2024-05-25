@@ -11,6 +11,7 @@ import '../../../../core/utils/size.dart';
 import '../../../../router/router.dart';
 import '../../widgets/app_dialog.dart';
 import '../../widgets/dashboard_detail.dart';
+import '../../widgets/delivery_charge.dart';
 import '../../widgets/provider_account.dart';
 import '../../widgets/provider_orders.dart';
 import '../../widgets/provider_products.dart';
@@ -97,7 +98,10 @@ class _MainPage extends StatelessWidget {
       case 'Products':
         contentWidget = const ProviderProduct();
         break;
-      case 'Orders':
+      case 'Delivery Charges':
+        contentWidget = DeliveryChargeView();
+        break;
+        case 'Orders':
         contentWidget = const ProviderOrder();
         break;
       default:
@@ -160,6 +164,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             _buildMenuItem(
               Icons.production_quantity_limits,
               'Products',
+            ),
+            _buildMenuItem(
+              Icons.monetization_on,
+              'Delivery Charges',
             ),
             _buildMenuItem(
               Icons.local_shipping,
