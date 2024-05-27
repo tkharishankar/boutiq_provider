@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../../core/common/error/exceptions.dart';
 import '../../../../core/local_storage/app_cache.dart';
@@ -13,18 +14,23 @@ import '../../models/login/login_response.dart';
 import '../../models/registration/registration_response.dart';
 
 abstract class AuthenticationRemoteDataSource {
-  Future<Either<ApiError, RegisterResponse>> createAccount(Map<String, dynamic> body);
+  Future<Either<ApiError, RegisterResponse>> createAccount(
+      Map<String, dynamic> body);
 
-  Future<Either<ApiError, LoginResponse>> login(String phoneNumber, String password);
+  Future<Either<ApiError, LoginResponse>> login(
+      String phoneNumber, String password);
 }
 
-class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource {
+class IAuthenticationRemoteDataSource
+    implements AuthenticationRemoteDataSource {
   final ApiService? apiService;
+  final AppCache? appCache;
 
-  IAuthenticationRemoteDataSource({required this.apiService});
+  IAuthenticationRemoteDataSource({required this.apiService, this.appCache});
 
   @override
-  Future<Either<ApiError, RegisterResponse>> createAccount(Map<String, dynamic> body) async {
+  Future<Either<ApiError, RegisterResponse>> createAccount(
+      Map<String, dynamic> body) async {
     try {
       final response = await apiService!.providerRegistration(body);
 
@@ -42,7 +48,8 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
     } on DioException catch (error) {
       if (error.response?.statusCode == 400) {
         log('Bad request: ${error.response?.data}');
-        final errorMessage = error.response!.data['statusMessage'] ?? 'Unknown error';
+        final errorMessage =
+            error.response!.data['statusMessage'] ?? 'Unknown error';
         return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
       } else {
         log('Dio error: $error');
@@ -53,7 +60,8 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
     }
   }
 
-  Future<void> addUser(String username, String phoneNumber, String password) async {
+  Future<void> addUser(
+      String username, String phoneNumber, String password) async {
     try {
       var db = FirebaseFirestore.instance;
       final userCollection = db.collection("users");
@@ -68,25 +76,26 @@ class IAuthenticationRemoteDataSource implements AuthenticationRemoteDataSource 
   }
 
   @override
-  Future<Either<ApiError, LoginResponse>> login(String phoneNumber, String password) async {
+  Future<Either<ApiError, LoginResponse>> login(
+      String phoneNumber, String password) async {
     try {
       final body = {"phoneNumber": phoneNumber, "password": password};
 
       final response = await apiService!.providerLogin(body);
       if (response.response.statusCode == 200) {
-        final cache = sl<AppCache>();
         final loginResponse = LoginResponse.fromJson(response.response.data);
-        cache.setUserInfo(loginResponse);
+        appCache?.setUserInfo(loginResponse);
         return Right(LoginResponse.fromJson(response.response.data));
       } else if (response.response.statusCode == 400) {
         return Left(ApiError(errorCode: "400", errorMessage: "Error in login"));
       } else {
         return Left(ApiError(errorCode: "400", errorMessage: "Error in login"));
       }
-    }on DioException catch (error) {
+    } on DioException catch (error) {
       if (error.response?.statusCode == 400) {
         log('Bad request: ${error.response?.data}');
-        final errorMessage = error.response!.data['statusMessage'] ?? 'Unknown error';
+        final errorMessage =
+            error.response!.data['statusMessage'] ?? 'Unknown error';
         return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
       } else {
         log('Dio error: $error');

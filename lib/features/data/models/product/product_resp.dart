@@ -4,8 +4,34 @@ part 'product_resp.freezed.dart';
 part 'product_resp.g.dart';
 
 @freezed
+class AddProductReq with _$AddProductReq {
+  const factory AddProductReq({
+    required String name,
+    required String category,
+    required String description,
+    required List<String> imageUrls,
+  }) = _AddProductReq;
+
+  factory AddProductReq.fromJson(Map<String, dynamic> json) =>
+      _$AddProductReqFromJson(json);
+}
+
+@freezed
+class AddProductSizeReq with _$AddProductSizeReq {
+  const factory AddProductSizeReq({
+    required List<ProductSize> productSize,
+  }) = _AddProductSizeReq;
+
+  factory AddProductSizeReq.fromJson(Map<String, dynamic> json) =>
+      _$AddProductSizeReqFromJson(json);
+}
+
+@freezed
 class AddProductResp with _$AddProductResp {
-  const factory AddProductResp({@Default('') message}) = _AddProductResp;
+  const factory AddProductResp({
+    @Default('') String productId,
+    @Default('') String message
+  }) = _AddProductResp;
 
   factory AddProductResp.fromJson(Map<String, dynamic> json) =>
       _$AddProductRespFromJson(json);

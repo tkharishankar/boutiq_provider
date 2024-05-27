@@ -14,13 +14,370 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+AddProductReq _$AddProductReqFromJson(Map<String, dynamic> json) {
+  return _AddProductReq.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AddProductReq {
+  String get name => throw _privateConstructorUsedError;
+  String get category => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  List<String> get imageUrls => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AddProductReqCopyWith<AddProductReq> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AddProductReqCopyWith<$Res> {
+  factory $AddProductReqCopyWith(
+          AddProductReq value, $Res Function(AddProductReq) then) =
+      _$AddProductReqCopyWithImpl<$Res, AddProductReq>;
+  @useResult
+  $Res call(
+      {String name,
+      String category,
+      String description,
+      List<String> imageUrls});
+}
+
+/// @nodoc
+class _$AddProductReqCopyWithImpl<$Res, $Val extends AddProductReq>
+    implements $AddProductReqCopyWith<$Res> {
+  _$AddProductReqCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? category = null,
+    Object? description = null,
+    Object? imageUrls = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      imageUrls: null == imageUrls
+          ? _value.imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AddProductReqImplCopyWith<$Res>
+    implements $AddProductReqCopyWith<$Res> {
+  factory _$$AddProductReqImplCopyWith(
+          _$AddProductReqImpl value, $Res Function(_$AddProductReqImpl) then) =
+      __$$AddProductReqImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String name,
+      String category,
+      String description,
+      List<String> imageUrls});
+}
+
+/// @nodoc
+class __$$AddProductReqImplCopyWithImpl<$Res>
+    extends _$AddProductReqCopyWithImpl<$Res, _$AddProductReqImpl>
+    implements _$$AddProductReqImplCopyWith<$Res> {
+  __$$AddProductReqImplCopyWithImpl(
+      _$AddProductReqImpl _value, $Res Function(_$AddProductReqImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? category = null,
+    Object? description = null,
+    Object? imageUrls = null,
+  }) {
+    return _then(_$AddProductReqImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      imageUrls: null == imageUrls
+          ? _value._imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AddProductReqImpl implements _AddProductReq {
+  const _$AddProductReqImpl(
+      {required this.name,
+      required this.category,
+      required this.description,
+      required final List<String> imageUrls})
+      : _imageUrls = imageUrls;
+
+  factory _$AddProductReqImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AddProductReqImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String category;
+  @override
+  final String description;
+  final List<String> _imageUrls;
+  @override
+  List<String> get imageUrls {
+    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_imageUrls);
+  }
+
+  @override
+  String toString() {
+    return 'AddProductReq(name: $name, category: $category, description: $description, imageUrls: $imageUrls)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AddProductReqImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            const DeepCollectionEquality()
+                .equals(other._imageUrls, _imageUrls));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, category, description,
+      const DeepCollectionEquality().hash(_imageUrls));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AddProductReqImplCopyWith<_$AddProductReqImpl> get copyWith =>
+      __$$AddProductReqImplCopyWithImpl<_$AddProductReqImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AddProductReqImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AddProductReq implements AddProductReq {
+  const factory _AddProductReq(
+      {required final String name,
+      required final String category,
+      required final String description,
+      required final List<String> imageUrls}) = _$AddProductReqImpl;
+
+  factory _AddProductReq.fromJson(Map<String, dynamic> json) =
+      _$AddProductReqImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get category;
+  @override
+  String get description;
+  @override
+  List<String> get imageUrls;
+  @override
+  @JsonKey(ignore: true)
+  _$$AddProductReqImplCopyWith<_$AddProductReqImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+AddProductSizeReq _$AddProductSizeReqFromJson(Map<String, dynamic> json) {
+  return _AddProductSizeReq.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AddProductSizeReq {
+  List<ProductSize> get productSize => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AddProductSizeReqCopyWith<AddProductSizeReq> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AddProductSizeReqCopyWith<$Res> {
+  factory $AddProductSizeReqCopyWith(
+          AddProductSizeReq value, $Res Function(AddProductSizeReq) then) =
+      _$AddProductSizeReqCopyWithImpl<$Res, AddProductSizeReq>;
+  @useResult
+  $Res call({List<ProductSize> productSize});
+}
+
+/// @nodoc
+class _$AddProductSizeReqCopyWithImpl<$Res, $Val extends AddProductSizeReq>
+    implements $AddProductSizeReqCopyWith<$Res> {
+  _$AddProductSizeReqCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? productSize = null,
+  }) {
+    return _then(_value.copyWith(
+      productSize: null == productSize
+          ? _value.productSize
+          : productSize // ignore: cast_nullable_to_non_nullable
+              as List<ProductSize>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AddProductSizeReqImplCopyWith<$Res>
+    implements $AddProductSizeReqCopyWith<$Res> {
+  factory _$$AddProductSizeReqImplCopyWith(_$AddProductSizeReqImpl value,
+          $Res Function(_$AddProductSizeReqImpl) then) =
+      __$$AddProductSizeReqImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<ProductSize> productSize});
+}
+
+/// @nodoc
+class __$$AddProductSizeReqImplCopyWithImpl<$Res>
+    extends _$AddProductSizeReqCopyWithImpl<$Res, _$AddProductSizeReqImpl>
+    implements _$$AddProductSizeReqImplCopyWith<$Res> {
+  __$$AddProductSizeReqImplCopyWithImpl(_$AddProductSizeReqImpl _value,
+      $Res Function(_$AddProductSizeReqImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? productSize = null,
+  }) {
+    return _then(_$AddProductSizeReqImpl(
+      productSize: null == productSize
+          ? _value._productSize
+          : productSize // ignore: cast_nullable_to_non_nullable
+              as List<ProductSize>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AddProductSizeReqImpl implements _AddProductSizeReq {
+  const _$AddProductSizeReqImpl({required final List<ProductSize> productSize})
+      : _productSize = productSize;
+
+  factory _$AddProductSizeReqImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AddProductSizeReqImplFromJson(json);
+
+  final List<ProductSize> _productSize;
+  @override
+  List<ProductSize> get productSize {
+    if (_productSize is EqualUnmodifiableListView) return _productSize;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_productSize);
+  }
+
+  @override
+  String toString() {
+    return 'AddProductSizeReq(productSize: $productSize)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AddProductSizeReqImpl &&
+            const DeepCollectionEquality()
+                .equals(other._productSize, _productSize));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_productSize));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AddProductSizeReqImplCopyWith<_$AddProductSizeReqImpl> get copyWith =>
+      __$$AddProductSizeReqImplCopyWithImpl<_$AddProductSizeReqImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AddProductSizeReqImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AddProductSizeReq implements AddProductSizeReq {
+  const factory _AddProductSizeReq(
+      {required final List<ProductSize> productSize}) = _$AddProductSizeReqImpl;
+
+  factory _AddProductSizeReq.fromJson(Map<String, dynamic> json) =
+      _$AddProductSizeReqImpl.fromJson;
+
+  @override
+  List<ProductSize> get productSize;
+  @override
+  @JsonKey(ignore: true)
+  _$$AddProductSizeReqImplCopyWith<_$AddProductSizeReqImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 AddProductResp _$AddProductRespFromJson(Map<String, dynamic> json) {
   return _AddProductResp.fromJson(json);
 }
 
 /// @nodoc
 mixin _$AddProductResp {
-  dynamic get message => throw _privateConstructorUsedError;
+  String get productId => throw _privateConstructorUsedError;
+  String get message => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +391,7 @@ abstract class $AddProductRespCopyWith<$Res> {
           AddProductResp value, $Res Function(AddProductResp) then) =
       _$AddProductRespCopyWithImpl<$Res, AddProductResp>;
   @useResult
-  $Res call({dynamic message});
+  $Res call({String productId, String message});
 }
 
 /// @nodoc
@@ -50,13 +407,18 @@ class _$AddProductRespCopyWithImpl<$Res, $Val extends AddProductResp>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? message = freezed,
+    Object? productId = null,
+    Object? message = null,
   }) {
     return _then(_value.copyWith(
-      message: freezed == message
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
+              as String,
+      message: null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as String,
     ) as $Val);
   }
 }
@@ -69,7 +431,7 @@ abstract class _$$AddProductRespImplCopyWith<$Res>
       __$$AddProductRespImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({dynamic message});
+  $Res call({String productId, String message});
 }
 
 /// @nodoc
@@ -83,10 +445,18 @@ class __$$AddProductRespImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? message = freezed,
+    Object? productId = null,
+    Object? message = null,
   }) {
     return _then(_$AddProductRespImpl(
-      message: freezed == message ? _value.message! : message,
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
+              as String,
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -94,18 +464,21 @@ class __$$AddProductRespImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AddProductRespImpl implements _AddProductResp {
-  const _$AddProductRespImpl({this.message = ''});
+  const _$AddProductRespImpl({this.productId = '', this.message = ''});
 
   factory _$AddProductRespImpl.fromJson(Map<String, dynamic> json) =>
       _$$AddProductRespImplFromJson(json);
 
   @override
   @JsonKey()
-  final dynamic message;
+  final String productId;
+  @override
+  @JsonKey()
+  final String message;
 
   @override
   String toString() {
-    return 'AddProductResp(message: $message)';
+    return 'AddProductResp(productId: $productId, message: $message)';
   }
 
   @override
@@ -113,13 +486,14 @@ class _$AddProductRespImpl implements _AddProductResp {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AddProductRespImpl &&
-            const DeepCollectionEquality().equals(other.message, message));
+            (identical(other.productId, productId) ||
+                other.productId == productId) &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(message));
+  int get hashCode => Object.hash(runtimeType, productId, message);
 
   @JsonKey(ignore: true)
   @override
@@ -137,13 +511,16 @@ class _$AddProductRespImpl implements _AddProductResp {
 }
 
 abstract class _AddProductResp implements AddProductResp {
-  const factory _AddProductResp({final dynamic message}) = _$AddProductRespImpl;
+  const factory _AddProductResp(
+      {final String productId, final String message}) = _$AddProductRespImpl;
 
   factory _AddProductResp.fromJson(Map<String, dynamic> json) =
       _$AddProductRespImpl.fromJson;
 
   @override
-  dynamic get message;
+  String get productId;
+  @override
+  String get message;
   @override
   @JsonKey(ignore: true)
   _$$AddProductRespImplCopyWith<_$AddProductRespImpl> get copyWith =>

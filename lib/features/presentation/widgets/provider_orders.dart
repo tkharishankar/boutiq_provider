@@ -29,7 +29,7 @@ class _ProviderOrderState extends State<ProviderOrder> {
   void initState() {
     super.initState();
     _orderBloc = context.read<OrderBloc>()
-      ..add(const GetOrders(providerID: '2342024PROV0662'));
+      ..add(const GetOrders());
   }
 
   @override

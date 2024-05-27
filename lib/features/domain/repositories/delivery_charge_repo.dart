@@ -20,7 +20,7 @@ class DeliveryChargeRepository implements DeliveryChargeRepo {
   @override
   Future<Either<ApiError, List<Region>>> regions() async {
     try {
-      return await deliveryChargeRemoteDataSource.getRegions("");
+      return await deliveryChargeRemoteDataSource.getRegions();
     } on ApiError catch (error) {
       return Left(error);
     }

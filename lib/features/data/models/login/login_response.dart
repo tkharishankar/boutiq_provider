@@ -1,63 +1,41 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'login_response.freezed.dart';
 part 'login_response.g.dart';
 
-@JsonSerializable()
-class LoginResponse {
-  final String? accessToken;
-  final Provider? provider;
-
-  const LoginResponse({this.accessToken, this.provider});
+@freezed
+class LoginResponse with _$LoginResponse {
+  const factory LoginResponse({
+    String? accessToken,
+    Provider? provider,
+  }) = _LoginResponse;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
 }
 
-@JsonSerializable()
-class Provider {
-  final String? providerId;
-  final String? companyName;
-  final ContactPersonDetail contactPerson;
-  final String? email;
-  final String? phone;
-  final String? place;
-  final String? password;
-  final int? createdAt;
-  final int? updatedAt;
-  final ProviderStatus? status;
-
-  const Provider({
-    this.providerId,
-    this.companyName,
-    required this.contactPerson,
-    this.email,
-    this.phone,
-    this.place,
-    this.password,
-    this.createdAt,
-    this.updatedAt,
-    this.status,
-  });
+@freezed
+class Provider with _$Provider {
+  const factory Provider({
+    String? providerId,
+    String? companyName,
+    required ContactPersonDetail contactPerson,
+    String? email,
+    String? phone,
+    String? place,
+    String? password,
+    int? createdAt,
+    int? updatedAt,
+  }) = _Provider;
 
   factory Provider.fromJson(Map<String, dynamic> json) => _$ProviderFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ProviderToJson(this);
 }
 
-@JsonSerializable()
-class ContactPersonDetail {
-  final String name;
-  final String phoneNumber;
-
-  const ContactPersonDetail({
-    this.name = "",
-    this.phoneNumber = "",
-  });
+@freezed
+class ContactPersonDetail with _$ContactPersonDetail {
+  const factory ContactPersonDetail({
+    @Default('') String name,
+    @Default('') String phoneNumber,
+  }) = _ContactPersonDetail;
 
   factory ContactPersonDetail.fromJson(Map<String, dynamic> json) => _$ContactPersonDetailFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ContactPersonDetailToJson(this);
 }
-
-enum ProviderStatus { REQUESTED, ACTIVE, DEACTIVATED}

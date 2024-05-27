@@ -5,7 +5,6 @@ import '../../../../core/themes/color_scheme.dart';
 class ProductCard extends StatelessWidget {
   final String productName;
   final String brandName;
-  final double price;
   final double rating;
   final bool isFavorited;
   final String imageUrl;
@@ -13,7 +12,6 @@ class ProductCard extends StatelessWidget {
   const ProductCard({super.key,
     required this.productName,
     required this.brandName,
-    required this.price,
     required this.rating,
     required this.isFavorited,
     required this.imageUrl,

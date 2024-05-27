@@ -1,28 +1,37 @@
 import 'dart:developer';
 
+import 'package:boutiq_provider/features/data/datasource/remote/product_remote_firebase.dart';
 import 'package:boutiq_provider/features/data/models/deliverycharge/delivery_charge.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
+import '../../../../core/local_storage/app_cache.dart';
 import '../../../../core/network/api_error.dart';
 import '../../../../core/network/api_service.dart';
 
 abstract class DeliveryChargeDataSource {
-  Future<Either<ApiError, List<Region>>> getRegions(String providerID);
+  Future<Either<ApiError, List<Region>>> getRegions();
 
-  Future<Either<ApiError, bool>> updateDeliveryCharges(DeliveryChargeReq deliveryChargeReq);
+  Future<Either<ApiError, bool>> updateDeliveryCharges(
+      DeliveryChargeReq deliveryChargeReq);
 }
 
 class IDeliveryChargeDataSource implements DeliveryChargeDataSource {
   final ApiService? apiService;
+  final AppCache? appCache;
 
-  IDeliveryChargeDataSource({this.apiService});
+  IDeliveryChargeDataSource({this.apiService, this.appCache});
 
   @override
-  Future<Either<ApiError, List<Region>>> getRegions(String providerID) async {
+  Future<Either<ApiError, List<Region>>> getRegions() async {
     try {
-      final response = await apiService!.getRegionList("2342024PROV0662");
-      print('response: ${response.response}');
+      final providerId = appCache?.getProviderId();
+      if (providerId == null || providerId.isEmpty) {
+        return handleGeneralError(
+            "Error in adding product size. Please re-login and try again.");
+      }
+
+      final response = await apiService!.getRegionList(providerId);
       if (response.response.statusCode == 200) {
         List<Map<String, dynamic>> jsonList =
             response.response.data.cast<Map<String, dynamic>>();
@@ -30,20 +39,16 @@ class IDeliveryChargeDataSource implements DeliveryChargeDataSource {
             jsonList.map((json) => Region.fromJson(json)).toList();
         return Right(orders);
       } else {
-        print('response statusCode: ${response.response.statusCode}');
         return Left(ApiError(
             errorCode: response.response.statusCode.toString(),
             errorMessage: "Error in getting details"));
       }
     } on DioException catch (error) {
-      print('DioException: ${error}');
       if (error.response?.statusCode == 400) {
-        log('Bad request: ${error.response?.data}');
         final errorMessage =
             error.response!.data['statusMessage'] ?? 'Unknown error';
         return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
       } else {
-        log('Dio error: $error');
         return Left(ApiError(
             errorCode: error.response!.statusCode.toString(),
             errorMessage: "Error in getting details"));
@@ -52,9 +57,11 @@ class IDeliveryChargeDataSource implements DeliveryChargeDataSource {
   }
 
   @override
-  Future<Either<ApiError, bool>> updateDeliveryCharges(DeliveryChargeReq deliveryChargeReq) async {
+  Future<Either<ApiError, bool>> updateDeliveryCharges(
+      DeliveryChargeReq deliveryChargeReq) async {
     try {
-      final response = await apiService!.updateDeliveryCharges("2342024PROV0662", deliveryChargeReq);
+      final response = await apiService!
+          .updateDeliveryCharges("2342024PROV0662", deliveryChargeReq);
       if (response.response.statusCode == 200) {
         return const Right(true);
       } else {
@@ -68,7 +75,6 @@ class IDeliveryChargeDataSource implements DeliveryChargeDataSource {
   }
 
   Either<ApiError, bool> _handleDioException(DioException error) {
-    print(error);
     final errorMessage =
         error.response?.data['statusMessage'] ?? 'Unknown error';
     return Left(ApiError(

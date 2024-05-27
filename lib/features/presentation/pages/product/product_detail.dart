@@ -56,11 +56,11 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
   bool _detailsPopulated = false; // Flag to track initialization
   bool _isLoading = false; // Flag to track loading state
   double oneThirdScreenWidth = 0;
+  String productId = "";
 
   @override
   void initState() {
     super.initState();
-    print("resp initState");
     _tabController = TabController(length: 2, vsync: this);
     _loadProductDetails();
   }
@@ -68,22 +68,24 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
   @override
   void didUpdateWidget(covariant ProductDetail oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print("resp didUpdateWidget");
     if (oldWidget.productId != widget.productId) {
       _loadProductDetails();
     }
   }
 
   void _loadProductDetails() {
-    print("resp _loadProductDetails");
     if (widget.productId.isNotEmpty && widget.productId != "XXX") {
       setState(() {
         _isLoading = true; // Set loading state
+        productId = widget.productId;
       });
       context
           .read<ProductBloc>()
           .add(GetProductDetail(productId: widget.productId));
     } else {
+      setState(() {
+        productId = widget.productId;
+      });
       clearProductDetail();
     }
   }
@@ -108,19 +110,18 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       _productIdentifierController.clear();
       _priceController.clear();
       _descriptionController.clear();
-      productSizeList = [];
       _detailsPopulated = false; // Reset the flag when clearing details
       _isLoading = false;
     });
   }
 
   void _populateProductDetails(ProductDetailResp resp) {
-    print("resp _populateProductDetails");
     if (!_detailsPopulated) {
       // Check if the details have already been populated
       setState(() {
+        productId = resp.product.productId;
         _productNameController.text = resp.product.name;
-        _productIdentifierController.text = resp.product.productId;
+        _productIdentifierController.text = resp.product.category;
         _priceController.text = resp.product.price;
         _descriptionController.text = resp.product.description;
         productSizeList = List.from(resp.productSize);
@@ -163,7 +164,9 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.productId == "XXX" ? "Add New Product" : "Update Product",
+            productId == "XXX"
+                ? "Add New Product"
+                : "Product Detail - $productId",
             style: GoogleFonts.lato(),
           ),
         ),
@@ -171,23 +174,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
           children: [
             _buildForm(isMobile),
             BlocListener<ProductBloc, ProductState>(
-              listener: (context, state) {
-                state.maybeWhen(
-                  onProductDetail: (product) {
-                    _populateProductDetails(product);
-                  },
-                  onProductDetailError: (message) {
-                    setState(() {
-                      _isLoading =
-                          false; // Set loading state to false if there's an error
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(message)),
-                    );
-                  },
-                  orElse: () {},
-                );
-              },
+              listener: _listener,
               child: Container(),
             ),
             if (_isLoading) // Show loading indicator if loading
@@ -229,43 +216,47 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     return Stack(
       children: [
         SingleChildScrollView(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: isMobile ? 1 : 2,
-                    child: Column(
+            padding: const EdgeInsets.all(8),
+            child: SafeArea(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildProductNameField(),
-                        _buildProductIdentifierField(),
-                        _buildDescriptionField(),
-                        if (isMobile) fileUpload(),
-                        if (isMobile) selectedImageList(),
+                        Expanded(
+                          flex: isMobile ? 1 : 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildProductNameField(),
+                              _buildProductIdentifierField(),
+                              _buildDescriptionField(),
+                              if (isMobile) fileUpload(),
+                              if (isMobile) selectedImageList(),
+                            ],
+                          ),
+                        ),
+                        if (!isMobile)
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                fileUpload(),
+                                selectedImageList(),
+                              ],
+                            ),
+                          ),
                       ],
                     ),
-                  ),
-                  if (!isMobile)
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          fileUpload(),
-                          selectedImageList(),
-                        ],
-                      ),
-                    ),
-                ],
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
+            )),
         Positioned(
           left: isMobile ? 20 : oneThirdScreenWidth,
           right: isMobile ? 20 : oneThirdScreenWidth,
@@ -274,7 +265,9 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: AppButton(
               text: AppTexts.save,
-              onTap: () {},
+              onTap: () {
+                onAddProductDetail(context);
+              },
               textSize: 18,
               textColor: AppColors.white100,
               color: AppColors.primaryColor,
@@ -283,6 +276,72 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
         ),
       ],
     );
+  }
+
+  void onAddProductDetail(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      if (selectedImages == null || selectedImages!.isEmpty) {
+        showAlertDialog(context, "Product Image Missing",
+            "Please select the product images.");
+        return;
+      }
+      if (selectedImages!.length > 3) {
+        showAlertDialog(context, "Product Image Restriction",
+            "You are allowed to add up to 3 images per product.");
+        return;
+      }
+
+      var req = AddProduct(
+        name: _productNameController.text,
+        identifier: _productIdentifierController.text,
+        price: _priceController.text,
+        description: _descriptionController.text,
+        images: selectedImages!,
+        imageStorageUrl: [],
+      );
+
+      context.read<ProductBloc>().add(req);
+    }
+    return;
+  }
+
+  void _listener(BuildContext context, ProductState state) {
+    state.maybeWhen(orElse: () {
+      _overlayEntry?.remove();
+    }, onProductDetail: (product) {
+      _populateProductDetails(product);
+    }, onProductDetailError: (message) {
+      setState(() {
+        _isLoading = false; // Set loading state to false if there's an error
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }, loading: () {
+      _overlayEntry = showLoadingOverlay(context, _overlayEntry);
+    }, addProductError: (message) {
+      _overlayEntry?.remove();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.errorColor,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }, addProductSuccessful: (message) {
+      _overlayEntry = hideLoadingOverlay(context, _overlayEntry);
+      showActionAlertDialog(
+        context,
+        "Product Added successfully.",
+        "",
+        [
+          AlertAction(
+            label: 'Ok',
+            onTap: () {},
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildTab2(bool isMobile) {
@@ -324,7 +383,9 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: AppButton(
             text: AppTexts.save,
-            onTap: () {},
+            onTap: () {
+              onAddProductSizes(context);
+            },
             textSize: 18,
             textColor: AppColors.white100,
             color: AppColors.primaryColor,
@@ -332,6 +393,26 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
         ),
       ),
     ]);
+  }
+
+  void onAddProductSizes(BuildContext context) {
+    if (productSizeList.isEmpty) {
+      showAlertDialog(context, "Warning!", "Please add product sizes");
+      return;
+    }
+    if (productSizeList.length > 5) {
+      showAlertDialog(context, "Product Size Restriction",
+          "You are allowed to add up to 5 sizes per product");
+      return;
+    }
+
+    var req = AddProductSize(
+      productId: productId,
+      productSizes: productSizeList,
+    );
+
+    context.read<ProductBloc>().add(req);
+    return;
   }
 
   Widget _buildProductNameField() {
@@ -357,6 +438,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       controller: _descriptionController,
       label: 'Description',
       hint: 'Enter description.',
+      validator: descriptionValidator,
     );
   }
 
@@ -531,26 +613,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     setState(() {});
   }
 
-  void onPublish(BuildContext context) {
-    if (_formKey.currentState!.validate()) {
-      if (selectedImages == null || selectedImages!.isEmpty) {
-        showAlertDialog(context, "Product Image Missing",
-            "Please select the product images.");
-        return;
-      }
-      // context.read<ProductBloc>().add(
-      //       AddProductReq(
-      //           name: _productName,
-      //           identifier: _productIdentifier,
-      //           price: _price,
-      //           deliveryPrice: "",
-      //           description: _description,
-      //           images: selectedImages!),
-      //     );
-    }
-    return;
-  }
-
   openImages() async {
     try {
       var selectedFiles =
@@ -559,41 +621,8 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       selectedImages = uniqueImages.toList();
       setState(() {});
     } catch (e) {
-      print("error while picking file.");
     }
   }
-
-// void _listener(BuildContext context, ProductState state) {
-//   state.maybeWhen(orElse: () {
-//     _overlayEntry?.remove();
-//   }, loading: () {
-//     _overlayEntry = showLoadingOverlay(context, _overlayEntry);
-//   }, addProductError: (message) {
-//     _overlayEntry?.remove();
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(
-//         content: Text(message),
-//         backgroundColor: AppColors.errorColor,
-//         duration: const Duration(seconds: 3),
-//       ),
-//     );
-//   }, addProductSuccessful: (message) {
-//     _overlayEntry = hideLoadingOverlay(context, _overlayEntry);
-//     showActionAlertDialog(
-//       context,
-//       "Product Added successfully.",
-//       "",
-//       [
-//         AlertAction(
-//           label: 'Ok',
-//           onTap: () {
-//             GoRouter.of(context).replaceNamed(RouteConstants.home);
-//           },
-//         ),
-//       ],
-//     );
-//   });
-// }
 
   Widget productSizeListView() {
     if (productSizeList.isEmpty) {
@@ -823,7 +852,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                 hintText: 'Enter weight',
                 validator: sizeNameValidator,
                 keyboardType:
-                const TextInputType.numberWithOptions(decimal: false),
+                    const TextInputType.numberWithOptions(decimal: false),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                 ],
@@ -837,8 +866,9 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                   text: _editingIndex == null
                       ? AppTexts.add
                       : AppTexts.updateSize,
-                  onTap:
-                  _editingIndex == null ? _addOrUpdateSize : _addOrUpdateSize,
+                  onTap: _editingIndex == null
+                      ? _addOrUpdateSize
+                      : _addOrUpdateSize,
                   textSize: 18,
                   textColor: AppColors.white100,
                   color: AppColors.primaryColor.withAlpha(150),
@@ -873,11 +903,10 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       setState(() {
         productSizeList = List.from(productSizeList)
           ..add(ProductSize(
-            productSize: _sizeNameController.text,
-            price: price,
-            quantity: quantity,
-              weight:weight
-          ));
+              productSize: _sizeNameController.text,
+              price: price,
+              quantity: quantity,
+              weight: weight));
         _editingIndex = null;
       });
     }
@@ -959,24 +988,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
           inputFormatters: inputFormatters,
         ),
       ],
-    );
-  }
-
-  Widget _buildTab3(bool isMobile) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          Expanded(
-            flex: isMobile ? 1 : 2, // Adjust flex based on device
-            child: Column(
-              children: [
-                descriptionDetail(),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 

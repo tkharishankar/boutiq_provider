@@ -7,54 +7,83 @@ import '../../../data/models/product/product_resp.dart';
 import '../../../domain/repositories/product_repo.dart';
 
 part 'product_bloc.freezed.dart';
+
 part 'product_event.dart';
+
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductRepo productRepo;
 
   ProductBloc({required this.productRepo}) : super(_Initial()) {
-    on<AddProductReq>(_onAddProduct);
+    on<AddProduct>(_onAddProduct);
+    on<AddProductSize>(_onAddProductSizes);
     on<GetProducts>(_getProducts);
     on<GetProductDetail>(_getProductDetail);
   }
 
-  Future<void> _onAddProduct(
-      AddProductReq addProductReq, Emitter<ProductState> emit) async {
+  Future<void> _onAddProductSizes(AddProductSize addProductSize, Emitter<ProductState> emit) async {
     emit(const ProductState.loading());
+    final result = await productRepo.addProductSize(addProductSize);
+    await result.fold(
+          (failure) async {
+        emit(ProductState.addProductError(failure.errorMessage));
+      },
+          (success) async {
+        emit(ProductState.addProductSuccessful(success.message));
+        await _handleGetProductDetail(success.productId, emit);
+      },
+    );
+  }
 
-    final failureOrSuccess = await productRepo.addProduct(addProductReq);
+  Future<void> _onAddProduct(AddProduct addProduct, Emitter<ProductState> emit) async {
+    emit(const ProductState.loading());
+    final result = await productRepo.addProduct(addProduct);
+    await result.fold(
+          (failure) async {
+        emit(ProductState.addProductError(failure.errorMessage));
+      },
+          (success) async {
+        emit(ProductState.addProductSuccessful(success.message));
+        await _handleGetProductDetail(success.productId, emit);
+      },
+    );
+  }
 
-    failureOrSuccess.fold((failure) {
-      emit(ProductState.addProductError(failure.errorMessage));
-    }, (success) {
-      emit(ProductState.addProductSuccessful(success.message));
-    });
+  Future<void> _getProductDetail(GetProductDetail getProductDetail, Emitter<ProductState> emit) async {
+    emit(const ProductState.onProductDetailLoading());
+    final result = await productRepo.getProductDetail(getProductDetail.productId);
+    await result.fold(
+          (failure) async {
+        emit(ProductState.onProductDetailError(failure.errorMessage));
+      },
+          (success) async {
+        emit(ProductState.onProductDetail(success));
+      },
+    );
+  }
+
+  Future<void> _handleGetProductDetail(String productId, Emitter<ProductState> emit) async {
+    final result = await productRepo.getProductDetail(productId);
+    await result.fold(
+          (failure) async {
+        emit(ProductState.onProductDetailError(failure.errorMessage));
+      },
+          (success) async {
+        emit(ProductState.onProductDetail(success));
+      },
+    );
   }
 
   Future<void> _getProducts(
       GetProducts getProducts, Emitter<ProductState> emit) async {
     emit(const ProductState.loading());
     final failureOrSuccess =
-        await productRepo.getProducts(getProducts.providerID);
+        await productRepo.getProducts();
     failureOrSuccess.fold((failure) {
       emit(ProductState.onProductListError(failure.errorMessage));
     }, (success) {
       emit(ProductState.onProductList(success));
     });
   }
-
-  Future<void> _getProductDetail(
-      GetProductDetail getProductDetail, Emitter<ProductState> emit) async {
-    emit(const ProductState.onProductDetailLoading());
-    print("_getProductDetail called");
-    final failureOrSuccess =
-        await productRepo.getProductDetail(getProductDetail.productId);
-    failureOrSuccess.fold((failure) {
-      emit(ProductState.onProductDetailError(failure.errorMessage));
-    }, (success) {
-      emit(ProductState.onProductDetail(success));
-    });
-  }
-
 }

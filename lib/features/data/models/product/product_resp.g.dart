@@ -6,14 +6,47 @@ part of 'product_resp.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_$AddProductReqImpl _$$AddProductReqImplFromJson(Map<String, dynamic> json) =>
+    _$AddProductReqImpl(
+      name: json['name'] as String,
+      category: json['category'] as String,
+      description: json['description'] as String,
+      imageUrls:
+          (json['imageUrls'] as List<dynamic>).map((e) => e as String).toList(),
+    );
+
+Map<String, dynamic> _$$AddProductReqImplToJson(_$AddProductReqImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'category': instance.category,
+      'description': instance.description,
+      'imageUrls': instance.imageUrls,
+    };
+
+_$AddProductSizeReqImpl _$$AddProductSizeReqImplFromJson(
+        Map<String, dynamic> json) =>
+    _$AddProductSizeReqImpl(
+      productSize: (json['productSize'] as List<dynamic>)
+          .map((e) => ProductSize.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$AddProductSizeReqImplToJson(
+        _$AddProductSizeReqImpl instance) =>
+    <String, dynamic>{
+      'productSize': instance.productSize,
+    };
+
 _$AddProductRespImpl _$$AddProductRespImplFromJson(Map<String, dynamic> json) =>
     _$AddProductRespImpl(
-      message: json['message'] ?? '',
+      productId: json['productId'] as String? ?? '',
+      message: json['message'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$AddProductRespImplToJson(
         _$AddProductRespImpl instance) =>
     <String, dynamic>{
+      'productId': instance.productId,
       'message': instance.message,
     };
 

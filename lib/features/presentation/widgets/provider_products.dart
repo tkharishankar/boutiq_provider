@@ -22,7 +22,7 @@ class ProviderProduct extends StatelessWidget {
         Expanded(
           child: BlocBuilder<ProductBloc, ProductState>(
             bloc: context.read<ProductBloc>()
-              ..add(const GetProducts(providerID: '2342024PROV0662')),
+              ..add(const GetProducts()),
             builder: (context, state) {
               return state.maybeWhen(
                 orElse: () {
@@ -60,7 +60,6 @@ class ProviderProduct extends StatelessWidget {
       itemCount: products.length,
       itemBuilder: (BuildContext context, int index) {
         final product = products[index];
-        final double price = double.parse(product.price);
         final String imageUrl =
             product.imageUrls.isNotEmpty ? product.imageUrls[0] : '';
         return GestureDetector(
@@ -73,7 +72,6 @@ class ProviderProduct extends StatelessWidget {
           child: ProductCard(
             productName: product.name,
             brandName: product.description,
-            price: price,
             rating: 4.5,
             isFavorited: false,
             imageUrl: imageUrl,

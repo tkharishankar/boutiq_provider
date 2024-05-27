@@ -11,9 +11,8 @@ class OrderEvent extends Equatable {
 }
 
 class GetOrders extends OrderEvent {
-  final String providerID;
 
-  const GetOrders({required this.providerID});
+  const GetOrders();
 }
 
 class GetOrderStatusTraces extends OrderEvent {

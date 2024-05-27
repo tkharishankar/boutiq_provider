@@ -20,7 +20,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   Future<void> _getOrders(GetOrders getOrders, Emitter<OrderState> emit) async {
     emit(const OrderState.loading());
-    final failureOrSuccess = await orderRepo.getOrders(getOrders.providerID);
+    final failureOrSuccess = await orderRepo.getOrders();
     failureOrSuccess.fold((failure) {
       emit(OrderState.onOrderListError(failure.errorMessage));
     }, (success) {

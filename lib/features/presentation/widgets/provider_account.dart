@@ -15,7 +15,7 @@ class _AccountDetailState extends State<AccountDetail> {
   String? _phone = "1234567890";
   String? _place = "New York";
   String? _password = "password123";
-  ProviderStatus? _status = ProviderStatus.ACTIVE;
+  // ProviderStatus? _status = ProviderStatus.ACTIVE;
 
   final ContactPersonDetail _contactPerson = ContactPersonDetail(
     name: "John Doe",
@@ -38,7 +38,7 @@ class _AccountDetailState extends State<AccountDetail> {
                 _buildDetailRow("Phone", _phone),
                 _buildDetailRow("Place", _place),
                 _buildDetailRow("Password", _password),
-                _buildDetailRow("Status", _status.toString().split('.').last),
+                // _buildDetailRow("Status", _status.toString().split('.').last),
                 if (isMobile) _buildContactPersonDetail(_contactPerson),
               ],
             ),
@@ -65,7 +65,7 @@ class _AccountDetailState extends State<AccountDetail> {
       trailing: IconButton(
         icon: const Icon(Icons.edit),
         onPressed: () {
-          print('Editing $label');
+
         },
       ),
     );

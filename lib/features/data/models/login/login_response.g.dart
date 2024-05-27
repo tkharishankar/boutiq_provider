@@ -6,21 +6,22 @@ part of 'login_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
-    LoginResponse(
+_$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>
+    _$LoginResponseImpl(
       accessToken: json['accessToken'] as String?,
       provider: json['provider'] == null
           ? null
           : Provider.fromJson(json['provider'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
+Map<String, dynamic> _$$LoginResponseImplToJson(_$LoginResponseImpl instance) =>
     <String, dynamic>{
       'accessToken': instance.accessToken,
       'provider': instance.provider,
     };
 
-Provider _$ProviderFromJson(Map<String, dynamic> json) => Provider(
+_$ProviderImpl _$$ProviderImplFromJson(Map<String, dynamic> json) =>
+    _$ProviderImpl(
       providerId: json['providerId'] as String?,
       companyName: json['companyName'] as String?,
       contactPerson: ContactPersonDetail.fromJson(
@@ -31,10 +32,10 @@ Provider _$ProviderFromJson(Map<String, dynamic> json) => Provider(
       password: json['password'] as String?,
       createdAt: (json['createdAt'] as num?)?.toInt(),
       updatedAt: (json['updatedAt'] as num?)?.toInt(),
-      status: $enumDecodeNullable(_$ProviderStatusEnumMap, json['status']),
     );
 
-Map<String, dynamic> _$ProviderToJson(Provider instance) => <String, dynamic>{
+Map<String, dynamic> _$$ProviderImplToJson(_$ProviderImpl instance) =>
+    <String, dynamic>{
       'providerId': instance.providerId,
       'companyName': instance.companyName,
       'contactPerson': instance.contactPerson,
@@ -44,23 +45,17 @@ Map<String, dynamic> _$ProviderToJson(Provider instance) => <String, dynamic>{
       'password': instance.password,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'status': _$ProviderStatusEnumMap[instance.status],
     };
 
-const _$ProviderStatusEnumMap = {
-  ProviderStatus.REQUESTED: 'REQUESTED',
-  ProviderStatus.ACTIVE: 'ACTIVE',
-  ProviderStatus.DEACTIVATED: 'DEACTIVATED',
-};
-
-ContactPersonDetail _$ContactPersonDetailFromJson(Map<String, dynamic> json) =>
-    ContactPersonDetail(
-      name: json['name'] as String? ?? "",
-      phoneNumber: json['phoneNumber'] as String? ?? "",
+_$ContactPersonDetailImpl _$$ContactPersonDetailImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ContactPersonDetailImpl(
+      name: json['name'] as String? ?? '',
+      phoneNumber: json['phoneNumber'] as String? ?? '',
     );
 
-Map<String, dynamic> _$ContactPersonDetailToJson(
-        ContactPersonDetail instance) =>
+Map<String, dynamic> _$$ContactPersonDetailImplToJson(
+        _$ContactPersonDetailImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'phoneNumber': instance.phoneNumber,

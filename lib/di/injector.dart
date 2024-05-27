@@ -13,19 +13,20 @@ import 'auth_service_locator.dart';
 final sl = GetIt.I;
 
 Future<void> injector() async {
-
   final Dio dio = Dio();
   dio.options.headers['Content-Type'] = 'application/json';
+
+  // Register ApiService
   final ApiService apiService = ApiService(dio);
   sl.registerSingleton<ApiService>(apiService);
 
+  // Register all other dependencies
   await registerAuthDependencies();
   await registerProductDependencies();
   await registerOrderDependencies();
   await registerDeliveryChargeDependencies();
 
-  sl
-    ..registerLazySingleton<NetworkInfo>(
-        () => NetworkInfoImpl(InternetConnectionChecker()))
-    ..registerLazySingleton<AppCache>(() => AppCacheImpl());
+  // Register AppCacheImpl
+  sl.registerLazySingleton<AppCache>(() => AppCacheImpl());
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(InternetConnectionChecker()));
 }

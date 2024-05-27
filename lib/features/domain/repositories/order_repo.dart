@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import '../../data/datasource/remote/order_remote_firebase.dart';
 
 abstract class OrderRepo {
-  Future<Either<ApiError, List<OrderSummary>>> getOrders(String providerID);
+  Future<Either<ApiError, List<OrderSummary>>> getOrders();
 
   Future<Either<ApiError, List<OrderStatusTrace>>> getOrderStatusTraces(
       String orderId);
@@ -20,9 +20,8 @@ class OrderRepository implements OrderRepo {
   OrderRepository({required this.orderRemoteDataSource});
 
   @override
-  Future<Either<ApiError, List<OrderSummary>>> getOrders(
-      String providerID) async {
-    return await orderRemoteDataSource.getOrder(providerID);
+  Future<Either<ApiError, List<OrderSummary>>> getOrders() async {
+    return await orderRemoteDataSource.getOrder();
   }
 
   @override

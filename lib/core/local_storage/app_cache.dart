@@ -1,18 +1,28 @@
-import 'package:get_storage/get_storage.dart';
+import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:get_storage/get_storage.dart';
 import '../../features/data/models/login/login_response.dart';
 import '../common/error/exceptions.dart';
 
 class AppCacheKey {
   static const String introState = 'introState';
+  static const String providerId = 'providerId';
   static const String userData = 'userData';
 }
 
 abstract class AppCache {
-  setIntroState(bool state);
+  Future<void> setIntroState(bool state);
+
   bool getIntroState();
-  setUserInfo(LoginResponse userData);
+
+  Future<void> setUserInfo(LoginResponse userData);
+
   LoginResponse? getUserInfo();
+
+  Future<void> setProviderId(String id);
+
+  String getProviderId();
 }
 
 class AppCacheImpl implements AppCache {
@@ -23,18 +33,30 @@ class AppCacheImpl implements AppCache {
     try {
       final userData = box.read(AppCacheKey.userData);
       if (userData != null) {
-        return LoginResponse.fromJson(userData);
-      } else {
-        return null;
+        // Convert userData to Map<String, dynamic>
+        Map<String, dynamic>? jsonUserData;
+        if (userData is Map<String, dynamic>) {
+          jsonUserData = userData;
+        } else if (userData is String) {
+          // If userData is a String, try parsing it as JSON
+          jsonUserData = json.decode(userData);
+        }
+
+        if (jsonUserData != null) {
+          return LoginResponse.fromJson(jsonUserData);
+        }
       }
-    } on CacheException {
+
+      return null;
+    } catch (e) {
       throw CacheException();
     }
   }
 
   @override
-  setUserInfo(LoginResponse userData) async {
+  Future<void> setUserInfo(LoginResponse userData) async {
     try {
+      setProviderId(userData.provider?.providerId ?? "");
       await box.write(AppCacheKey.userData, userData.toJson());
     } on CacheException {
       throw CacheException();
@@ -42,7 +64,7 @@ class AppCacheImpl implements AppCache {
   }
 
   @override
-  setIntroState(bool state) async {
+  Future<void> setIntroState(bool state) async {
     try {
       await box.write(AppCacheKey.introState, state);
     } on CacheException {
@@ -59,6 +81,29 @@ class AppCacheImpl implements AppCache {
       } else {
         return false;
       }
+    } on CacheException {
+      throw CacheException();
+    }
+  }
+
+  @override
+  String getProviderId() {
+    try {
+      final state = box.read(AppCacheKey.providerId);
+      if (state != null) {
+        return state;
+      } else {
+        return "";
+      }
+    } on CacheException {
+      throw CacheException();
+    }
+  }
+
+  @override
+  Future<void> setProviderId(String id) async {
+    try {
+      await box.write(AppCacheKey.providerId, id);
     } on CacheException {
       throw CacheException();
     }

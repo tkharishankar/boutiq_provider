@@ -3,6 +3,7 @@ import 'package:boutiq_provider/features/data/models/login/login_response.dart';
 import 'package:boutiq_provider/features/data/models/order/order_summary.dart';
 import 'package:boutiq_provider/features/data/models/product/product_resp.dart';
 import 'package:boutiq_provider/features/data/models/registration/registration_response.dart';
+import 'package:boutiq_provider/features/presentation/bloc/product/product_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -54,4 +55,15 @@ abstract class ApiService {
     @Path('providerID') String providerID,
     @Body() DeliveryChargeReq req,
   );
+
+  @POST('api/v1/products')
+  Future<HttpResponse<AddProductResp>> addProduct(
+      @Header('providerID') String providerId,
+      @Body() AddProductReq addProductReq);
+
+  @POST('api/v1/products/{productId}/sizes')
+  Future<HttpResponse<AddProductResp>> addProductSize(
+      @Header('providerID') String providerId,
+      @Path('productId') String productId,
+      @Body() List<ProductSize> productSizes);
 }

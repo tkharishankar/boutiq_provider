@@ -1,15 +1,17 @@
 import 'dart:developer';
 
+import 'package:boutiq_provider/features/data/datasource/remote/product_remote_firebase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../../../core/local_storage/app_cache.dart';
 import '../../../../core/network/api_error.dart';
 import '../../../../core/network/api_service.dart';
 import '../../models/order/order_summary.dart';
 
 abstract class OrderRemoteDataSource {
-  Future<Either<ApiError, List<OrderSummary>>> getOrder(String providerID);
+  Future<Either<ApiError, List<OrderSummary>>> getOrder();
 
   Future<Either<ApiError, List<OrderStatusTrace>>> getOrderStatusTraces(
       String orderId);
@@ -20,14 +22,20 @@ abstract class OrderRemoteDataSource {
 
 class IOrderRemoteDataSource implements OrderRemoteDataSource {
   final ApiService? apiService;
+  final AppCache? appCache;
 
-  IOrderRemoteDataSource({this.apiService});
+  IOrderRemoteDataSource({this.apiService, this.appCache});
 
   @override
-  Future<Either<ApiError, List<OrderSummary>>> getOrder(
-      String providerID) async {
+  Future<Either<ApiError, List<OrderSummary>>> getOrder() async {
     try {
-      final response = await apiService!.getProviderOrdersList(providerID);
+      final providerId = appCache?.getProviderId();
+      if (providerId == null || providerId.isEmpty) {
+        return handleGeneralError(
+            "Error in adding product size. Please re-login and try again.");
+      }
+
+      final response = await apiService!.getProviderOrdersList(providerId);
 
       if (response.response.statusCode == 200) {
         List<Map<String, dynamic>> jsonList =
@@ -91,9 +99,6 @@ class IOrderRemoteDataSource implements OrderRemoteDataSource {
       String orderId, OrderStatusUpdateReq orderStatusUpdateReq) async {
     try {
       final response = await apiService?.updateOrderStatus(orderId, orderStatusUpdateReq);
-      debugPrint("updateOrderStatus ${response?.response.statusCode}");
-      debugPrint("updateOrderStatus response data: ${response?.response.data}");
-
       if (response != null && response.response.statusCode == 200) {
         return const Right("Success");
       } else {
@@ -102,9 +107,6 @@ class IOrderRemoteDataSource implements OrderRemoteDataSource {
             errorMessage: "Error in getting details"));
       }
     } on DioException catch (error) {
-      debugPrint("updateOrderStatus DioException: $error");
-      debugPrint("updateOrderStatus response data: ${error.response?.data}");
-
       if (error.response?.statusCode == 400) {
         log('Bad request: ${error.response?.data}');
         final responseData = error.response?.data;
@@ -118,7 +120,6 @@ class IOrderRemoteDataSource implements OrderRemoteDataSource {
             errorMessage: "Error in getting details"));
       }
     } catch (e) {
-      debugPrint("updateOrderStatus Exception: $e");
       return Left(ApiError(
           errorCode: 'Unknown', errorMessage: "Unexpected error occurred"));
     }

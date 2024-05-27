@@ -6,12 +6,12 @@ import 'package:get_it/get_it.dart';
 final orderLocator = GetIt.instance;
 
 Future<void> registerOrderDependencies() async {
-  orderLocator
-      .registerFactory(() => OrderBloc(orderRepo: orderLocator()));
+  orderLocator.registerFactory(() => OrderBloc(orderRepo: orderLocator()));
 
   orderLocator.registerLazySingleton<OrderRepo>(
-          () => OrderRepository(orderRemoteDataSource: orderLocator()));
+      () => OrderRepository(orderRemoteDataSource: orderLocator()));
 
-  orderLocator.registerLazySingleton<OrderRemoteDataSource>(
-      () => IOrderRemoteDataSource(apiService: orderLocator()));
+  orderLocator.registerLazySingleton<OrderRemoteDataSource>(() =>
+      IOrderRemoteDataSource(
+          apiService: orderLocator(), appCache: orderLocator()));
 }
