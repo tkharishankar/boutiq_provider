@@ -6,123 +6,141 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/common/error/exceptions.dart';
+import '../../../../core/local_storage/app_cache.dart';
 import '../../../../core/network/api_error.dart';
 import '../../../../core/network/api_service.dart';
+import '../../../../di/injector.dart';
 import '../../../presentation/bloc/product/product_bloc.dart';
 
 abstract class ProductRemoteDataSource {
-  Future<Either<ApiError, AddProductResp>> addProduct(
-      AddProductReq addProductReq);
+  Future<Either<ApiError, AddProductResp>> addProduct(AddProduct addProduct);
 
-  Future<Either<ApiError, List<Product>>> getProduct(String providerID);
+  Future<Either<ApiError, List<Product>>> getProduct();
 
   Future<Either<ApiError, ProductDetailResp>> getProductDetail(
       String productId);
+
+  Future<Either<ApiError, AddProductResp>> addProductSize(
+      AddProductSize addProductSize);
 }
 
 class IProductRemoteDataSource implements ProductRemoteDataSource {
-  // final user = sl<AppCache>().getUserInfo();
-
   final ApiService? apiService;
 
-  IProductRemoteDataSource({this.apiService});
+  final AppCache? appCache;
 
-  @override
-  Future<Either<ApiError, AddProductResp>> addProduct(
-      AddProductReq addProductReq) async {
-    try {
-      List<String> fileUrl = await uploadImages(addProductReq.images);
-      int status = await addProductToFirebase(addProductReq, fileUrl);
-      if (status != 200) {
-        return Left(ApiError(
-            errorCode: "400",
-            errorMessage:
-                "Error in adding product please contact support team"));
-      } else {
-        return const Right(AddProductResp(message: "Product Added successful"));
-      }
-    } on ApiError catch (error) {
-      return Left(error);
-    }
-  }
-
-  Future<int> addProductToFirebase(
-      AddProductReq addProductReq, List<String> fileUrl) async {
-    try {
-      var db = FirebaseFirestore.instance;
-      final productCollection = db.collection("product");
-      await productCollection.add({
-        // "provider_id": user!.phoneNumber,
-        "name": addProductReq.name,
-        "identifier": addProductReq.identifier,
-        "price": addProductReq.price,
-        "deliveryPrice": addProductReq.deliveryPrice,
-        "description": addProductReq.description,
-        "imageUrls": fileUrl,
-      });
-      return 200;
-    } catch (e) {
-      print("uploadImages" + e.toString());
-      throw ServerException(message: 'Server Error $e');
-    }
-  }
+  IProductRemoteDataSource({this.apiService, this.appCache});
 
   Future<List<String>> uploadImages(List<XFile> images) async {
     final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
     final List<Future<String>> uploadFutures = [];
-
     try {
       for (var item in images) {
         final storageRef = firebaseStorage
             .ref('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
         final Uint8List imageBytes = await item.readAsBytes();
         final uploadTask = storageRef.putData(imageBytes);
-
         // Add the future of getting download URL to the list
         uploadFutures.add(uploadTask.then((_) => storageRef.getDownloadURL()));
       }
 
       // Wait for all uploads to complete
       final List<String> fileUrls = await Future.wait(uploadFutures);
-
       return fileUrls;
     } catch (e) {
-      print("uploadImages Error: $e");
       throw ServerException(message: 'Server Error $e');
     }
   }
 
   @override
-  Future<Either<ApiError, List<Product>>> getProduct(String providerID) async {
+  Future<Either<ApiError, AddProductResp>> addProduct(
+      AddProduct addProduct) async {
     try {
-      final response = await apiService!.getProviderProductsList(providerID);
-      if (response.response.statusCode == 200) {
-        List<Map<String, dynamic>> jsonList =
-            response.response.data.cast<Map<String, dynamic>>();
-        List<Product> products =
-            jsonList.map((json) => Product.fromJson(json)).toList();
+      final providerId = appCache?.getProviderId();
+      if (providerId == null || providerId.isEmpty) {
+        return handleGeneralError(
+            "Error in adding product. Please re-login and try again.");
+      }
+      final fileUrl = await uploadImages(addProduct.images);
+      final updatedReq = AddProductReq(
+          name: addProduct.name,
+          category: addProduct.identifier,
+          description: addProduct.description,
+          imageUrls: fileUrl);
+      final response = await apiService!.addProduct(providerId, updatedReq);
 
-        return Right(products);
+      if (response.response.statusCode != 200) {
+        return handleGeneralError(
+            "Error in adding product. Please contact support team.");
       } else {
-        return Left(ApiError(
-            errorCode: response.response.statusCode.toString(),
-            errorMessage: "Error in getting details"));
+        final json = response.response.data as Map<String, dynamic>;
+        final addProductResp = AddProductResp.fromJson(json);
+        return Right(addProductResp);
       }
     } on DioException catch (error) {
-      if (error.response?.statusCode == 400) {
-        log('Bad request: ${error.response?.data}');
-        final errorMessage =
-            error.response!.data['statusMessage'] ?? 'Unknown error';
-        return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
-      } else {
-        log('Dio error: $error');
-        return Left(ApiError(
-            errorCode: error.response!.statusCode.toString(),
-            errorMessage: "Error in getting details"));
+      return handleError(error);
+    } catch (error) {
+      return handleGeneralError(
+          "An unexpected error occurred. Please try again.");
+    }
+  }
+
+  @override
+  Future<Either<ApiError, AddProductResp>> addProductSize(
+      AddProductSize addProductSize) async {
+    try {
+      final providerId = appCache?.getProviderId();
+      if (providerId == null || providerId.isEmpty) {
+        return handleGeneralError(
+            "Error in adding product size. Please re-login and try again.");
       }
+      final updatedReq =
+          AddProductSizeReq(productSize: addProductSize.productSizes);
+      final response = await apiService!.addProductSize(
+          providerId, addProductSize.productId, addProductSize.productSizes);
+      if (response.response.statusCode != 200) {
+        return handleGeneralError(
+            "Error in adding product size. Please contact support team.");
+      } else {
+        final json = response.response.data as Map<String, dynamic>;
+        final addProductResp = AddProductResp.fromJson(json);
+        return Right(addProductResp);
+      }
+    } on DioException catch (error) {
+      return handleError(error);
+    } catch (error) {
+      return handleGeneralError(
+          "An unexpected error occurred. Please try again.");
+    }
+  }
+
+  @override
+  Future<Either<ApiError, List<Product>>> getProduct() async {
+    try {
+      final providerId = appCache?.getProviderId();
+      if (providerId == null || providerId.isEmpty) {
+        return handleGeneralError(
+            "Error in adding product size. Please re-login and try again.");
+      }
+      final response = await apiService!.getProviderProductsList(providerId);
+      if (response.response.statusCode == 200) {
+        final jsonList = response.response.data as List<dynamic>;
+        // Map each element to Map<String, dynamic> and then to Product
+        final products = jsonList
+            .map((item) => Product.fromJson(item as Map<String, dynamic>))
+            .toList();
+        return Right(products);
+      } else {
+        return handleGeneralError("Error in getting details");
+      }
+    } on DioException catch (error) {
+      return handleError(error);
+    } catch (e) {
+      return handleGeneralError(e.toString());
     }
   }
 
@@ -132,28 +150,30 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
     try {
       final response = await apiService!.getProductDetail(productId);
       if (response.response.statusCode == 200) {
-        print(response.response.data);
-        Map<String, dynamic> json =
-            response.response.data as Map<String, dynamic>;
-        ProductDetailResp product = ProductDetailResp.fromJson(json);
+        final json = response.response.data as Map<String, dynamic>;
+        final product = ProductDetailResp.fromJson(json);
         return Right(product);
       } else {
-        return Left(ApiError(
-            errorCode: response.response.statusCode.toString(),
-            errorMessage: "Error in getting details"));
+        return handleGeneralError("Error in getting details");
       }
     } on DioException catch (error) {
-      if (error.response?.statusCode == 400) {
-        log('Bad request: ${error.response?.data}');
-        final errorMessage =
-            error.response!.data['statusMessage'] ?? 'Unknown error';
-        return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
-      } else {
-        log('Dio error: $error');
-        return Left(ApiError(
-            errorCode: error.response!.statusCode.toString(),
-            errorMessage: "Error in getting details"));
-      }
+      return handleError(error);
     }
   }
+}
+
+Either<ApiError, T> handleError<T>(DioException error) {
+  if (error.response?.statusCode == 4) {
+    final errorMessage =
+        error.response!.data['statusMessage'] ?? 'Unknown error';
+    return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
+  } else {
+    return Left(ApiError(
+        errorCode: error.response!.statusCode.toString(),
+        errorMessage: "Error in getting details"));
+  }
+}
+
+Either<ApiError, T> handleGeneralError<T>(String message) {
+  return Left(ApiError(errorCode: "400", errorMessage: message));
 }

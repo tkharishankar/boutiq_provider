@@ -6,12 +6,15 @@ import '../../data/models/product/product_resp.dart';
 import '../../presentation/bloc/product/product_bloc.dart';
 
 abstract class ProductRepo {
-  Future<Either<ApiError, AddProductResp>> addProduct(
-      AddProductReq addProductReq);
+  Future<Either<ApiError, AddProductResp>> addProduct(AddProduct addProduct);
 
-  Future<Either<ApiError, List<Product>>> getProducts(String providerID);
+  Future<Either<ApiError, AddProductResp>> addProductSize(
+      AddProductSize addProductSize);
 
-  Future<Either<ApiError, ProductDetailResp>> getProductDetail(String productId);
+  Future<Either<ApiError, List<Product>>> getProducts();
+
+  Future<Either<ApiError, ProductDetailResp>> getProductDetail(
+      String productId);
 }
 
 class ProductRepository implements ProductRepo {
@@ -21,17 +24,24 @@ class ProductRepository implements ProductRepo {
 
   @override
   Future<Either<ApiError, AddProductResp>> addProduct(
-      AddProductReq addProductReq) async {
-    return await productRemoteDataSource.addProduct(addProductReq);
+      AddProduct addProduct) async {
+    return await productRemoteDataSource.addProduct(addProduct);
   }
 
   @override
-  Future<Either<ApiError, List<Product>>> getProducts(String providerID) async {
-    return await productRemoteDataSource.getProduct(providerID);
+  Future<Either<ApiError, AddProductResp>> addProductSize(
+      AddProductSize addProductSize) async {
+    return await productRemoteDataSource.addProductSize(addProductSize);
   }
 
   @override
-  Future<Either<ApiError, ProductDetailResp>> getProductDetail(String productId) async {
+  Future<Either<ApiError, List<Product>>> getProducts() async {
+    return await productRemoteDataSource.getProduct();
+  }
+
+  @override
+  Future<Either<ApiError, ProductDetailResp>> getProductDetail(
+      String productId) async {
     return await productRemoteDataSource.getProductDetail(productId);
   }
 }
