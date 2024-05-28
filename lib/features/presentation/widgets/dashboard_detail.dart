@@ -1,11 +1,38 @@
+import 'package:boutiq_provider/features/data/datasource/remote/provider_remote_firebase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../core/utils/responsive.dart';
-import '../../data/models/product/product_resp.dart';
+import '../../data/models/provider/order_dashboard_resp.dart';
+import '../../domain/repositories/provider_repo.dart';
+import '../bloc/provider/provider_bloc.dart';
 
-class DashboardDetail extends StatelessWidget {
+class DashboardBlocProvider extends StatelessWidget {
+  final Widget child;
+
+  const DashboardBlocProvider({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ProviderBloc(
+        providerRepo: GetIt.instance<ProviderRepo>(),
+      )..add(const GetDashboardDetail()),
+      child: child,
+    );
+  }
+}
+
+
+class DashboardDetail extends StatefulWidget {
   const DashboardDetail({super.key});
 
+  @override
+  _DashboardDetailState createState() => _DashboardDetailState();
+}
+
+class _DashboardDetailState extends State<DashboardDetail> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -16,11 +43,32 @@ class DashboardDetail extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: isMobile ? _buildGridView([], 2) : _buildGridView([], 6),
+          child: BlocBuilder<ProviderBloc, ProviderState>(
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                onOrderDashboardDetail: (dashboardData) {
+                  return isMobile
+                      ? _buildGridView(dashboardData, 2)
+                      : _buildGridView(dashboardData, 6);
+                },
+                onOrderDashboardDetailError: (message) {
+                  return Center(
+                    child: Text(message),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ],
     );
   }
+
 
   Widget _buildDashboardCard({required String title, required String value}) {
     return Card(
@@ -52,34 +100,34 @@ class DashboardDetail extends StatelessWidget {
     );
   }
 
-  Widget _buildGridView(List<Product> products, int i) {
+  Widget _buildGridView(OrderDashboardResp data, int crossAxisCount) {
     return GridView.count(
-      crossAxisCount: i,
+      crossAxisCount: crossAxisCount,
       padding: const EdgeInsets.all(16.0),
       children: [
         _buildDashboardCard(
           title: 'Total Orders',
-          value: '200',
+          value: data.orders.toString(),
         ),
         _buildDashboardCard(
           title: 'Total Amount',
-          value: '\$5000',
+          value: '₹ ${data.amount}',
         ),
         _buildDashboardCard(
           title: 'Created',
-          value: '150',
+          value: data.createdOrders.toString(),
         ),
         _buildDashboardCard(
           title: 'Shipped',
-          value: '120',
+          value: data.shippedOrders.toString(),
         ),
         _buildDashboardCard(
           title: 'Delivered',
-          value: '100',
+          value: data.deliveredOrders.toString(),
         ),
         _buildDashboardCard(
           title: 'Cancelled',
-          value: '20',
+          value: data.canceledOrders.toString(),
         ),
       ],
     );

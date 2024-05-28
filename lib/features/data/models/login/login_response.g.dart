@@ -24,14 +24,18 @@ _$ProviderImpl _$$ProviderImplFromJson(Map<String, dynamic> json) =>
     _$ProviderImpl(
       providerId: json['providerId'] as String?,
       companyName: json['companyName'] as String?,
-      contactPerson: ContactPersonDetail.fromJson(
-          json['contactPerson'] as Map<String, dynamic>),
+      contactPerson: json['contactPerson'] == null
+          ? const ContactPersonDetail()
+          : ContactPersonDetail.fromJson(
+              json['contactPerson'] as Map<String, dynamic>),
       email: json['email'] as String?,
       phone: json['phone'] as String?,
       place: json['place'] as String?,
-      password: json['password'] as String?,
-      createdAt: (json['createdAt'] as num?)?.toInt(),
       updatedAt: (json['updatedAt'] as num?)?.toInt(),
+      createdAt: (json['createdAt'] as num?)?.toInt(),
+      status: json['status'] == null
+          ? ProviderStatus.REQUESTED
+          : providerStatusFromJson(json['status'] as String),
     );
 
 Map<String, dynamic> _$$ProviderImplToJson(_$ProviderImpl instance) =>
@@ -42,9 +46,9 @@ Map<String, dynamic> _$$ProviderImplToJson(_$ProviderImpl instance) =>
       'email': instance.email,
       'phone': instance.phone,
       'place': instance.place,
-      'password': instance.password,
-      'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
+      'createdAt': instance.createdAt,
+      'status': providerStatusToJson(instance.status),
     };
 
 _$ContactPersonDetailImpl _$$ContactPersonDetailImplFromJson(

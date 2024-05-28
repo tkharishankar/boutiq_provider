@@ -13,9 +13,11 @@ import 'package:get_storage/get_storage.dart';
 import 'di/auth_service_locator.dart';
 import 'di/injector.dart';
 import 'di/product_locator.dart';
+import 'di/provider_locator.dart';
 import 'features/presentation/bloc/login/login_bloc.dart';
 import 'features/presentation/bloc/order/order_bloc.dart';
 import 'features/presentation/bloc/product/product_bloc.dart';
+import 'features/presentation/bloc/provider/provider_bloc.dart';
 import 'features/presentation/bloc/registration/registration_bloc.dart';
 import 'firebase_options.dart';
 import 'router/router.dart';
@@ -53,7 +55,10 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: const Size(360, 640),  minTextAdapt: true,  splitScreenMode: true);
+    ScreenUtil.init(context,
+        designSize: const Size(360, 640),
+        minTextAdapt: true,
+        splitScreenMode: true);
     return MultiBlocProvider(
         providers: [
           BlocProvider<RegistrationBloc>(
@@ -71,11 +76,15 @@ class _AppState extends ConsumerState<App> {
           BlocProvider<RegionBloc>(
             create: (context) => deliveryChargeLocator<RegionBloc>(),
           ),
+          BlocProvider<ProviderBloc>(
+            create: (context) => providerLocator<ProviderBloc>(),
+          ),
         ],
         child: MaterialApp.router(
           title: 'BoutiQ',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(primaryColor: const Color(0xFFE21F4E),fontFamily: 'onest'),
+          theme: ThemeData(
+              primaryColor: const Color(0xFFE21F4E), fontFamily: 'onest'),
           scrollBehavior: const _AppScrollBehavior(),
           routeInformationProvider: AppRouter.router.routeInformationProvider,
           routeInformationParser: AppRouter.router.routeInformationParser,

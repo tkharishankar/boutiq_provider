@@ -2,8 +2,8 @@ import 'package:boutiq_provider/features/data/models/deliverycharge/delivery_cha
 import 'package:boutiq_provider/features/data/models/login/login_response.dart';
 import 'package:boutiq_provider/features/data/models/order/order_summary.dart';
 import 'package:boutiq_provider/features/data/models/product/product_resp.dart';
+import 'package:boutiq_provider/features/data/models/provider/order_dashboard_resp.dart';
 import 'package:boutiq_provider/features/data/models/registration/registration_response.dart';
-import 'package:boutiq_provider/features/presentation/bloc/product/product_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -24,13 +24,13 @@ abstract class ApiService {
   @GET("api/v1/providers")
   Future<HttpResponse<LoginResponse>> getProviderList();
 
-  @GET('api/v1/products/{providerID}')
+  @GET('api/v1/products/{providerId}')
   Future<HttpResponse<List<Product>>> getProviderProductsList(
-      @Path('providerID') String providerID);
+      @Path('providerId') String providerId);
 
-  @GET('api/v1/orders/provider/{providerID}')
+  @GET('api/v1/orders/provider/{providerId}')
   Future<HttpResponse<List<Product>>> getProviderOrdersList(
-      @Path('providerID') String providerID);
+      @Path('providerId') String providerId);
 
   @GET('api/v1/orders/orderStatus/{orderId}')
   Future<HttpResponse<List<OrderStatusTrace>>> getOrderStatusTraces(
@@ -46,24 +46,32 @@ abstract class ApiService {
   Future<HttpResponse<Product>> getProductDetail(
       @Path('productId') String productId);
 
-  @GET('api/v1/providers/delivery-charge/{providerID}')
+  @GET('api/v1/providers/delivery-charge/{providerId}')
   Future<HttpResponse<List<Region>>> getRegionList(
-      @Path('providerID') String providerID);
+      @Path('providerId') String providerId);
 
-  @POST('api/v1/providers/delivery-charge/{providerID}')
+  @POST('api/v1/providers/delivery-charge/{providerId}')
   Future<HttpResponse<String>> updateDeliveryCharges(
-    @Path('providerID') String providerID,
+    @Path('providerId') String providerId,
     @Body() DeliveryChargeReq req,
   );
 
   @POST('api/v1/products')
   Future<HttpResponse<AddProductResp>> addProduct(
-      @Header('providerID') String providerId,
+      @Header('providerId') String providerId,
       @Body() AddProductReq addProductReq);
 
   @POST('api/v1/products/{productId}/sizes')
   Future<HttpResponse<AddProductResp>> addProductSize(
-      @Header('providerID') String providerId,
+      @Header('providerId') String providerId,
       @Path('productId') String productId,
       @Body() List<ProductSize> productSizes);
+
+  @GET('api/v1/providers/order-summary-detail')
+  Future<HttpResponse<OrderDashboardResp>> getDashboardDetails(
+      @Header('providerId') String providerId);
+
+  @GET('api/v1/providers/{providerId}')
+  Future<HttpResponse<Provider>> getGetProviderDetail(
+      @Path('providerId') String providerId);
 }

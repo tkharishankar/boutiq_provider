@@ -56,6 +56,7 @@ class AppCacheImpl implements AppCache {
   @override
   Future<void> setUserInfo(LoginResponse userData) async {
     try {
+      print(userData);
       setProviderId(userData.provider?.providerId ?? "");
       await box.write(AppCacheKey.userData, userData.toJson());
     } on CacheException {
@@ -90,6 +91,7 @@ class AppCacheImpl implements AppCache {
   String getProviderId() {
     try {
       final state = box.read(AppCacheKey.providerId);
+      print(state);
       if (state != null) {
         return state;
       } else {
@@ -103,6 +105,7 @@ class AppCacheImpl implements AppCache {
   @override
   Future<void> setProviderId(String id) async {
     try {
+      print(id);
       await box.write(AppCacheKey.providerId, id);
     } on CacheException {
       throw CacheException();

@@ -1,56 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../core/utils/responsive.dart';
 import '../../data/models/login/login_response.dart';
+import '../../domain/repositories/provider_repo.dart';
+import '../bloc/provider/provider_bloc.dart';
+
+
+
+class AccountBlocProvider extends StatelessWidget {
+  final Widget child;
+
+  const AccountBlocProvider({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ProviderBloc(
+        providerRepo: GetIt.instance<ProviderRepo>(),
+      )..add(const GetProviderDetail()),
+      child: child,
+    );
+  }
+}
 
 class AccountDetail extends StatefulWidget {
+  const AccountDetail({super.key});
+
   @override
   _AccountDetailState createState() => _AccountDetailState();
 }
 
 class _AccountDetailState extends State<AccountDetail> {
-  // Initialize variables to store user details
-  String? _companyName = "Company XYZ";
-  String? _email = "user@example.com";
-  String? _phone = "1234567890";
-  String? _place = "New York";
-  String? _password = "password123";
-  // ProviderStatus? _status = ProviderStatus.ACTIVE;
-
-  final ContactPersonDetail _contactPerson = ContactPersonDetail(
-    name: "John Doe",
-    phoneNumber: "9876543210",
-  );
-
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
-    return Row(
+    return Column(
       children: [
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildDetailRow("Company Name", _companyName),
-                _buildDetailRow("Email", _email),
-                _buildDetailRow("Phone", _phone),
-                _buildDetailRow("Place", _place),
-                _buildDetailRow("Password", _password),
-                // _buildDetailRow("Status", _status.toString().split('.').last),
-                if (isMobile) _buildContactPersonDetail(_contactPerson),
-              ],
-            ),
+          child: BlocBuilder<ProviderBloc, ProviderState>(
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                onProviderDetail: (provider) {
+                  return detailView(provider,isMobile);
+                },
+                onProviderDetailError: (message) {
+                  return Center(
+                    child: Text(message),
+                  );
+                },
+              );
+            },
           ),
         ),
-        if (!isMobile)
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: _buildContactPersonDetail(_contactPerson),
-            ),
-          ),
       ],
     );
   }
@@ -64,9 +72,7 @@ class _AccountDetailState extends State<AccountDetail> {
       subtitle: Text(value ?? ''),
       trailing: IconButton(
         icon: const Icon(Icons.edit),
-        onPressed: () {
-
-        },
+        onPressed: () {},
       ),
     );
   }
@@ -94,6 +100,35 @@ class _AccountDetailState extends State<AccountDetail> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget detailView(Provider provider, bool isMobile) {
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildDetailRow("Company Name", provider.companyName),
+                _buildDetailRow("Email", provider.email),
+                _buildDetailRow("Phone", provider.phone),
+                _buildDetailRow("Place", provider.place),
+                if (isMobile) _buildContactPersonDetail(provider.contactPerson),
+              ],
+            ),
+          ),
+        ),
+        if (!isMobile)
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: _buildContactPersonDetail(provider.contactPerson),
+            ),
+          ),
+      ],
     );
   }
 }

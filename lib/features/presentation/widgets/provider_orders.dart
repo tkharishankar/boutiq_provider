@@ -28,8 +28,7 @@ class _ProviderOrderState extends State<ProviderOrder> {
   @override
   void initState() {
     super.initState();
-    _orderBloc = context.read<OrderBloc>()
-      ..add(const GetOrders());
+    _orderBloc = context.read<OrderBloc>()..add(const GetOrders());
   }
 
   @override
@@ -42,8 +41,7 @@ class _ProviderOrderState extends State<ProviderOrder> {
           flex: 7,
           child: SingleChildScrollView(
             child: Container(
-              height: MediaQuery
-                  .of(context)
+              height: MediaQuery.of(context)
                   .size
                   .height, // Make sure the container takes the full height
               child: Column(
@@ -65,15 +63,13 @@ class _ProviderOrderState extends State<ProviderOrder> {
                       builder: (context, state) {
                         return state.maybeWhen(
                           loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                          onOrderList: (orders) =>
-                          _orders.isNotEmpty
+                              const Center(child: CircularProgressIndicator()),
+                          onOrderList: (orders) => _orders.isNotEmpty
                               ? _buildOrderDataTable()
                               : Container(),
                           onOrderListError: (message) =>
                               Center(child: Text(message)),
-                          orElse: () =>
-                          _orders.isNotEmpty
+                          orElse: () => _orders.isNotEmpty
                               ? _buildOrderDataTable()
                               : Container(),
                         );
@@ -89,8 +85,7 @@ class _ProviderOrderState extends State<ProviderOrder> {
           Expanded(
             flex: 3,
             child: Container(
-              height: MediaQuery
-                  .of(context)
+              height: MediaQuery.of(context)
                   .size
                   .height, // Make sure the container takes the full height
               padding: const EdgeInsets.all(0.0),
@@ -102,7 +97,6 @@ class _ProviderOrderState extends State<ProviderOrder> {
       ],
     );
   }
-
 
   Color _getStatusColor(OrderStatus? status) {
     switch (status) {
@@ -135,8 +129,9 @@ class _ProviderOrderState extends State<ProviderOrder> {
             final paymentData = order.paymentData!;
             final formattedDateTime = order.updatedAt != null
                 ? DateFormat('yyyy-MM-dd HH:mm').format(
-                DateTime.fromMillisecondsSinceEpoch(order.updatedAt! * 1000)
-            ) : 'N/A';
+                    DateTime.fromMillisecondsSinceEpoch(
+                        order.updatedAt! * 1000))
+                : 'N/A';
             return DataRow(
               selected: _selectedOrder == order,
               onSelectChanged: (selected) {
@@ -151,25 +146,24 @@ class _ProviderOrderState extends State<ProviderOrder> {
                 DataCell(Text(formattedDateTime)),
                 DataCell(Text(address.name ?? '')),
                 DataCell(Text((order.productItems?.length ?? 0).toString())),
-                DataCell(
-                    Container(
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(order.status),
-                        // Set your desired background color here
-                        borderRadius: BorderRadius.circular(
-                            10), // Set the border radius
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4.0, horizontal: 8.0),
-                        child: Text(
-                          order.status?.name.toLowerCase().capitalize() ?? '',
-                          style: const TextStyle(color: Colors
-                              .black), // Set the text color
-                        ),
-                      ),
-                    )),
-                DataCell(Text(paymentData.totalAmount.toString())),
+                DataCell(Container(
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(order.status),
+                    // Set your desired background color here
+                    borderRadius:
+                        BorderRadius.circular(10), // Set the border radius
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
+                    child: Text(
+                      order.status?.name.toLowerCase().capitalize() ?? '',
+                      style: const TextStyle(
+                          color: Colors.black), // Set the text color
+                    ),
+                  ),
+                )),
+                DataCell(Text("₹ ${paymentData.totalAmount}")),
               ],
             );
           }),
@@ -201,7 +195,7 @@ class OrderDetail extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: const Text('Status detail',
                     style:
-                    TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
               ),
               Column(
                 children: [
@@ -260,12 +254,12 @@ class OrderDetail extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: const Text('Payment detail',
                     style:
-                    TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 8.0),
               Padding(
                 padding:
-                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -276,7 +270,7 @@ class OrderDetail extends StatelessWidget {
               ),
               Padding(
                 padding:
-                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -295,7 +289,7 @@ class OrderDetail extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '${orderSummary.paymentData?.totalAmount}',
+                      '₹ ${orderSummary.paymentData?.totalAmount}',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -304,7 +298,7 @@ class OrderDetail extends StatelessWidget {
               const Divider(thickness: 1.0),
               const Text('Item Summary',
                   style:
-                  TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8.0),
               ListView.builder(
                 shrinkWrap: true,
@@ -317,23 +311,22 @@ class OrderDetail extends StatelessWidget {
                       children: [
                         kIsWeb
                             ? Image.network(
-                          productItem!.imageUrl ?? "",
-                          width: 100,
-                          height: 100,
-                        )
+                                productItem!.imageUrl ?? "",
+                                width: 100,
+                                height: 100,
+                              )
                             : Image.file(
-                          File(productItem!.imageUrl ?? ""),
-                          width: 100,
-                          height: 100,
-                        ),
+                                File(productItem!.imageUrl ?? ""),
+                                width: 100,
+                                height: 100,
+                              ),
                         const HorizontalMargin(10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(productItem.name.toString()),
                             Text(
-                                '${productItem.productSize} * ${productItem
-                                    .quantity}'),
+                                '${productItem.productSize} * ${productItem.quantity}'),
                             Text('Total: ₹ ${productItem.totalAmount}'),
                           ],
                         ),
@@ -430,8 +423,8 @@ class OrderDetail extends StatelessWidget {
 
   void _performAction(BuildContext context, OrderStatus state) {
     context.read<OrderBloc>().add(UpdateOrderStatus(
-      orderId: orderSummary.orderId ?? "",
-      status: state,
-    ));
+          orderId: orderSummary.orderId ?? "",
+          status: state,
+        ));
   }
 }

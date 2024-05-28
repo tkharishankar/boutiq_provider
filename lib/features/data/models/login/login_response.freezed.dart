@@ -199,9 +199,10 @@ mixin _$Provider {
   String? get email => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
   String? get place => throw _privateConstructorUsedError;
-  String? get password => throw _privateConstructorUsedError;
-  int? get createdAt => throw _privateConstructorUsedError;
   int? get updatedAt => throw _privateConstructorUsedError;
+  int? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
+  ProviderStatus get status => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -221,9 +222,10 @@ abstract class $ProviderCopyWith<$Res> {
       String? email,
       String? phone,
       String? place,
-      String? password,
+      int? updatedAt,
       int? createdAt,
-      int? updatedAt});
+      @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
+      ProviderStatus status});
 
   $ContactPersonDetailCopyWith<$Res> get contactPerson;
 }
@@ -247,9 +249,9 @@ class _$ProviderCopyWithImpl<$Res, $Val extends Provider>
     Object? email = freezed,
     Object? phone = freezed,
     Object? place = freezed,
-    Object? password = freezed,
-    Object? createdAt = freezed,
     Object? updatedAt = freezed,
+    Object? createdAt = freezed,
+    Object? status = null,
   }) {
     return _then(_value.copyWith(
       providerId: freezed == providerId
@@ -276,18 +278,18 @@ class _$ProviderCopyWithImpl<$Res, $Val extends Provider>
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
               as String?,
-      password: freezed == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as int?,
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as int?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as int?,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ProviderStatus,
     ) as $Val);
   }
 
@@ -315,9 +317,10 @@ abstract class _$$ProviderImplCopyWith<$Res>
       String? email,
       String? phone,
       String? place,
-      String? password,
+      int? updatedAt,
       int? createdAt,
-      int? updatedAt});
+      @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
+      ProviderStatus status});
 
   @override
   $ContactPersonDetailCopyWith<$Res> get contactPerson;
@@ -340,9 +343,9 @@ class __$$ProviderImplCopyWithImpl<$Res>
     Object? email = freezed,
     Object? phone = freezed,
     Object? place = freezed,
-    Object? password = freezed,
-    Object? createdAt = freezed,
     Object? updatedAt = freezed,
+    Object? createdAt = freezed,
+    Object? status = null,
   }) {
     return _then(_$ProviderImpl(
       providerId: freezed == providerId
@@ -369,18 +372,18 @@ class __$$ProviderImplCopyWithImpl<$Res>
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
               as String?,
-      password: freezed == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as int?,
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as int?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as int?,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ProviderStatus,
     ));
   }
 }
@@ -391,13 +394,14 @@ class _$ProviderImpl implements _Provider {
   const _$ProviderImpl(
       {this.providerId,
       this.companyName,
-      required this.contactPerson,
+      this.contactPerson = const ContactPersonDetail(),
       this.email,
       this.phone,
       this.place,
-      this.password,
+      this.updatedAt,
       this.createdAt,
-      this.updatedAt});
+      @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
+      this.status = ProviderStatus.REQUESTED});
 
   factory _$ProviderImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProviderImplFromJson(json);
@@ -407,6 +411,7 @@ class _$ProviderImpl implements _Provider {
   @override
   final String? companyName;
   @override
+  @JsonKey()
   final ContactPersonDetail contactPerson;
   @override
   final String? email;
@@ -415,15 +420,16 @@ class _$ProviderImpl implements _Provider {
   @override
   final String? place;
   @override
-  final String? password;
+  final int? updatedAt;
   @override
   final int? createdAt;
   @override
-  final int? updatedAt;
+  @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
+  final ProviderStatus status;
 
   @override
   String toString() {
-    return 'Provider(providerId: $providerId, companyName: $companyName, contactPerson: $contactPerson, email: $email, phone: $phone, place: $place, password: $password, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Provider(providerId: $providerId, companyName: $companyName, contactPerson: $contactPerson, email: $email, phone: $phone, place: $place, updatedAt: $updatedAt, createdAt: $createdAt, status: $status)';
   }
 
   @override
@@ -440,18 +446,17 @@ class _$ProviderImpl implements _Provider {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.place, place) || other.place == place) &&
-            (identical(other.password, password) ||
-                other.password == password) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+            (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, providerId, companyName,
-      contactPerson, email, phone, place, password, createdAt, updatedAt);
+      contactPerson, email, phone, place, updatedAt, createdAt, status);
 
   @JsonKey(ignore: true)
   @override
@@ -471,13 +476,14 @@ abstract class _Provider implements Provider {
   const factory _Provider(
       {final String? providerId,
       final String? companyName,
-      required final ContactPersonDetail contactPerson,
+      final ContactPersonDetail contactPerson,
       final String? email,
       final String? phone,
       final String? place,
-      final String? password,
+      final int? updatedAt,
       final int? createdAt,
-      final int? updatedAt}) = _$ProviderImpl;
+      @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
+      final ProviderStatus status}) = _$ProviderImpl;
 
   factory _Provider.fromJson(Map<String, dynamic> json) =
       _$ProviderImpl.fromJson;
@@ -495,11 +501,12 @@ abstract class _Provider implements Provider {
   @override
   String? get place;
   @override
-  String? get password;
+  int? get updatedAt;
   @override
   int? get createdAt;
   @override
-  int? get updatedAt;
+  @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
+  ProviderStatus get status;
   @override
   @JsonKey(ignore: true)
   _$$ProviderImplCopyWith<_$ProviderImpl> get copyWith =>

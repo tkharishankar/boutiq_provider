@@ -13,18 +13,42 @@ class LoginResponse with _$LoginResponse {
   factory LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);
 }
 
+@JsonEnum(fieldRename: FieldRename.none)
+enum ProviderStatus {
+  REQUESTED,
+  ACTIVE,
+  DEACTIVATED,
+}
+
+extension ProviderStatusExtension on ProviderStatus {
+  String get name {
+    return this.toString().split('.').last;
+  }
+}
+
+ProviderStatus providerStatusFromJson(String status) {
+  return ProviderStatus.values.firstWhere(
+        (e) => e.toString().split('.').last == status.toUpperCase(),
+    orElse: () => ProviderStatus.REQUESTED,
+  );
+}
+
+String providerStatusToJson(ProviderStatus status) {
+  return status.name;
+}
+
 @freezed
 class Provider with _$Provider {
   const factory Provider({
     String? providerId,
     String? companyName,
-    required ContactPersonDetail contactPerson,
+    @Default(ContactPersonDetail()) ContactPersonDetail contactPerson,
     String? email,
     String? phone,
     String? place,
-    String? password,
-    int? createdAt,
     int? updatedAt,
+    int? createdAt,
+    @Default(ProviderStatus.REQUESTED) @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson) ProviderStatus status,
   }) = _Provider;
 
   factory Provider.fromJson(Map<String, dynamic> json) => _$ProviderFromJson(json);

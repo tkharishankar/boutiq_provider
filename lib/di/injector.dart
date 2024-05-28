@@ -1,6 +1,7 @@
 import 'package:boutiq_provider/di/delivery_charge_locator.dart';
 import 'package:boutiq_provider/di/order_locator.dart';
 import 'package:boutiq_provider/di/product_locator.dart';
+import 'package:boutiq_provider/di/provider_locator.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -25,6 +26,7 @@ Future<void> injector() async {
   await registerProductDependencies();
   await registerOrderDependencies();
   await registerDeliveryChargeDependencies();
+  await registerProviderDependencies();
 
   // Register AppCacheImpl
   sl.registerLazySingleton<AppCache>(() => AppCacheImpl());

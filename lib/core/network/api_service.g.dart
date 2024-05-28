@@ -110,7 +110,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<List<Product>>> getProviderProductsList(
-      String providerID) async {
+      String providerId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -123,7 +123,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/v1/products/${providerID}',
+              'api/v1/products/${providerId}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -141,7 +141,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<List<Product>>> getProviderOrdersList(
-      String providerID) async {
+      String providerId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -154,7 +154,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/v1/orders/provider/${providerID}',
+              'api/v1/orders/provider/${providerId}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -262,7 +262,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<List<Region>>> getRegionList(String providerID) async {
+  Future<HttpResponse<List<Region>>> getRegionList(String providerId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -275,7 +275,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/v1/providers/delivery-charge/${providerID}',
+              'api/v1/providers/delivery-charge/${providerId}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -293,7 +293,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<String>> updateDeliveryCharges(
-    String providerID,
+    String providerId,
     DeliveryChargeReq req,
   ) async {
     const _extra = <String, dynamic>{};
@@ -308,7 +308,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/v1/providers/delivery-charge/${providerID}',
+              'api/v1/providers/delivery-charge/${providerId}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -329,7 +329,7 @@ class _ApiService implements ApiService {
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'providerID': providerId};
+    final _headers = <String, dynamic>{r'providerId': providerId};
     _headers.removeWhere((k, v) => v == null);
     final _data = addProductReq;
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -362,7 +362,7 @@ class _ApiService implements ApiService {
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'providerID': providerId};
+    final _headers = <String, dynamic>{r'providerId': providerId};
     _headers.removeWhere((k, v) => v == null);
     final _data = productSizes.map((e) => e.toJson()).toList();
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -383,6 +383,64 @@ class _ApiService implements ApiService {
               baseUrl,
             ))));
     final value = AddProductResp.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<OrderDashboardResp>> getDashboardDetails(
+      String providerId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'providerId': providerId};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<OrderDashboardResp>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/v1/providers/order-summary-detail',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = OrderDashboardResp.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<Provider>> getGetProviderDetail(String providerId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<Provider>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/v1/providers/${providerId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Provider.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

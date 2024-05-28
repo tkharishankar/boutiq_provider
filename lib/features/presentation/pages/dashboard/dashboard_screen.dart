@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/app_texts.dart';
@@ -9,6 +11,8 @@ import '../../../../core/utils/input_validation.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/utils/size.dart';
 import '../../../../router/router.dart';
+import '../../../domain/repositories/provider_repo.dart';
+import '../../bloc/provider/provider_bloc.dart';
 import '../../widgets/app_dialog.dart';
 import '../../widgets/dashboard_detail.dart';
 import '../../widgets/delivery_charge.dart';
@@ -63,11 +67,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
           }),
       drawer: isMobile
           ? DrawerWidget(onMenuItemSelected: (menuItem) {
-              setState(() {
-                _selectedMenuItem = menuItem;
-              });
-              Navigator.pop(context);
-            })
+        setState(() {
+          _selectedMenuItem = menuItem;
+        });
+        Navigator.pop(context);
+      })
           : null,
     );
   }
@@ -90,10 +94,14 @@ class _MainPage extends StatelessWidget {
     Widget contentWidget;
     switch (selectedMenuItem) {
       case 'Account':
-        contentWidget = AccountDetail();
+        contentWidget = const AccountBlocProvider(
+          child: AccountDetail(),
+        );
         break;
       case 'Dashboard':
-        contentWidget = const DashboardDetail();
+        contentWidget = const DashboardBlocProvider(
+          child: DashboardDetail(),
+        );
         break;
       case 'Products':
         contentWidget = const ProviderProduct();
@@ -101,11 +109,13 @@ class _MainPage extends StatelessWidget {
       case 'Delivery Charges':
         contentWidget = DeliveryChargeView();
         break;
-        case 'Orders':
+      case 'Orders':
         contentWidget = const ProviderOrder();
         break;
       default:
-        contentWidget = const DashboardDetail();
+        contentWidget = const DashboardBlocProvider(
+          child: DashboardDetail(),
+        );
         break;
     }
 
@@ -113,11 +123,11 @@ class _MainPage extends StatelessWidget {
       child: isMobile!
           ? contentWidget
           : Row(
-              children: [
-                DrawerWidget(onMenuItemSelected: onMenuItemSelected),
-                Expanded(child: contentWidget),
-              ],
-            ),
+        children: [
+          DrawerWidget(onMenuItemSelected: onMenuItemSelected),
+          Expanded(child: contentWidget),
+        ],
+      ),
     );
   }
 }
@@ -181,7 +191,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   context,
                   'Logout',
                   'Are you sure you want to logout?',
-                  () {
+                      () {
                     GoRouter.of(context).pushNamed(RouteConstants.login);
                   },
                   confirmText: 'Logout',
@@ -216,3 +226,5 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     );
   }
 }
+
+

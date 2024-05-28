@@ -215,12 +215,12 @@ class RegionDetailView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Chip(
-                  label: Text('Base Charge: \$${region.baseCharge}'),
+                  label: Text('Base Charge: ₹ ${region.baseCharge}'),
                   backgroundColor: Colors.green.withOpacity(0.1),
                 ),
                 Chip(
                   label:
-                      Text('Additional Charge: \$${region.additionalCharge}'),
+                      Text('Additional Charge: ₹ ${region.additionalCharge}'),
                   backgroundColor: Colors.red.withOpacity(0.1),
                 ),
               ],
