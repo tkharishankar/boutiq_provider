@@ -60,8 +60,15 @@ class IDeliveryChargeDataSource implements DeliveryChargeDataSource {
   Future<Either<ApiError, bool>> updateDeliveryCharges(
       DeliveryChargeReq deliveryChargeReq) async {
     try {
+      final providerId = appCache?.getProviderId();
+      if (providerId == null || providerId.isEmpty) {
+        return handleGeneralError(
+            "Error in adding product size. Please re-login and try again.");
+      }
+
       final response = await apiService!
-          .updateDeliveryCharges("2342024PROV0662", deliveryChargeReq);
+          .updateDeliveryCharges(providerId, deliveryChargeReq);
+
       if (response.response.statusCode == 200) {
         return const Right(true);
       } else {
