@@ -15,6 +15,8 @@ abstract class ProductRepo {
 
   Future<Either<ApiError, ProductDetailResp>> getProductDetail(
       String productId);
+
+  Future<Either<ApiError, AddProductResp>> updateProduct(UpdateProduct updateProduct);
 }
 
 class ProductRepository implements ProductRepo {
@@ -43,5 +45,10 @@ class ProductRepository implements ProductRepo {
   Future<Either<ApiError, ProductDetailResp>> getProductDetail(
       String productId) async {
     return await productRemoteDataSource.getProductDetail(productId);
+  }
+
+  @override
+  Future<Either<ApiError, AddProductResp>> updateProduct(UpdateProduct updateProduct) async {
+    return await productRemoteDataSource.updateProduct(updateProduct);
   }
 }

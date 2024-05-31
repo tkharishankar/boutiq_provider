@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:boutiq_provider/features/data/datasource/remote/product_remote_firebase.dart';
 import 'package:boutiq_provider/features/data/models/deliverycharge/delivery_charge.dart';

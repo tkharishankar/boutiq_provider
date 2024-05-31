@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "boutiq-stage"
-  }
+    "default": "boutiq-stage",
+    "prod": "boutiq-prod-ca17e",
+    "stage": "boutiq-stage"
+  },
+  "targets": {},
+  "etags": {}
 }

@@ -10,6 +10,7 @@ import 'package:retrofit/retrofit.dart';
 part 'api_service.g.dart';
 
 @RestApi(baseUrl: "https://boutiq-stage-db4d05bbf88e.herokuapp.com/")
+// @RestApi(baseUrl: "https://boutiq-prod-57c1a3c7a03d.herokuapp.com/")
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
@@ -74,4 +75,10 @@ abstract class ApiService {
   @GET('api/v1/providers/{providerId}')
   Future<HttpResponse<Provider>> getGetProviderDetail(
       @Path('providerId') String providerId);
+
+  @POST('api/v1/products/{productId}')
+  Future<HttpResponse<AddProductResp>> updateProduct(
+      @Header('providerId') String providerId,
+      @Path('productId') String productId,
+      @Body() AddProductReq addProductReq);
 }

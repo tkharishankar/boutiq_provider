@@ -28,6 +28,28 @@ class AddProduct extends ProductEvent {
   });
 }
 
+class UpdateProduct extends ProductEvent {
+  final String productId;
+  final String name;
+  final String identifier;
+  final String price;
+  final String description;
+  final List<XFile> newImages;
+  final List<String> availableImages;
+  final List<String> deletedAvailableImages;
+
+  const UpdateProduct({
+    required this.productId,
+    required this.name,
+    required this.identifier,
+    required this.price,
+    required this.description,
+    required this.newImages,
+    required this.availableImages,
+    required this.deletedAvailableImages,
+  });
+}
+
 class AddProductSize extends ProductEvent {
   final String productId;
   final List<ProductSize> productSizes;
@@ -57,7 +79,6 @@ class UpdateProductReq extends ProductEvent {
 }
 
 class GetProducts extends ProductEvent {
-
   const GetProducts();
 }
 

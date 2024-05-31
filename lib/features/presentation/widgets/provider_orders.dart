@@ -32,66 +32,55 @@ class _ProviderOrderState extends State<ProviderOrder> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
-    final isMobile = Responsive.isMobile(context);
+    final isMobile = MediaQuery.of(context).size.width < 600;
     return Row(
       children: [
         Expanded(
-          flex: 7,
+          flex: 6,
           child: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context)
-                  .size
-                  .height, // Make sure the container takes the full height
-              child: Column(
-                children: [
-                  BlocListener<OrderBloc, OrderState>(
-                    bloc: _orderBloc,
-                    listener: (context, state) {
-                      state.maybeWhen(
-                        onOrderList: (orders) {
-                          setState(() {
-                            _orders = orders;
-                          });
-                        },
-                        orElse: () {},
-                      );
-                    },
-                    child: BlocBuilder<OrderBloc, OrderState>(
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    BlocListener<OrderBloc, OrderState>(
                       bloc: _orderBloc,
-                      builder: (context, state) {
-                        return state.maybeWhen(
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()),
-                          onOrderList: (orders) => _orders.isNotEmpty
-                              ? _buildOrderDataTable()
-                              : Container(),
-                          onOrderListError: (message) =>
-                              Center(child: Text(message)),
-                          orElse: () => _orders.isNotEmpty
-                              ? _buildOrderDataTable()
-                              : Container(),
+                      listener: (context, state) {
+                        state.maybeWhen(
+                          onOrderList: (orders) {
+                            setState(() {
+                              _orders = orders;
+                            });
+                          },
+                          orElse: () {},
                         );
                       },
+                      child: BlocBuilder<OrderBloc, OrderState>(
+                        bloc: _orderBloc,
+                        builder: (context, state) {
+                          return state.maybeWhen(
+                            loading: () => const Center(child: CircularProgressIndicator()),
+                            onOrderList: (orders) => _orders.isNotEmpty ? _buildOrderDataTable() : Container(),
+                            onOrderListError: (message) => Center(child: Text(message)),
+                            orElse: () => _orders.isNotEmpty ? _buildOrderDataTable() : Container(),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ),
         if (!isMobile)
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Container(
-              height: MediaQuery.of(context)
-                  .size
-                  .height, // Make sure the container takes the full height
+              height: MediaQuery.of(context).size.height,
               padding: const EdgeInsets.all(0.0),
-              child: _selectedOrder != null
-                  ? OrderDetail(orderSummary: _selectedOrder!)
-                  : Container(),
+              child: _selectedOrder != null ? OrderDetail(orderSummary: _selectedOrder!) : Container(),
             ),
           ),
       ],
@@ -112,63 +101,67 @@ class _ProviderOrderState extends State<ProviderOrder> {
   }
 
   Widget _buildOrderDataTable() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        columns: const [
-          DataColumn(label: Text('Order ID')),
-          DataColumn(label: Text('Date')),
-          DataColumn(label: Text('Customer Name')),
-          DataColumn(label: Text('Products')),
-          DataColumn(label: Text('Order Status')),
-          DataColumn(label: Text('Total Amount')),
-        ],
-        rows: [
-          ..._orders.map((order) {
-            final address = order.address!;
-            final paymentData = order.paymentData!;
-            final formattedDateTime = order.updatedAt != null
-                ? DateFormat('yyyy-MM-dd HH:mm').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        order.updatedAt! * 1000))
-                : 'N/A';
-            return DataRow(
-              selected: _selectedOrder == order,
-              onSelectChanged: (selected) {
-                if (selected != null && selected) {
-                  setState(() {
-                    _selectedOrder = order;
-                  });
-                }
-              },
-              cells: [
-                DataCell(Text(order.orderId ?? '')),
-                DataCell(Text(formattedDateTime)),
-                DataCell(Text(address.name ?? '')),
-                DataCell(Text((order.productItems?.length ?? 0).toString())),
-                DataCell(Container(
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(order.status),
-                    // Set your desired background color here
-                    borderRadius:
-                        BorderRadius.circular(10), // Set the border radius
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 8.0),
-                    child: Text(
-                      order.status?.name.toLowerCase().capitalize() ?? '',
-                      style: const TextStyle(
-                          color: Colors.black), // Set the text color
-                    ),
-                  ),
-                )),
-                DataCell(Text("₹ ${paymentData.totalAmount}")),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: DataTable(
+              columnSpacing: 20.0, // Adjust this value to give some space between columns
+              columns: const [
+                DataColumn(label: Expanded(child: Text('Order ID'))),
+                DataColumn(label: Expanded(child: Text('Date'))),
+                DataColumn(label: Expanded(child: Text('Customer Name'))),
+                DataColumn(label: Expanded(child: Text('Products'))),
+                DataColumn(label: Expanded(child: Text('Order Status'))),
+                DataColumn(label: Expanded(child: Text('Total Amount'))),
               ],
-            );
-          }),
-        ],
-      ),
+              rows: _orders.map((order) {
+                final address = order.address!;
+                final paymentData = order.paymentData!;
+                final formattedDateTime = order.updatedAt != null
+                    ? DateFormat('yyyy-MM-dd HH:mm').format(
+                    DateTime.fromMillisecondsSinceEpoch(order.updatedAt! * 1000))
+                    : 'N/A';
+                return DataRow(
+                  selected: _selectedOrder == order,
+                  onSelectChanged: (selected) {
+                    if (selected != null && selected) {
+                      setState(() {
+                        _selectedOrder = order;
+                      });
+                    }
+                  },
+                  cells: [
+                    DataCell(Text(order.orderId ?? '', overflow: TextOverflow.ellipsis)),
+                    DataCell(Text(formattedDateTime, overflow: TextOverflow.ellipsis)),
+                    DataCell(Text(address.name ?? '', overflow: TextOverflow.ellipsis)),
+                    DataCell(Text((order.productItems?.length ?? 0).toString(), overflow: TextOverflow.ellipsis)),
+                    DataCell(
+                      Container(
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(order.status),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                          child: Text(
+                            order.status?.name.toLowerCase().capitalize() ?? '',
+                            style: const TextStyle(color: Colors.black),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                    DataCell(Text("₹ ${paymentData.totalAmount}", overflow: TextOverflow.ellipsis)),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
     );
   }
 }

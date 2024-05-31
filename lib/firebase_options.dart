@@ -14,36 +14,22 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
-class DefaultFirebaseOptions {
-  static FirebaseOptions get currentPlatform {
-    if (kIsWeb) {
-      return web;
-    }
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return android;
-      case TargetPlatform.iOS:
-        return ios;
-      case TargetPlatform.macOS:
-        return macos;
-      case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      default:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
-        );
-    }
+
+FirebaseOptions currentFirebaseConfig() {
+  const flavor = String.fromEnvironment("flavor", defaultValue: "dev");
+
+  if (flavor == "prod") {
+    return const FirebaseOptions(
+        apiKey: "AIzaSyCeiV5RlSEval2-vQizLA8w7OUXVcL4Hsw",
+        authDomain: "boutiq-prod-ca17e.firebaseapp.com",
+        projectId: "boutiq-prod-ca17e",
+        storageBucket: "boutiq-prod-ca17e.appspot.com",
+        messagingSenderId: "308647587711",
+        appId: "1:308647587711:web:5e22ac1667764018eaf44a",
+        measurementId: "G-7YWPFC9HG4");
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
+  return const FirebaseOptions(
     apiKey: 'AIzaSyB2uVN6SxP5ENHHLDWkOBgOCRptUxvvUtY',
     appId: '1:49238018761:web:fe969e59da2aa0bee71b18',
     messagingSenderId: '49238018761',
@@ -52,32 +38,74 @@ class DefaultFirebaseOptions {
     storageBucket: 'boutiq-stage.appspot.com',
     measurementId: 'G-L548G9XBGK',
   );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCt98bKYFrSzETXHP_CQ09qIV2irWisB9o',
-    appId: '1:49238018761:android:25b53cf4da848eeee71b18',
-    messagingSenderId: '49238018761',
-    projectId: 'boutiq-stage',
-    storageBucket: 'boutiq-stage.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCYA3mqo2xFsY5264huhA_A9n6-VaD84a8',
-    appId: '1:49238018761:ios:18a5fae92089122ae71b18',
-    messagingSenderId: '49238018761',
-    projectId: 'boutiq-stage',
-    storageBucket: 'boutiq-stage.appspot.com',
-    iosClientId: '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
-    iosBundleId: 'com.boutiq.provider',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCYA3mqo2xFsY5264huhA_A9n6-VaD84a8',
-    appId: '1:49238018761:ios:18a5fae92089122ae71b18',
-    messagingSenderId: '49238018761',
-    projectId: 'boutiq-stage',
-    storageBucket: 'boutiq-stage.appspot.com',
-    iosClientId: '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
-    iosBundleId: 'com.boutiq.provider',
-  );
 }
+
+// class DefaultFirebaseOptions {
+//   static FirebaseOptions get currentPlatform {
+//     if (kIsWeb) {
+//       return web;
+//     }
+//     switch (defaultTargetPlatform) {
+//       case TargetPlatform.android:
+//         return android;
+//       case TargetPlatform.iOS:
+//         return ios;
+//       case TargetPlatform.macOS:
+//         return macos;
+//       case TargetPlatform.windows:
+//         throw UnsupportedError(
+//           'DefaultFirebaseOptions have not been configured for windows - '
+//           'you can reconfigure this by running the FlutterFire CLI again.',
+//         );
+//       case TargetPlatform.linux:
+//         throw UnsupportedError(
+//           'DefaultFirebaseOptions have not been configured for linux - '
+//           'you can reconfigure this by running the FlutterFire CLI again.',
+//         );
+//       default:
+//         throw UnsupportedError(
+//           'DefaultFirebaseOptions are not supported for this platform.',
+//         );
+//     }
+//   }
+//
+//   static const FirebaseOptions web = FirebaseOptions(
+//     apiKey: 'AIzaSyB2uVN6SxP5ENHHLDWkOBgOCRptUxvvUtY',
+//     appId: '1:49238018761:web:fe969e59da2aa0bee71b18',
+//     messagingSenderId: '49238018761',
+//     projectId: 'boutiq-stage',
+//     authDomain: 'boutiq-stage.firebaseapp.com',
+//     storageBucket: 'boutiq-stage.appspot.com',
+//     measurementId: 'G-L548G9XBGK',
+//   );
+//
+//   static const FirebaseOptions android = FirebaseOptions(
+//     apiKey: 'AIzaSyCt98bKYFrSzETXHP_CQ09qIV2irWisB9o',
+//     appId: '1:49238018761:android:25b53cf4da848eeee71b18',
+//     messagingSenderId: '49238018761',
+//     projectId: 'boutiq-stage',
+//     storageBucket: 'boutiq-stage.appspot.com',
+//   );
+//
+//   static const FirebaseOptions ios = FirebaseOptions(
+//     apiKey: 'AIzaSyCYA3mqo2xFsY5264huhA_A9n6-VaD84a8',
+//     appId: '1:49238018761:ios:18a5fae92089122ae71b18',
+//     messagingSenderId: '49238018761',
+//     projectId: 'boutiq-stage',
+//     storageBucket: 'boutiq-stage.appspot.com',
+//     iosClientId:
+//         '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
+//     iosBundleId: 'com.boutiq.provider',
+//   );
+//
+//   static const FirebaseOptions macos = FirebaseOptions(
+//     apiKey: 'AIzaSyCYA3mqo2xFsY5264huhA_A9n6-VaD84a8',
+//     appId: '1:49238018761:ios:18a5fae92089122ae71b18',
+//     messagingSenderId: '49238018761',
+//     projectId: 'boutiq-stage',
+//     storageBucket: 'boutiq-stage.appspot.com',
+//     iosClientId:
+//         '49238018761-b7k2geqfis14pme1alrngjb87del44oc.apps.googleusercontent.com',
+//     iosBundleId: 'com.boutiq.provider',
+//   );
+// }

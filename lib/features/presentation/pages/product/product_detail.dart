@@ -1,14 +1,9 @@
-import 'dart:io';
-
 import 'package:boutiq_provider/core/common/button/buttons.dart';
-import 'package:boutiq_provider/core/utils/size.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/themes/color_scheme.dart';
 import '../../../../core/utils/app_texts.dart';
@@ -18,6 +13,7 @@ import '../../../../core/utils/responsive.dart';
 import '../../../data/models/product/product_resp.dart';
 import '../../bloc/product/product_bloc.dart';
 import '../../widgets/app_dialog.dart';
+import 'image_list_widget.dart';
 
 class ProductDetail extends ConsumerStatefulWidget {
   const ProductDetail({super.key, required this.productId});
@@ -42,9 +38,8 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  final ImagePicker imagePicker = ImagePicker();
-  List<XFile>? selectedImages;
   List<ProductSize> productSizeList = [];
+  List<String> availableImages = [];
 
   final TextEditingController _sizeNameController = TextEditingController();
   final TextEditingController _sizeWeightController = TextEditingController();
@@ -57,6 +52,9 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
   bool _isLoading = false; // Flag to track loading state
   double oneThirdScreenWidth = 0;
   String productId = "";
+
+  final GlobalKey<ImageListWidgetState> _imageListKey =
+      GlobalKey<ImageListWidgetState>();
 
   @override
   void initState() {
@@ -119,6 +117,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     if (!_detailsPopulated) {
       // Check if the details have already been populated
       setState(() {
+        availableImages = List<String>.from(resp.product.imageUrls);
         productId = resp.product.productId;
         _productNameController.text = resp.product.name;
         _productIdentifierController.text = resp.product.category;
@@ -234,8 +233,11 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                               _buildProductNameField(),
                               _buildProductIdentifierField(),
                               _buildDescriptionField(),
-                              if (isMobile) fileUpload(),
-                              if (isMobile) selectedImageList(),
+                              if (isMobile)
+                                ImageListWidget(
+                                  key: _imageListKey,
+                                  availableImages: availableImages,
+                                ),
                             ],
                           ),
                         ),
@@ -245,8 +247,10 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                fileUpload(),
-                                selectedImageList(),
+                                ImageListWidget(
+                                  key: _imageListKey,
+                                  availableImages: availableImages,
+                                ),
                               ],
                             ),
                           ),
@@ -280,27 +284,47 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
 
   void onAddProductDetail(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      if (selectedImages == null || selectedImages!.isEmpty) {
+      final deletedAvailableImages =
+          _imageListKey.currentState?.getDeletedAvailableImages();
+      final availableImages = _imageListKey.currentState?.getAvailableImages();
+      final newImages = _imageListKey.currentState?.getNewImages();
+
+      final imageCount = (availableImages?.length ?? 0) + newImages!.length;
+
+      if (imageCount == 0) {
         showAlertDialog(context, "Product Image Missing",
             "Please select the product images.");
         return;
       }
-      if (selectedImages!.length > 3) {
+
+      if (imageCount > 3) {
         showAlertDialog(context, "Product Image Restriction",
             "You are allowed to add up to 3 images per product.");
         return;
       }
 
-      var req = AddProduct(
-        name: _productNameController.text,
-        identifier: _productIdentifierController.text,
-        price: _priceController.text,
-        description: _descriptionController.text,
-        images: selectedImages!,
-        imageStorageUrl: [],
-      );
-
-      context.read<ProductBloc>().add(req);
+      if (productId.isEmpty || productId == "XXX") {
+        var req = AddProduct(
+          name: _productNameController.text,
+          identifier: _productIdentifierController.text,
+          price: _priceController.text,
+          description: _descriptionController.text,
+          images: newImages,
+          imageStorageUrl: [],
+        );
+        context.read<ProductBloc>().add(req);
+      } else {
+        var req = UpdateProduct(
+            productId: productId,
+            name: _productNameController.text,
+            identifier: _productIdentifierController.text,
+            price: _priceController.text,
+            description: _descriptionController.text,
+            newImages: newImages,
+            availableImages: availableImages ?? [],
+            deletedAvailableImages: deletedAvailableImages ?? []);
+        context.read<ProductBloc>().add(req);
+      }
     }
     return;
   }
@@ -309,6 +333,8 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
     state.maybeWhen(orElse: () {
       _overlayEntry?.remove();
     }, onProductDetail: (product) {
+      _detailsPopulated = false;
+      _imageListKey.currentState?.clear();
       _populateProductDetails(product);
     }, onProductDetailError: (message) {
       setState(() {
@@ -332,7 +358,7 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       _overlayEntry = hideLoadingOverlay(context, _overlayEntry);
       showActionAlertDialog(
         context,
-        "Product Added successfully.",
+        message,
         "",
         [
           AlertAction(
@@ -510,118 +536,6 @@ class _AddNewProductState extends ConsumerState<ProductDetail>
       return 'must be at least 10 character';
     }
     return null;
-  }
-
-  Widget fileUpload() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      child: InkWell(
-        onTap: openImages,
-        child: Container(
-          width: double.infinity, // Adjust the width as needed
-          height: 150, // Adjust the height as needed
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.blue, // Customize the border color
-              width: 2, // Adjust the border thickness
-            ),
-            borderRadius: BorderRadius.circular(15), // Adjust the border radius
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.camera_alt, // You can use any icon you like
-                  size: 40,
-                  color: Colors.blue,
-                ),
-                Text(
-                  'Upload Image',
-                  style: GoogleFonts.lato(
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  selectedImageList() {
-    if (selectedImages != null) {
-      return Wrap(
-        spacing: 10.0,
-        children: selectedImages!.asMap().entries.map((entry) {
-          final index = entry.key;
-          final imageFile = entry.value;
-          return Container(
-            margin: EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300, width: 1.0),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              children: [
-                kIsWeb
-                    ? Image.network(
-                        imageFile.path,
-                        width: 100,
-                        height: 100,
-                      )
-                    : Image.file(
-                        File(imageFile.path),
-                        width: 100,
-                        height: 100,
-                      ),
-                HorizontalMargin(10),
-                Text(imageFile.name),
-                Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    onDelete(index);
-                  },
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      );
-    } else {
-      return Container(
-        height: 200.0,
-        margin: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300, width: 1.0),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Center(
-          child: Text(
-            'Please select the product images',
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-      );
-    }
-  }
-
-  void onDelete(int index) {
-    selectedImages?.removeAt(index);
-    setState(() {});
-  }
-
-  openImages() async {
-    try {
-      var selectedFiles =
-          await imagePicker.pickMultiImage(requestFullMetadata: true);
-      Set<XFile> uniqueImages = {...?selectedImages, ...selectedFiles};
-      selectedImages = uniqueImages.toList();
-      setState(() {});
-    } catch (e) {
-    }
   }
 
   Widget productSizeListView() {
