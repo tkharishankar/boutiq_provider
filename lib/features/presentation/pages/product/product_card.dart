@@ -60,26 +60,36 @@ class ProductCard extends StatelessWidget {
   }
 
   ClipRRect posterImageView(String imageUrl) {
+    print("imageUrl $imageUrl");
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
       child: Image.network(
+        imageUrl.trim(),
         fit: BoxFit.fill,
-        imageUrl,
-        loadingBuilder: (BuildContext context, Widget child,
-            ImageChunkEvent? loadingProgress) {
+        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
           if (loadingProgress == null) {
             return child;
           }
           return Center(
             child: CircularProgressIndicator(
               value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
+                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                   : null,
+            ),
+          );
+        },
+        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+          print('Error loading image: $error $stackTrace');
+          return Center(
+            child: Icon(
+              Icons.error,
+              color: Colors.red,
+              size: 50,
             ),
           );
         },
       ),
     );
   }
+
 }
