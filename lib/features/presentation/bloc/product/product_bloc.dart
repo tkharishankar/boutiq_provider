@@ -46,7 +46,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       },
           (success) async {
         emit(ProductState.addProductSuccessful(success.message));
-        print(success);
         await _handleGetProductDetail(success.productId, emit);
       },
     );

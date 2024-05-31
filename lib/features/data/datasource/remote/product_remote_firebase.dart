@@ -44,10 +44,8 @@ class IProductRemoteDataSource implements ProductRemoteDataSource {
             .ref('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
         final Uint8List imageBytes = await item.readAsBytes();
         final uploadTask = storageRef.putData(imageBytes);
-        // Add the future of getting download URL to the list
         uploadFutures.add(uploadTask.then((_) => storageRef.getDownloadURL()));
       }
-      // Wait for all uploads to complete
       final List<String> fileUrls = await Future.wait(uploadFutures);
       return fileUrls;
     } catch (e) {
@@ -222,7 +220,6 @@ Either<ApiError, T> handleError<T>(DioException error) {
         error.response!.data['statusMessage'] ?? 'Unknown error';
     return Left(ApiError(errorCode: "400", errorMessage: errorMessage));
   } else {
-    print(error.response);
     return Left(ApiError(
         errorCode: error.response!.statusCode.toString(),
         errorMessage: "Error in getting details"));
@@ -230,6 +227,5 @@ Either<ApiError, T> handleError<T>(DioException error) {
 }
 
 Either<ApiError, T> handleGeneralError<T>(String message) {
-  print(message);
   return Left(ApiError(errorCode: "400", errorMessage: message));
 }

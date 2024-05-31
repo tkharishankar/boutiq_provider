@@ -478,6 +478,38 @@ class _ApiService implements ApiService {
     return httpResponse;
   }
 
+  @override
+  Future<HttpResponse<bool>> updateProviderDetail(
+    String providerId,
+    UpdateProviderReq updatedReq,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'providerId': providerId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = updatedReq;
+    final _result =
+        await _dio.fetch<bool>(_setStreamType<HttpResponse<bool>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/v1/providers/update-detail',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = _result.data!;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

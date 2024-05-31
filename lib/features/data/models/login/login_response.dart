@@ -46,12 +46,25 @@ class Provider with _$Provider {
     String? email,
     String? phone,
     String? place,
+    String? bannerImageUrl,
     int? updatedAt,
     int? createdAt,
     @Default(ProviderStatus.REQUESTED) @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson) ProviderStatus status,
   }) = _Provider;
 
   factory Provider.fromJson(Map<String, dynamic> json) => _$ProviderFromJson(json);
+}
+
+@freezed
+class UpdateProviderReq with _$UpdateProviderReq {
+  const factory UpdateProviderReq({
+    String? companyName,
+    @Default(ContactPersonDetail()) ContactPersonDetail contactPerson,
+    String? place,
+    String? bannerImageUrl,
+  }) = _UpdateProviderReq;
+
+  factory UpdateProviderReq.fromJson(Map<String, dynamic> json) => _$UpdateProviderReqFromJson(json);
 }
 
 @freezed

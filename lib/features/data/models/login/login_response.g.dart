@@ -31,6 +31,7 @@ _$ProviderImpl _$$ProviderImplFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String?,
       phone: json['phone'] as String?,
       place: json['place'] as String?,
+      bannerImageUrl: json['bannerImageUrl'] as String?,
       updatedAt: (json['updatedAt'] as num?)?.toInt(),
       createdAt: (json['createdAt'] as num?)?.toInt(),
       status: json['status'] == null
@@ -46,9 +47,31 @@ Map<String, dynamic> _$$ProviderImplToJson(_$ProviderImpl instance) =>
       'email': instance.email,
       'phone': instance.phone,
       'place': instance.place,
+      'bannerImageUrl': instance.bannerImageUrl,
       'updatedAt': instance.updatedAt,
       'createdAt': instance.createdAt,
       'status': providerStatusToJson(instance.status),
+    };
+
+_$UpdateProviderReqImpl _$$UpdateProviderReqImplFromJson(
+        Map<String, dynamic> json) =>
+    _$UpdateProviderReqImpl(
+      companyName: json['companyName'] as String?,
+      contactPerson: json['contactPerson'] == null
+          ? const ContactPersonDetail()
+          : ContactPersonDetail.fromJson(
+              json['contactPerson'] as Map<String, dynamic>),
+      place: json['place'] as String?,
+      bannerImageUrl: json['bannerImageUrl'] as String?,
+    );
+
+Map<String, dynamic> _$$UpdateProviderReqImplToJson(
+        _$UpdateProviderReqImpl instance) =>
+    <String, dynamic>{
+      'companyName': instance.companyName,
+      'contactPerson': instance.contactPerson,
+      'place': instance.place,
+      'bannerImageUrl': instance.bannerImageUrl,
     };
 
 _$ContactPersonDetailImpl _$$ContactPersonDetailImplFromJson(

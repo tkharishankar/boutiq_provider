@@ -199,6 +199,7 @@ mixin _$Provider {
   String? get email => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
   String? get place => throw _privateConstructorUsedError;
+  String? get bannerImageUrl => throw _privateConstructorUsedError;
   int? get updatedAt => throw _privateConstructorUsedError;
   int? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
@@ -222,6 +223,7 @@ abstract class $ProviderCopyWith<$Res> {
       String? email,
       String? phone,
       String? place,
+      String? bannerImageUrl,
       int? updatedAt,
       int? createdAt,
       @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
@@ -249,6 +251,7 @@ class _$ProviderCopyWithImpl<$Res, $Val extends Provider>
     Object? email = freezed,
     Object? phone = freezed,
     Object? place = freezed,
+    Object? bannerImageUrl = freezed,
     Object? updatedAt = freezed,
     Object? createdAt = freezed,
     Object? status = null,
@@ -277,6 +280,10 @@ class _$ProviderCopyWithImpl<$Res, $Val extends Provider>
       place: freezed == place
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bannerImageUrl: freezed == bannerImageUrl
+          ? _value.bannerImageUrl
+          : bannerImageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
@@ -317,6 +324,7 @@ abstract class _$$ProviderImplCopyWith<$Res>
       String? email,
       String? phone,
       String? place,
+      String? bannerImageUrl,
       int? updatedAt,
       int? createdAt,
       @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
@@ -343,6 +351,7 @@ class __$$ProviderImplCopyWithImpl<$Res>
     Object? email = freezed,
     Object? phone = freezed,
     Object? place = freezed,
+    Object? bannerImageUrl = freezed,
     Object? updatedAt = freezed,
     Object? createdAt = freezed,
     Object? status = null,
@@ -372,6 +381,10 @@ class __$$ProviderImplCopyWithImpl<$Res>
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
               as String?,
+      bannerImageUrl: freezed == bannerImageUrl
+          ? _value.bannerImageUrl
+          : bannerImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -398,6 +411,7 @@ class _$ProviderImpl implements _Provider {
       this.email,
       this.phone,
       this.place,
+      this.bannerImageUrl,
       this.updatedAt,
       this.createdAt,
       @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
@@ -420,6 +434,8 @@ class _$ProviderImpl implements _Provider {
   @override
   final String? place;
   @override
+  final String? bannerImageUrl;
+  @override
   final int? updatedAt;
   @override
   final int? createdAt;
@@ -429,7 +445,7 @@ class _$ProviderImpl implements _Provider {
 
   @override
   String toString() {
-    return 'Provider(providerId: $providerId, companyName: $companyName, contactPerson: $contactPerson, email: $email, phone: $phone, place: $place, updatedAt: $updatedAt, createdAt: $createdAt, status: $status)';
+    return 'Provider(providerId: $providerId, companyName: $companyName, contactPerson: $contactPerson, email: $email, phone: $phone, place: $place, bannerImageUrl: $bannerImageUrl, updatedAt: $updatedAt, createdAt: $createdAt, status: $status)';
   }
 
   @override
@@ -446,6 +462,8 @@ class _$ProviderImpl implements _Provider {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.place, place) || other.place == place) &&
+            (identical(other.bannerImageUrl, bannerImageUrl) ||
+                other.bannerImageUrl == bannerImageUrl) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             (identical(other.createdAt, createdAt) ||
@@ -455,8 +473,18 @@ class _$ProviderImpl implements _Provider {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, providerId, companyName,
-      contactPerson, email, phone, place, updatedAt, createdAt, status);
+  int get hashCode => Object.hash(
+      runtimeType,
+      providerId,
+      companyName,
+      contactPerson,
+      email,
+      phone,
+      place,
+      bannerImageUrl,
+      updatedAt,
+      createdAt,
+      status);
 
   @JsonKey(ignore: true)
   @override
@@ -480,6 +508,7 @@ abstract class _Provider implements Provider {
       final String? email,
       final String? phone,
       final String? place,
+      final String? bannerImageUrl,
       final int? updatedAt,
       final int? createdAt,
       @JsonKey(fromJson: providerStatusFromJson, toJson: providerStatusToJson)
@@ -501,6 +530,8 @@ abstract class _Provider implements Provider {
   @override
   String? get place;
   @override
+  String? get bannerImageUrl;
+  @override
   int? get updatedAt;
   @override
   int? get createdAt;
@@ -510,6 +541,225 @@ abstract class _Provider implements Provider {
   @override
   @JsonKey(ignore: true)
   _$$ProviderImplCopyWith<_$ProviderImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+UpdateProviderReq _$UpdateProviderReqFromJson(Map<String, dynamic> json) {
+  return _UpdateProviderReq.fromJson(json);
+}
+
+/// @nodoc
+mixin _$UpdateProviderReq {
+  String? get companyName => throw _privateConstructorUsedError;
+  ContactPersonDetail get contactPerson => throw _privateConstructorUsedError;
+  String? get place => throw _privateConstructorUsedError;
+  String? get bannerImageUrl => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $UpdateProviderReqCopyWith<UpdateProviderReq> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $UpdateProviderReqCopyWith<$Res> {
+  factory $UpdateProviderReqCopyWith(
+          UpdateProviderReq value, $Res Function(UpdateProviderReq) then) =
+      _$UpdateProviderReqCopyWithImpl<$Res, UpdateProviderReq>;
+  @useResult
+  $Res call(
+      {String? companyName,
+      ContactPersonDetail contactPerson,
+      String? place,
+      String? bannerImageUrl});
+
+  $ContactPersonDetailCopyWith<$Res> get contactPerson;
+}
+
+/// @nodoc
+class _$UpdateProviderReqCopyWithImpl<$Res, $Val extends UpdateProviderReq>
+    implements $UpdateProviderReqCopyWith<$Res> {
+  _$UpdateProviderReqCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? companyName = freezed,
+    Object? contactPerson = null,
+    Object? place = freezed,
+    Object? bannerImageUrl = freezed,
+  }) {
+    return _then(_value.copyWith(
+      companyName: freezed == companyName
+          ? _value.companyName
+          : companyName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      contactPerson: null == contactPerson
+          ? _value.contactPerson
+          : contactPerson // ignore: cast_nullable_to_non_nullable
+              as ContactPersonDetail,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bannerImageUrl: freezed == bannerImageUrl
+          ? _value.bannerImageUrl
+          : bannerImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ContactPersonDetailCopyWith<$Res> get contactPerson {
+    return $ContactPersonDetailCopyWith<$Res>(_value.contactPerson, (value) {
+      return _then(_value.copyWith(contactPerson: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$UpdateProviderReqImplCopyWith<$Res>
+    implements $UpdateProviderReqCopyWith<$Res> {
+  factory _$$UpdateProviderReqImplCopyWith(_$UpdateProviderReqImpl value,
+          $Res Function(_$UpdateProviderReqImpl) then) =
+      __$$UpdateProviderReqImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String? companyName,
+      ContactPersonDetail contactPerson,
+      String? place,
+      String? bannerImageUrl});
+
+  @override
+  $ContactPersonDetailCopyWith<$Res> get contactPerson;
+}
+
+/// @nodoc
+class __$$UpdateProviderReqImplCopyWithImpl<$Res>
+    extends _$UpdateProviderReqCopyWithImpl<$Res, _$UpdateProviderReqImpl>
+    implements _$$UpdateProviderReqImplCopyWith<$Res> {
+  __$$UpdateProviderReqImplCopyWithImpl(_$UpdateProviderReqImpl _value,
+      $Res Function(_$UpdateProviderReqImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? companyName = freezed,
+    Object? contactPerson = null,
+    Object? place = freezed,
+    Object? bannerImageUrl = freezed,
+  }) {
+    return _then(_$UpdateProviderReqImpl(
+      companyName: freezed == companyName
+          ? _value.companyName
+          : companyName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      contactPerson: null == contactPerson
+          ? _value.contactPerson
+          : contactPerson // ignore: cast_nullable_to_non_nullable
+              as ContactPersonDetail,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bannerImageUrl: freezed == bannerImageUrl
+          ? _value.bannerImageUrl
+          : bannerImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$UpdateProviderReqImpl implements _UpdateProviderReq {
+  const _$UpdateProviderReqImpl(
+      {this.companyName,
+      this.contactPerson = const ContactPersonDetail(),
+      this.place,
+      this.bannerImageUrl});
+
+  factory _$UpdateProviderReqImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UpdateProviderReqImplFromJson(json);
+
+  @override
+  final String? companyName;
+  @override
+  @JsonKey()
+  final ContactPersonDetail contactPerson;
+  @override
+  final String? place;
+  @override
+  final String? bannerImageUrl;
+
+  @override
+  String toString() {
+    return 'UpdateProviderReq(companyName: $companyName, contactPerson: $contactPerson, place: $place, bannerImageUrl: $bannerImageUrl)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateProviderReqImpl &&
+            (identical(other.companyName, companyName) ||
+                other.companyName == companyName) &&
+            (identical(other.contactPerson, contactPerson) ||
+                other.contactPerson == contactPerson) &&
+            (identical(other.place, place) || other.place == place) &&
+            (identical(other.bannerImageUrl, bannerImageUrl) ||
+                other.bannerImageUrl == bannerImageUrl));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, companyName, contactPerson, place, bannerImageUrl);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateProviderReqImplCopyWith<_$UpdateProviderReqImpl> get copyWith =>
+      __$$UpdateProviderReqImplCopyWithImpl<_$UpdateProviderReqImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UpdateProviderReqImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _UpdateProviderReq implements UpdateProviderReq {
+  const factory _UpdateProviderReq(
+      {final String? companyName,
+      final ContactPersonDetail contactPerson,
+      final String? place,
+      final String? bannerImageUrl}) = _$UpdateProviderReqImpl;
+
+  factory _UpdateProviderReq.fromJson(Map<String, dynamic> json) =
+      _$UpdateProviderReqImpl.fromJson;
+
+  @override
+  String? get companyName;
+  @override
+  ContactPersonDetail get contactPerson;
+  @override
+  String? get place;
+  @override
+  String? get bannerImageUrl;
+  @override
+  @JsonKey(ignore: true)
+  _$$UpdateProviderReqImplCopyWith<_$UpdateProviderReqImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

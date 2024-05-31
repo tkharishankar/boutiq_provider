@@ -81,4 +81,9 @@ abstract class ApiService {
       @Header('providerId') String providerId,
       @Path('productId') String productId,
       @Body() AddProductReq addProductReq);
+
+  @POST('api/v1/providers/update-detail')
+  Future<HttpResponse<bool>> updateProviderDetail(
+      @Header('providerId') String providerId,
+      @Body() UpdateProviderReq updatedReq);
 }
