@@ -1,0 +1,16 @@
+
+flutter pub run build_runner build --delete-conflicting-outputs
+
+flutter run -d chrome
+
+//DEPLOY
+
+firebase login
+
+firebase init
+
+firebase projects:list
+
+firebase deploy --project=prod // deploy prod app
+
+firebase deploy --project=stage // deploy stage app

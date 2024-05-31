@@ -21,8 +21,10 @@ class AppButton extends StatelessWidget {
     this.textSize = 16,
     this.borderColor,
     this.isRounded = false,
+    this.width = double.infinity,
     required this.onTap,
   });
+
   final Color? color;
   final String text;
   final bool? isActive;
@@ -31,6 +33,7 @@ class AppButton extends StatelessWidget {
   final String? iconRtr;
   final Color textColor;
   final double? textSize;
+  final double? width;
   final bool? gradient;
   final void Function()? onTap;
   final Color? borderColor;
@@ -40,8 +43,8 @@ class AppButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       child: Container(
-        height: 58,
-        width: (context.screenWidth() * 0.85),
+        height: 55,
+        width: width,
         decoration: BoxDecoration(
           color: isActive! ? color : AppColors.grey200,
           borderRadius: BorderRadius.circular(isRounded == true ? 40 : 15),
@@ -88,6 +91,23 @@ class AppButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class AppElevatedButton extends StatelessWidget {
+  const AppElevatedButton({
+    super.key,
+    required this.text,
+  });
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {},
+      child: Text(text),
     );
   }
 }

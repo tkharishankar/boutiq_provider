@@ -2,22 +2,11 @@
 class Assets {
   Assets._();
 
-  static const String authAuthServiceLocator = 'lib/features/auth/auth_service_locator.dart';
-  static const String buttonButtons = 'lib/core/common/button/buttons.dart';
-  static const String dashboardProductLocator = 'lib/features/dashboard/product_locator.dart';
-  static const String dataSourceAuthenticationLocal = 'lib/features/auth/data/data_source/authentication_local.dart';
-  static const String dataSourceAuthenticationRemoteFirebase = 'lib/features/auth/data/data_source/authentication_remote_firebase.dart';
-  static const String dataSourceProductLocal = 'lib/features/dashboard/data/data_source/product_local.dart';
-  static const String dataSourceProductRemoteFirebase = 'lib/features/dashboard/data/data_source/product_remote_firebase.dart';
-  static const String diInjector = 'lib/di/injector.dart';
-  static const String entitiesLoginResponse = 'lib/features/auth/domain/entities/login_response.dart';
-  static const String entitiesProductResp = 'lib/features/dashboard/domain/entities/product_resp.dart';
-  static const String entitiesRegistrationResponse = 'lib/features/auth/domain/entities/registration_response.dart';
-  static const String errorExceptions = 'lib/core/common/error/exceptions.dart';
-  static const String errorFailure = 'lib/core/common/error/failure.dart';
-  static const String featuresOnboardingScreen = 'lib/features/onboarding_screen.dart';
-  static const String featuresSplashScreen = 'lib/features/splash_screen.dart';
-  static const String generatedAssets = 'lib/generated/assets.dart';
+  static const String fontsOnestBold = 'assets/fonts/onest-bold.ttf';
+  static const String fontsOnestExtraBold = 'assets/fonts/onest-extra-bold.ttf';
+  static const String fontsOnestLight = 'assets/fonts/onest-light.ttf';
+  static const String fontsOnestMedium = 'assets/fonts/onest-medium.ttf';
+  static const String fontsOnestRegular = 'assets/fonts/onest-regular.ttf';
   static const String imagesFacebook = 'assets/images/facebook.png';
   static const String imagesFlutter = 'assets/images/flutter.png';
   static const String imagesFullscreen = 'assets/images/fullscreen.jpg';
@@ -25,40 +14,5 @@ class Assets {
   static const String imagesLoading = 'assets/images/loading.png';
   static const String imagesTwitter = 'assets/images/twitter.png';
   static const String jsonCategory = 'assets/json/category.json';
-  static const String libFirebaseOptions = 'lib/firebase_options.dart';
-  static const String libMain = 'lib/main.dart';
-  static const String localStorageAppCache = 'lib/core/local_storage/app_cache.dart';
-  static const String loginLoginScreen = 'lib/features/auth/presentation/login/login_screen.dart';
-  static const String networkApiError = 'lib/core/network/api_error.dart';
-  static const String networkNetworkInfo = 'lib/core/network/network_info.dart';
-  static const String otpOtpScreen = 'lib/features/auth/presentation/otp/otp_screen.dart';
-  static const String presentationAddNewProduct = 'lib/features/dashboard/presentation/add_new_product.dart';
-  static const String presentationDashboardScreen = 'lib/features/dashboard/presentation/dashboard_screen.dart';
-  static const String presentationProductCard = 'lib/features/dashboard/presentation/product_card.dart';
-  static const String registrationRegistrationScreen = 'lib/features/auth/presentation/registration/registration_screen.dart';
-  static const String repositoriesAuthenticationRepo = 'lib/features/auth/data/repositories/authentication_repo.dart';
-  static const String repositoriesProductRepo = 'lib/features/dashboard/data/repositories/product_repo.dart';
-  static const String routerRouter = 'lib/router/router.dart';
-  static const String statesLoginBloc = 'lib/features/auth/presentation/login/states/login_bloc.dart';
-  static const String statesLoginEvent = 'lib/features/auth/presentation/login/states/login_event.dart';
-  static const String statesLoginState = 'lib/features/auth/presentation/login/states/login_state.dart';
-  static const String statesProductBloc = 'lib/features/dashboard/presentation/states/product_bloc.dart';
-  static const String statesProductEvent = 'lib/features/dashboard/presentation/states/product_event.dart';
-  static const String statesProductState = 'lib/features/dashboard/presentation/states/product_state.dart';
-  static const String statesRegistrationBloc = 'lib/features/auth/presentation/registration/states/registration_bloc.dart';
-  static const String statesRegistrationEvent = 'lib/features/auth/presentation/registration/states/registration_event.dart';
-  static const String statesRegistrationState = 'lib/features/auth/presentation/registration/states/registration_state.dart';
-  static const String textfieldSearchTextfield = 'lib/core/common/textfield/search_textfield.dart';
-  static const String textfieldTextfield = 'lib/core/common/textfield/textfield.dart';
-  static const String themesColorScheme = 'lib/core/themes/color_scheme.dart';
-  static const String usecasesLoginUsecase = 'lib/features/auth/domain/usecases/login_usecase.dart';
-  static const String usecasesRegistrationUsecase = 'lib/features/auth/domain/usecases/registration_usecase.dart';
-  static const String usecasesUsecases = 'lib/core/usecases/usecases.dart';
-  static const String utilsAppImages = 'lib/core/utils/app_images.dart';
-  static const String utilsAppTexts = 'lib/core/utils/app_texts.dart';
-  static const String utilsInputValidation = 'lib/core/utils/input_validation.dart';
-  static const String utilsLoadingOverlay = 'lib/core/utils/loading_overlay.dart';
-  static const String utilsResponsive = 'lib/core/utils/responsive.dart';
-  static const String utilsSize = 'lib/core/utils/size.dart';
 
 }

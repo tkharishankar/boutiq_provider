@@ -1,17 +1,24 @@
-import 'package:boutiq_provider/features/dashboard/presentation/states/product_bloc.dart';
+import 'package:boutiq_provider/di/delivery_charge_locator.dart';
+import 'package:boutiq_provider/di/order_locator.dart';
+import 'package:boutiq_provider/features/presentation/bloc/deliverycharge/region_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'di/auth_service_locator.dart';
 import 'di/injector.dart';
-import 'features/auth/auth_service_locator.dart';
-import 'features/auth/presentation/login/states/login_bloc.dart';
-import 'features/auth/presentation/registration/states/registration_bloc.dart';
-import 'features/dashboard/product_locator.dart';
+import 'di/product_locator.dart';
+import 'di/provider_locator.dart';
+import 'features/presentation/bloc/login/login_bloc.dart';
+import 'features/presentation/bloc/order/order_bloc.dart';
+import 'features/presentation/bloc/product/product_bloc.dart';
+import 'features/presentation/bloc/provider/provider_bloc.dart';
+import 'features/presentation/bloc/registration/registration_bloc.dart';
 import 'firebase_options.dart';
 import 'router/router.dart';
 
@@ -19,7 +26,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.remove();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: currentFirebaseConfig(),
   );
   await injector();
   await GetStorage.init();
@@ -48,6 +55,10 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context,
+        designSize: const Size(360, 640),
+        minTextAdapt: true,
+        splitScreenMode: true);
     return MultiBlocProvider(
         providers: [
           BlocProvider<RegistrationBloc>(
@@ -59,11 +70,21 @@ class _AppState extends ConsumerState<App> {
           BlocProvider<ProductBloc>(
             create: (context) => productLocator<ProductBloc>(),
           ),
+          BlocProvider<OrderBloc>(
+            create: (context) => orderLocator<OrderBloc>(),
+          ),
+          BlocProvider<RegionBloc>(
+            create: (context) => deliveryChargeLocator<RegionBloc>(),
+          ),
+          BlocProvider<ProviderBloc>(
+            create: (context) => providerLocator<ProviderBloc>(),
+          ),
         ],
         child: MaterialApp.router(
           title: 'BoutiQ',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(primaryColor: const Color.fromARGB(255, 3, 3, 3)),
+          theme: ThemeData(
+              primaryColor: const Color(0xFFE21F4E), fontFamily: 'onest'),
           scrollBehavior: const _AppScrollBehavior(),
           routeInformationProvider: AppRouter.router.routeInformationProvider,
           routeInformationParser: AppRouter.router.routeInformationParser,

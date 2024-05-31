@@ -1,40 +1,63 @@
-import 'package:get_storage/get_storage.dart';
+import 'dart:convert';
 
-import '../../features/auth/domain/entities/login_response.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get_storage/get_storage.dart';
+import '../../features/data/models/login/login_response.dart';
 import '../common/error/exceptions.dart';
 
 class AppCacheKey {
   static const String introState = 'introState';
+  static const String providerId = 'providerId';
   static const String userData = 'userData';
 }
 
 abstract class AppCache {
-  setIntroState(bool state);
+  Future<void> setIntroState(bool state);
+
   bool getIntroState();
-  setUserInfo(UserData userData);
-  UserData? getUserInfo();
+
+  Future<void> setUserInfo(LoginResponse userData);
+
+  LoginResponse? getUserInfo();
+
+  Future<void> setProviderId(String id);
+
+  String getProviderId();
 }
 
 class AppCacheImpl implements AppCache {
   final box = GetStorage();
 
   @override
-  UserData? getUserInfo() {
+  LoginResponse? getUserInfo() {
     try {
       final userData = box.read(AppCacheKey.userData);
       if (userData != null) {
-        return UserData.fromJson(userData);
-      } else {
-        return null;
+        // Convert userData to Map<String, dynamic>
+        Map<String, dynamic>? jsonUserData;
+        if (userData is Map<String, dynamic>) {
+          jsonUserData = userData;
+        } else if (userData is String) {
+          // If userData is a String, try parsing it as JSON
+          jsonUserData = json.decode(userData);
+        }
+
+        if (jsonUserData != null) {
+          return LoginResponse.fromJson(jsonUserData);
+        }
       }
-    } on CacheException {
+
+      return null;
+    } catch (e) {
       throw CacheException();
     }
   }
 
   @override
-  setUserInfo(UserData userData) async {
+  Future<void> setUserInfo(LoginResponse userData) async {
     try {
+      print(userData);
+      setProviderId(userData.provider?.providerId ?? "");
       await box.write(AppCacheKey.userData, userData.toJson());
     } on CacheException {
       throw CacheException();
@@ -42,7 +65,7 @@ class AppCacheImpl implements AppCache {
   }
 
   @override
-  setIntroState(bool state) async {
+  Future<void> setIntroState(bool state) async {
     try {
       await box.write(AppCacheKey.introState, state);
     } on CacheException {
@@ -59,6 +82,31 @@ class AppCacheImpl implements AppCache {
       } else {
         return false;
       }
+    } on CacheException {
+      throw CacheException();
+    }
+  }
+
+  @override
+  String getProviderId() {
+    try {
+      final state = box.read(AppCacheKey.providerId);
+      print(state);
+      if (state != null) {
+        return state;
+      } else {
+        return "";
+      }
+    } on CacheException {
+      throw CacheException();
+    }
+  }
+
+  @override
+  Future<void> setProviderId(String id) async {
+    try {
+      print(id);
+      await box.write(AppCacheKey.providerId, id);
     } on CacheException {
       throw CacheException();
     }

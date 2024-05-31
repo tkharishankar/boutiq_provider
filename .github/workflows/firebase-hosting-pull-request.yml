@@ -9,10 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: flutter run -d chrome
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BOUTIQ_STAGE }}'
           projectId: boutiq-stage
-        env:
-          FIREBASE_CLI_EXPERIMENTS: webframeworks

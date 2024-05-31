@@ -17,26 +17,26 @@ class ApiError {
   factory ApiError.fromDioError(Object error) {
     dynamic errorMessage = '';
     dynamic errorCode = '';
-    if (error is DioError) {
+    if (error is DioException) {
       var dioError = error;
       switch (dioError.type) {
-        case DioErrorType.cancel:
+        case DioExceptionType.cancel:
           errorMessage = 'Request was cancelled';
           errorCode = 400;
           break;
-        case DioErrorType.connectTimeout:
+        case DioExceptionType.connectionTimeout:
           errorMessage = 'Connection timeout';
           errorCode = 'CONNECTION_TIMEOUT';
           break;
-        case DioErrorType.other:
+        case DioExceptionType.unknown:
           errorMessage = 'Checks! your connection';
           errorCode = 'NETWORK_ERROR';
           break;
-        case DioErrorType.receiveTimeout:
+        case DioExceptionType.receiveTimeout:
           errorMessage = 'Receive timeout in connection';
           errorCode = 'RECEIVE_TIMEOUT';
           break;
-        case DioErrorType.response:
+        case DioExceptionType.badResponse:
           if (dioError.response!.statusCode == 300) {
             errorMessage = 'Session timeout';
             errorCode = 'SESSION_TIMEOUT';
@@ -49,9 +49,17 @@ class ApiError {
             errorMessage = errorData['message'] ?? '';
           }
           break;
-        case DioErrorType.sendTimeout:
+        case DioExceptionType.sendTimeout:
           errorMessage = 'Send timeout in connection';
           errorCode = 'SEND_TIMEOUT';
+          break;
+        case DioExceptionType.badCertificate:
+          errorMessage = 'Send timeout in connection';
+          errorCode = 'CERTIFICATE_ISSUE';
+          break;
+        case DioExceptionType.connectionError:
+          errorMessage = 'Unable to connect server';
+          errorCode = 'CONNECTION_ERROR';
           break;
       }
     } else {
